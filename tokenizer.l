@@ -1,0 +1,608 @@
+%option noyywrap
+
+%{
+enum tokens {
+    /* reserved words */
+    IF,
+    ENDIF,
+    ELSE,
+    SWITCH,
+    CASE,
+    FOR,
+    LOOP,
+    RETURN,
+    STRUCT,
+    CONST,
+    BREAK,
+    CONTINUE,
+    READ,
+    WRITE,
+    EXIT,
+    WHEN,
+    FUNCTION,
+    /* primitive types */
+    INT,
+    REAL,
+    CHAR,
+    STR,
+    BOOL,
+    VOID,
+    /* operations (arithmetic, boolean, etc) */
+    PLUS,
+    MINUS,
+    TIMES,
+    DIV,
+    MOD,
+    ASSIGN,
+    ASSIGN_PLUS,
+    ASSIGN_MINUS,
+    ASSIGN_MULT,
+    ASSIGN_DIV,
+    ASSIGN_MOD,
+    EQUALS,
+    DIFF,
+    LT,
+    GT,
+    LEQ,
+    GEQ,
+    OR,
+    AND,
+    NOT,
+    /* primitive values */
+    TRUE,
+    FALSE,
+    NUMBER,
+    CHARACTER,
+    STRING,
+    /* pairs */
+    LEFT_PAREN,
+    RIGHT_PAREN,
+    LEFT_BRACE,
+    RIGHT_BRACE,
+    LEFT_BRACKET,
+    RIGHT_BRACKET,
+    /* other constructs */
+    ID,
+    DOT,
+    COLON,
+    COMMA,
+    SEMICOLON,
+    QUESTION_MARK,
+    POINTER_VAL,                /* # */
+    ARROW,						/* -> */
+    INCREMENT,                  /* ++ */
+    DECREMENT,                  /* -- */
+    REFERENCE,                  /* & */
+    TERNARY                     /* $ */
+
+};
+/*
+char *enumStr(int val)
+{
+    switch (val) {
+        case IF: return "IF";
+        case ENDIF: return "ENDIF";
+        case ELSE: return "ELSE";
+        case SWITCH: return "SWITCH";
+        case CASE: return "CASE";
+        case FOR: return "FOR";
+        case LOOP: return "LOOP";
+        case RETURN: return "RETURN";
+        case STRUCT: return "STRUCT";
+        case CONST: return "CONST";
+        case BREAK: return "BREAK";
+        case CONTINUE: return "CONTINUE";
+        case READ: return "READ";
+        case WRITE: return "WRITE";
+        case EXIT: return "EXIT";
+        case WHEN: return "WHEN";
+        case INT: return "INT";
+        case REAL: return "REAL";
+        case CHAR: return "CHAR";
+        case STR: return "STR";
+        case BOOL: return "BOOL";
+        case VOID: return "VOID";
+        case PLUS: return "PLUS";
+        case MINUS: return "MINUS";
+        case TIMES: return "TIMES";
+        case DIV: return "DIV";
+        case MOD: return "MOD";
+        case ASSIGN: return "ASSIGN";
+        case ASSIGN_PLUS: return "ASSIGN_PLUS";
+        case ASSIGN_MINUS: return "ASSIGN_MINUS";
+        case ASSIGN_MULT: return "ASSIGN_MULT";
+        case ASSIGN_DIV: return "ASSIGN_DIV";
+        case ASSIGN_MOD: return "ASSIGN_MOD";
+        case EQUALS: return "EQUALS";
+        case DIFF: return "DIFF";
+        case LT: return "LT";
+        case GT: return "GT";
+        case LEQ: return "LEQ";
+        case GEQ: return "GEQ";
+        case OR: return "OR";
+        case AND: return "AND";
+        case NOT: return "NOT";
+        case TRUE: return "TRUE";
+        case FALSE: return "FALSE";
+        case NUMBER: return "NUMBER";
+        case CHARACTER: return "CHARACTER";
+        case STRING: return "STRING";
+        case LEFT_PAREN: return "LEFT_PAREN";
+        case RIGHT_PAREN: return "RIGHT_PAREN";
+        case LEFT_BRACE: return "LEFT_BRACE";
+        case RIGHT_BRACE: return "RIGHT_BRACE";
+        case LEFT_BRACKET: return "LEFT_BRACKET";
+        case RIGHT_BRACKET: return "RIGHT_BRACKET";
+        case ID: return "ID";
+        case SEMICOLON: return "SEMICOLON";
+        case QUESTION_MARK: return "QUESTION_MARK";
+        case COLON: return "COLON";
+        case DOT: return "DOT";
+        case POINTER_VAL: return "POINTER_VAL";
+        case ARROW: return "ARROW";
+        case COMMA: return "COMMA";
+        case INCREMENT: return "INCREMENT";
+        case DECREMENT: return "DECREMENT";
+        case REFERENCE: return "REFERENCE";
+        case TERNARY: return "TERNARY";
+        case FUNCTION: return "FUNCTION";
+    }
+}*/
+
+int column = 0;
+int char_count = 0;
+
+typedef struct lval_s {
+    int line;
+    int col;
+    /* the value of the token. if it is the number 0, this is going to be 0 */
+    char *lexeme;
+    int token;
+} lval;
+
+//typedef enum { false, true } bool;
+
+/* all we have as symbols for the symbol table are identifiers. other possible
+   symbols are, for example, goto labels */
+typedef struct symbol_s {
+    int scope;
+    /* this is the actual name of the symbol. an id 'foo' has the name foo */
+    char *name;
+    char *type;
+    bool is_const;
+    lval val;
+} symbol;
+
+// since we have 128 ASCII characters, that's the max number of children our
+// trie can have, even though we won't use all of them
+#define N 128
+
+typedef struct node_s {
+    struct node_s *children[N];
+    symbol sym;
+    bool is_leaf;
+} node;
+
+node *init()
+{
+    node *root = (node*) calloc(1, sizeof(node));
+    for (int i = 0; i < N; i++) root->children[i] = NULL;
+    root->is_leaf = 0;
+
+    return root;
+}
+
+node *add(node *root, char *word)
+{
+    node *tmp = root;
+
+    for (int i = 0; word[i] != '\0'; i++) {
+        /* get the relative position in the alphabet list */
+        int position = (int) word[i] - 'a';
+
+        if (tmp->children[position] == NULL)
+            tmp->children[position] = init();
+
+        tmp = tmp->children[position];
+    }
+
+    tmp->is_leaf = 1;
+
+    return root;
+}
+
+node *find(node *root, char *word)
+{
+    /* searches for word in the trie */
+    node *tmp = root;
+
+    for(int i = 0; word[i] != '\0'; i++)
+    {
+        int position = word[i] - 'a';
+        if (tmp->children[position] == NULL) return NULL;
+        tmp = tmp->children[position];
+    }
+
+    if (tmp != NULL && tmp->is_leaf == 1) return tmp;
+
+    return tmp;
+}
+
+node *sym_table;
+%}
+
+%%
+[ \t\r\f]+ { char_count += yyleng;
+             column += yyleng; }
+\n+        { yylineno += yyleng;
+             char_count += yyleng;
+             column = 0; }
+
+if       { lval val = {yylineno, column, yytext, IF};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+endif    { lval val = {yylineno, column, yytext, ENDIF};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+else     { lval val = {yylineno, column, yytext, ELSE};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+switch   { lval val = {yylineno, column, yytext, SWITCH};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+case     { lval val = {yylineno, column, yytext, CASE};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+for      { lval val = {yylineno, column, yytext, FOR};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+loop     { lval val = {yylineno, column, yytext, LOOP};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+return   { lval val = {yylineno, column, yytext, RETURN};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+struct   { lval val = {yylineno, column, yytext, STRUCT};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+const    { lval val = {yylineno, column, yytext, CONST};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+break    { lval val = {yylineno, column, yytext, BREAK};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+continue { lval val = {yylineno, column, yytext, CONTINUE};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+read     { lval val = {yylineno, column, yytext, READ};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+write    { lval val = {yylineno, column, yytext, WRITE};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+exit     { lval val = {yylineno, column, yytext, EXIT};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+when     { lval val = {yylineno, column, yytext, WHEN};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+
+function   { lval val = {yylineno, column, yytext, FUNCTION};
+           char_count += yyleng;
+           column += yyleng;
+           // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+           return val.token; }
+
+int  { lval val = {yylineno, column, yytext, INT};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+real { lval val = {yylineno, column, yytext, REAL};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+char { lval val = {yylineno, column, yytext, CHAR};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+str  { lval val = {yylineno, column, yytext, STR};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+bool { lval val = {yylineno, column, yytext, BOOL};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+void { lval val = {yylineno, column, yytext, VOID};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+
+\+  { lval val = {yylineno, column, yytext, PLUS};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+-   { lval val = {yylineno, column, yytext, MINUS};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\*  { lval val = {yylineno, column, yytext, TIMES};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\/  { lval val = {yylineno, column, yytext, DIV};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+%   { lval val = {yylineno, column, yytext, MOD};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+=   { lval val = {yylineno, column, yytext, ASSIGN};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\+= { lval val = {yylineno, column, yytext, ASSIGN_PLUS};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+-=  { lval val = {yylineno, column, yytext, ASSIGN_MINUS};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\*= { lval val = {yylineno, column, yytext, ASSIGN_MULT};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\/= { lval val = {yylineno, column, yytext, ASSIGN_DIV};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+%=  { lval val = {yylineno, column, yytext, ASSIGN_MOD};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+==  { lval val = {yylineno, column, yytext, EQUALS};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+!=  { lval val = {yylineno, column, yytext, DIFF};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\<  { lval val = {yylineno, column, yytext, LT};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\>  { lval val = {yylineno, column, yytext, GT};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\<= { lval val = {yylineno, column, yytext, LEQ};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+\>= { lval val = {yylineno, column, yytext, GEQ};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+(\|\||or) { lval val = {yylineno, column, yytext, OR};
+            char_count += yyleng;
+            column += yyleng;
+            // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+            return val.token; }
+(&&|and)  { lval val = {yylineno, column, yytext, AND};
+            char_count += yyleng;
+            column += yyleng;
+            // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+            return val.token; }
+(!|not)   { lval val = {yylineno, column, yytext, NOT};
+            char_count += yyleng;
+            column += yyleng;
+            // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+            return val.token; }
+
+(true)  { lval val = {yylineno, column, yytext, TRUE};
+          char_count += yyleng;
+          column += yyleng;
+          // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+          return val.token; }
+(false) { lval val = {yylineno, column, yytext, FALSE};
+          char_count += yyleng;
+          column += yyleng;
+          // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+          return val.token; }
+'.' { lval val = {yylineno, column, yytext, CHARACTER};
+      char_count += yyleng;
+      column += yyleng;
+      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+      return val.token; }
+[+-]?[0-9]+(\.[0-9]+)?  { lval val = {yylineno, column, yytext, NUMBER};
+                     char_count += yyleng;
+                     column += yyleng;
+                     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+                     return val.token; }
+\"([^\"\\]|\\[abefnrtv\\\"])*\" { lval val = {yylineno, column, yytext, STRING};
+                                  char_count += yyleng;
+                                  column += yyleng;
+                                  // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+                                  return val.token; }
+
+\( { lval val = {yylineno, column, yytext, LEFT_PAREN};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+\) { lval val = {yylineno, column, yytext, RIGHT_PAREN};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+\{ { lval val = {yylineno, column, yytext, LEFT_BRACE};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+\} { lval val = {yylineno, column, yytext, RIGHT_BRACE};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+\] { lval val = {yylineno, column, yytext, LEFT_BRACKET};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+\[ { lval val = {yylineno, column, yytext, RIGHT_BRACKET};
+     char_count += yyleng;
+     column += yyleng;
+     // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+     return val.token; }
+
+[a-zA-Z_][a-zA-Z0-9_]* { lval val = {yylineno, column, yytext, ID};
+                         symbol sym = {-1, yytext, NULL, false, val};
+                         add(sym_table, yytext);
+                         char_count += yyleng;
+                         column += yyleng;
+                         // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+                         return val.token; }
+\;   { lval val = {yylineno, column, yytext, SEMICOLON};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\?   { lval val = {yylineno, column, yytext, QUESTION_MARK};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\:   { lval val = {yylineno, column, yytext, COLON};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\.   { lval val = {yylineno, column, yytext, DOT};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+#    { lval val = {yylineno, column, yytext, POINTER_VAL};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+-\>  { lval val = {yylineno, column, yytext, ARROW};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\,   { lval val = {yylineno, column, yytext, COMMA};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\+\+ { lval val = {yylineno, column, yytext, INCREMENT};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+\-\- { lval val = {yylineno, column, yytext, DECREMENT};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+&    { lval val = {yylineno, column, yytext, REFERENCE};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+@   { lval val = {yylineno, column, yytext, TERNARY};
+       char_count += yyleng;
+       column += yyleng;
+       // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+       return val.token; }
+
+\/\/.* { char_count += yyleng; }
+%%
+
+void print(node *root)
+{
+    if (!root) return;
+    for (int i = 0; i < N; i++){
+        if(root->children[i]!=NULL){
+            printf("%c->",(char)('a'+i));
+            print(root->children[i]);
+        }
+    }
+    if (root->is_leaf) printf("\n");
+}
+
+int main(void)
+{
+    sym_table = init();
+
+    yylex();
+
+    /* print(sym_table); */
+    /* printf("%d\n", find(sym_table, "matrix") != NULL); */
+    /* printf("%d\n", find(sym_table, "bar") != NULL); */
+    /* printf("%d\n", find(sym_table, "foo") != NULL); */
+    /* printf("%d\n", find(sym_table, "matrixc") != NULL); */
+    /* printf("%d\n", find(sym_table, "ca") != NULL); */
+    return 0;
+}
