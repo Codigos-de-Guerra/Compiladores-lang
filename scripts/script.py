@@ -131,6 +131,8 @@ int tok;
 void advance() {
   printf("entrei no advance\\n");
   tok = yylex();
+  if(tok==ENDOFFILE)exit(0);
+
 }
 void error() {
   1/0;
