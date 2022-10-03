@@ -115,18 +115,15 @@ def printa(regra):
         print("    case " + token + ":")
         for string in regra[1]:
             if match('([a-zA-Z_0-9"])+', string):
-                if string[0] == '"':
-                    string = string[1:]
-                    if string[-1] == '"':
-                        string = string[:-1]
+                if string.isupper():
                     if string in token_names.keys():
                         string = token_names[string]
                     print("      EAT(" + string + ");")
                 else:
                     if string in non_terminals:
                         print("      " + fun(string) + "();")
-            else:
-                print("      error2();")
+            #else:
+                #print("      error2();")
         print("      break;")
 
 
@@ -173,8 +170,19 @@ for x in rules_dict.items():
 
 for x in rules_dict.items():
     print("void " + fun(x[0]) + "(void){")
+    print("printf(\"fun("+x[0]+")\\n\");")
+    #print("printf(\"%d\",tok);")
+    #print("printf(\"\\n\");")
     print("  switch(tok){")
     for regra in x[1]:
         printa(regra)
     print("    default: error();")
     print("  }\n}\n")
+
+
+print('''int main(){
+    advance();
+    T_S();
+}
+
+''')

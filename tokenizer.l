@@ -3,6 +3,7 @@
 %{
 enum tokens {
     /* reserved words */
+    ENDOFFILE, //0
     IF,
     ENDIF,
     ELSE,
@@ -76,78 +77,7 @@ enum tokens {
     TERNARY                     /* $ */
 
 };
-/*
-char *enumStr(int val)
-{
-    switch (val) {
-        case IF: return "IF";
-        case ENDIF: return "ENDIF";
-        case ELSE: return "ELSE";
-        case SWITCH: return "SWITCH";
-        case CASE: return "CASE";
-        case FOR: return "FOR";
-        case LOOP: return "LOOP";
-        case RETURN: return "RETURN";
-        case STRUCT: return "STRUCT";
-        case CONST: return "CONST";
-        case BREAK: return "BREAK";
-        case CONTINUE: return "CONTINUE";
-        case READ: return "READ";
-        case WRITE: return "WRITE";
-        case EXIT: return "EXIT";
-        case WHEN: return "WHEN";
-        case INT: return "INT";
-        case REAL: return "REAL";
-        case CHAR: return "CHAR";
-        case STR: return "STR";
-        case BOOL: return "BOOL";
-        case VOID: return "VOID";
-        case PLUS: return "PLUS";
-        case MINUS: return "MINUS";
-        case TIMES: return "TIMES";
-        case DIV: return "DIV";
-        case MOD: return "MOD";
-        case ASSIGN: return "ASSIGN";
-        case ASSIGN_PLUS: return "ASSIGN_PLUS";
-        case ASSIGN_MINUS: return "ASSIGN_MINUS";
-        case ASSIGN_MULT: return "ASSIGN_MULT";
-        case ASSIGN_DIV: return "ASSIGN_DIV";
-        case ASSIGN_MOD: return "ASSIGN_MOD";
-        case EQUALS: return "EQUALS";
-        case DIFF: return "DIFF";
-        case LT: return "LT";
-        case GT: return "GT";
-        case LEQ: return "LEQ";
-        case GEQ: return "GEQ";
-        case OR: return "OR";
-        case AND: return "AND";
-        case NOT: return "NOT";
-        case TRUE: return "TRUE";
-        case FALSE: return "FALSE";
-        case NUMBER: return "NUMBER";
-        case CHARACTER: return "CHARACTER";
-        case STRING: return "STRING";
-        case LEFT_PAREN: return "LEFT_PAREN";
-        case RIGHT_PAREN: return "RIGHT_PAREN";
-        case LEFT_BRACE: return "LEFT_BRACE";
-        case RIGHT_BRACE: return "RIGHT_BRACE";
-        case LEFT_BRACKET: return "LEFT_BRACKET";
-        case RIGHT_BRACKET: return "RIGHT_BRACKET";
-        case ID: return "ID";
-        case SEMICOLON: return "SEMICOLON";
-        case QUESTION_MARK: return "QUESTION_MARK";
-        case COLON: return "COLON";
-        case DOT: return "DOT";
-        case POINTER_VAL: return "POINTER_VAL";
-        case ARROW: return "ARROW";
-        case COMMA: return "COMMA";
-        case INCREMENT: return "INCREMENT";
-        case DECREMENT: return "DECREMENT";
-        case REFERENCE: return "REFERENCE";
-        case TERNARY: return "TERNARY";
-        case FUNCTION: return "FUNCTION";
-    }
-}*/
+
 
 int column = 0;
 int char_count = 0;
@@ -230,6 +160,10 @@ node *find(node *root, char *word)
 
 node *sym_table;
 %}
+
+dig         [0-9]
+alpha       [A-Z|a-z]
+id          ({alpha}|\_)({alpha}|{dig}|\_)*
 
 %%
 [ \t\r\f]+ { char_count += yyleng;
@@ -514,13 +448,14 @@ void { lval val = {yylineno, column, yytext, VOID};
      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
      return val.token; }
 
-[a-zA-Z_][a-zA-Z0-9_]* { lval val = {yylineno, column, yytext, ID};
+([a-z|A-Z|\_])([a-z|A-Z|0-9|\_])* { lval val = {yylineno, column, yytext, ID};
                          symbol sym = {-1, yytext, NULL, false, val};
-                         add(sym_table, yytext);
+                         //add(sym_table, yytext);
                          char_count += yyleng;
                          column += yyleng;
                          // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
                          return val.token; }
+
 \;   { lval val = {yylineno, column, yytext, SEMICOLON};
        char_count += yyleng;
        column += yyleng;
@@ -592,17 +527,3 @@ void print(node *root)
     if (root->is_leaf) printf("\n");
 }
 
-int main(void)
-{
-    sym_table = init();
-
-    yylex();
-
-    /* print(sym_table); */
-    /* printf("%d\n", find(sym_table, "matrix") != NULL); */
-    /* printf("%d\n", find(sym_table, "bar") != NULL); */
-    /* printf("%d\n", find(sym_table, "foo") != NULL); */
-    /* printf("%d\n", find(sym_table, "matrixc") != NULL); */
-    /* printf("%d\n", find(sym_table, "ca") != NULL); */
-    return 0;
-}
