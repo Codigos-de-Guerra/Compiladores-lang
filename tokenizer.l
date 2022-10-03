@@ -437,18 +437,18 @@ void { lval val = {yylineno, column, yytext, VOID};
      column += yyleng;
      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
      return val.token; }
-\] { lval val = {yylineno, column, yytext, LEFT_BRACKET};
+\[ { lval val = {yylineno, column, yytext, LEFT_BRACKET};
      char_count += yyleng;
      column += yyleng;
      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
      return val.token; }
-\[ { lval val = {yylineno, column, yytext, RIGHT_BRACKET};
+\] { lval val = {yylineno, column, yytext, RIGHT_BRACKET};
      char_count += yyleng;
      column += yyleng;
      // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
      return val.token; }
 
-([a-z|A-Z|\_])([a-z|A-Z|0-9|\_])* { lval val = {yylineno, column, yytext, ID};
+[a-z|A-Z|\_][a-z|A-Z|0-9|\_]* { lval val = {yylineno, column, yytext, ID};
                          symbol sym = {-1, yytext, NULL, false, val};
                          //add(sym_table, yytext);
                          char_count += yyleng;
@@ -526,4 +526,3 @@ void print(node *root)
     }
     if (root->is_leaf) printf("\n");
 }
-

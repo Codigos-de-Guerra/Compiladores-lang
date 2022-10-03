@@ -109,19 +109,14 @@ def printa(regra):
     if token in token_names.keys():
         token = token_names[token]
 
-    # return
-    # print(type(token))
     if token != "Îµ" and token != "Â¬" and token != "//":
         print("    case " + token + ":")
         for string in regra[1]:
             if match('([a-zA-Z_0-9"])+', string):
                 if string.isupper():
-                    if string in token_names.keys():
-                        string = token_names[string]
                     print("      EAT(" + string + ");")
                 else:
-                    if string in non_terminals:
-                        print("      " + fun(string) + "();")
+                    print("      " + fun(string) + "();")
             #else:
                 #print("      error2();")
         print("      break;")
@@ -134,16 +129,23 @@ print(
 
 int tok;
 void advance() {
+  printf("entrei no advance\\n");
   tok = yylex();
 }
 void error() {
   1/0;
+  printf("erro\\n");
+  exit(0);
 }
 void error2(){
     printf("erro2");
 }
 void EAT(tokens t) {
-  if (tok == t) advance();
+  printf("li o token %d\\n", t);
+  if (tok == t) {
+    printf("comando o %d\\n", t);
+    advance();
+  }
   else error();
 }
 """
