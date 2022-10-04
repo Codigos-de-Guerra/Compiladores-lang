@@ -6,7 +6,7 @@ function int partition(int# arr, int start, int end) {
 	int pivot = arr[start];
 
 	int count = 0;
-	for (int i = start + 1; i <= end; i++) {
+	for (x i = start + 1; i <= end; i++) {
 		if (arr[i] <= pivot) {
 			count++;
 		}
@@ -18,7 +18,8 @@ function int partition(int# arr, int start, int end) {
 	arr[pivotIndex] = arr[start];
 	arr[start] = tmp;
 
-	int i = start, j = end;
+	int i = start;
+	int j = end;
 
 	loop {
 		exit when (i >= pivotIndex or j <= pivotIndex);
@@ -42,7 +43,7 @@ function int partition(int# arr, int start, int end) {
 	return pivotIndex;
 }
 
-function void quickSort(int arr[], int start, int end) {
+function void quickSort(int# arr, int start, int end) {
 
 	if (start >= end) {
 		return;
@@ -56,9 +57,9 @@ function void quickSort(int arr[], int start, int end) {
 	quickSort(arr, p + 1, end);
 }
 
-int main() {
+function int main() {
 
-	int arr[] = { 9, 3, 4, 2, 1, 8 };
+	int# arr = { 9, 3, 4, 2, 1, 8 };
 	int n = 6;
 
 	quickSort(arr, 0, n - 1);
