@@ -26,6 +26,7 @@ all: compile link
 generate: treat
 	python3.10 $(auto_generate_iter) > $(SRC)/$(iter_anal)
 	python3.10 $(auto_generate_recur) > $(SRC)/$(recur_anal)
+	rm -f $(table)
 
 treat:
 	mkdir -p $(SRC)
@@ -38,6 +39,7 @@ compile: genLex
 	$(CCOMPILER) $(SRC)/$(recur_anal) $(CXXFLAGS) -o $(BIN)/$(recur)
 
 genLex:
+	mkdir -p $(SRC)
 	lex -o $(SRC)/lex.yy.c tokenizer.l
 
 link:
