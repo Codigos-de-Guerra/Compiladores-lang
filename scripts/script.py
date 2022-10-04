@@ -3,7 +3,7 @@
 from re import match
 from tokenize import group
 
-filename = "data/output_table.txt"
+filename = "output_table.txt"
 rules_dict = dict()
 
 non_terminals = []
@@ -123,25 +123,27 @@ def printa(regra):
 
 
 print(
-    """
-#include <iostream>
+    """#include <iostream>
 #include "lex.yy.c"
 
 int tok;
 void advance() {
   printf("entrei no advance\\n");
   tok = yylex();
-  if(tok==ENDOFFILE)exit(0);
-
+  if (tok == ENDOFFILE) exit(0);
 }
+
 void error() {
   1/0;
   printf("erro\\n");
   exit(0);
 }
+
 void error2(){
-    printf("erro2");
+    printf("erro2\\n");
+    exit(0);
 }
+
 void EAT(tokens t) {
   printf("li o token %d\\n", t);
   if (tok == t) {
@@ -172,11 +174,11 @@ for x in rules_dict.items():
     non_terminals.append(x[0])
     print("void " + fun(x[0]) + "(void);")
 
+print();
+
 for x in rules_dict.items():
-    print("void " + fun(x[0]) + "(void){")
-    print("printf(\"fun("+x[0]+")\\n\");")
-    #print("printf(\"%d\",tok);")
-    #print("printf(\"\\n\");")
+    print("void " + fun(x[0]) + "(void) {")
+    print("  printf(\"fun("+x[0]+")\\n\");")
     print("  switch(tok){")
     for regra in x[1]:
         printa(regra)
@@ -187,6 +189,4 @@ for x in rules_dict.items():
 print('''int main(){
     advance();
     T_S();
-}
-
-''')
+}''')

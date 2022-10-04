@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-table = pd.read_html("data/html_output.html")[0]
+table = pd.read_html("grammar/princeton_output.html")[0]
 table.index = table["Unnamed: 0"]
 table.drop("Unnamed: 0", inplace=True, axis=1)
 table.dropna(axis=0, how="all", inplace=True)
