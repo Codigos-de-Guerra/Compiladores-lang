@@ -2121,18 +2121,23 @@ void T_EXPR(void) {
       break;
     case NUMBER:
       T_LITERAL();
+      T_EXPR_BINMAYBE();
       break;
     case CHARACTER:
       T_LITERAL();
+      T_EXPR_BINMAYBE();
       break;
     case TRUE:
       T_LITERAL();
+      T_EXPR_BINMAYBE();
       break;
     case FALSE:
       T_LITERAL();
+      T_EXPR_BINMAYBE();
       break;
     case STRING:
       T_LITERAL();
+      T_EXPR_BINMAYBE();
       break;
     case RIGHT_BRACKET:
       break;
