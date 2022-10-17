@@ -1,6 +1,5 @@
-#line 2 "./src/lex.yy.c"
 
-#line 4 "./src/lex.yy.c"
+#line 3 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -708,8 +707,8 @@ node *find(node *root, char *word)
 }
 
 node *sym_table;
-#line 712 "./src/lex.yy.c"
-#line 713 "./src/lex.yy.c"
+#line 711 "lex.yy.c"
+#line 712 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -928,7 +927,7 @@ YY_DECL
 	{
 #line 168 "tokenizer.l"
 
-#line 932 "./src/lex.yy.c"
+#line 931 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1606,7 +1605,7 @@ YY_RULE_SETUP
 #line 516 "tokenizer.l"
 ECHO;
 	YY_BREAK
-#line 1610 "./src/lex.yy.c"
+#line 1609 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

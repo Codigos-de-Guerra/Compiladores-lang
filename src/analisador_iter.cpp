@@ -5,11 +5,11 @@ int tok;
 void advance() {
   printf("entrei no advance\n");
   tok = yylex();
+  printf("li o token %d\n",tok);
   if (tok == ENDOFFILE) exit(0);
 }
 
 void error() {
-  1/0;
   printf("erro\n");
   exit(0);
 }
@@ -20,9 +20,9 @@ void error2(){
 }
 
 void EAT(tokens t) {
-  printf("li o token %d\n", t);
+  printf("preciso do token %d\n", t);
   if (tok == t) {
-    printf("comando o %d\n", t);
+    printf("comendo o %d\n", t);
     advance();
   }
   else error();
