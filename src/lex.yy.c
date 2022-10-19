@@ -1,5 +1,6 @@
+#line 2 "lex.yy.c"
 
-#line 3 "lex.yy.c"
+#line 4 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -549,82 +550,8 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "tokenizer.l"
 #line 4 "tokenizer.l"
-enum tokens {
-    /* reserved words */
-    ENDOFFILE, //0
-    IF,
-    ENDIF,
-    ELSE,
-    SWITCH,
-    CASE,
-    FOR,
-    LOOP,
-    RETURN,
-    STRUCT,
-    CONST,
-    BREAK,
-    CONTINUE,
-    READ,
-    WRITE,
-    EXIT,
-    WHEN,
-    FUNCTION,
-    /* primitive types */
-    INT,
-    REAL,
-    CHAR,
-    STR,
-    BOOL,
-    VOID,
-    /* operations (arithmetic, boolean, etc) */
-    PLUS,
-    MINUS,
-    TIMES,
-    DIV,
-    MOD,
-    ASSIGN,
-    ASSIGN_PLUS,
-    ASSIGN_MINUS,
-    ASSIGN_MULT,
-    ASSIGN_DIV,
-    ASSIGN_MOD,
-    EQUALS,
-    DIFF,
-    LT,
-    GT,
-    LEQ,
-    GEQ,
-    OR,
-    AND,
-    NOT,
-    /* primitive values */
-    TRUE,
-    FALSE,
-    NUMBER,
-    CHARACTER,
-    STRING,
-    /* pairs */
-    LEFT_PAREN,
-    RIGHT_PAREN,
-    LEFT_BRACE,
-    RIGHT_BRACE,
-    LEFT_BRACKET,
-    RIGHT_BRACKET,
-    /* other constructs */
-    ID,
-    DOT,
-    COLON,
-    COMMA,
-    SEMICOLON,
-    QUESTION_MARK,
-    POINTER_VAL,                /* # */
-    ARROW,						/* -> */
-    INCREMENT,                  /* ++ */
-    DECREMENT,                  /* -- */
-    REFERENCE,                  /* & */
-    TERNARY                     /* $ */
+#include "y.tab.h"
 
-};
 
 
 int column = 0;
@@ -638,7 +565,7 @@ typedef struct lval_s {
     int token;
 } lval;
 
-//typedef enum { false, true } bool;
+typedef enum { false, true } bool;
 
 /* all we have as symbols for the symbol table are identifiers. other possible
    symbols are, for example, goto labels */
@@ -706,9 +633,8 @@ node *find(node *root, char *word)
     return tmp;
 }
 
-node *sym_table;
-#line 711 "lex.yy.c"
-#line 712 "lex.yy.c"
+#line 637 "lex.yy.c"
+#line 638 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -925,9 +851,9 @@ YY_DECL
 		}
 
 	{
-#line 168 "tokenizer.l"
+#line 93 "tokenizer.l"
 
-#line 931 "lex.yy.c"
+#line 857 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -986,21 +912,21 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 169 "tokenizer.l"
+#line 94 "tokenizer.l"
 { char_count += yyleng;
              column += yyleng; }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 171 "tokenizer.l"
+#line 96 "tokenizer.l"
 { yylineno += yyleng;
              char_count += yyleng;
              column = 0; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 175 "tokenizer.l"
+#line 100 "tokenizer.l"
 { lval val = {yylineno, column, yytext, IF};
            char_count += yyleng;
            column += yyleng;
@@ -1009,7 +935,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 180 "tokenizer.l"
+#line 105 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ENDIF};
            char_count += yyleng;
            column += yyleng;
@@ -1018,7 +944,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 185 "tokenizer.l"
+#line 110 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ELSE};
            char_count += yyleng;
            column += yyleng;
@@ -1027,7 +953,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 190 "tokenizer.l"
+#line 115 "tokenizer.l"
 { lval val = {yylineno, column, yytext, SWITCH};
            char_count += yyleng;
            column += yyleng;
@@ -1036,7 +962,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 195 "tokenizer.l"
+#line 120 "tokenizer.l"
 { lval val = {yylineno, column, yytext, CASE};
            char_count += yyleng;
            column += yyleng;
@@ -1045,7 +971,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 200 "tokenizer.l"
+#line 125 "tokenizer.l"
 { lval val = {yylineno, column, yytext, FOR};
            char_count += yyleng;
            column += yyleng;
@@ -1054,7 +980,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 205 "tokenizer.l"
+#line 130 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LOOP};
            char_count += yyleng;
            column += yyleng;
@@ -1063,7 +989,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 210 "tokenizer.l"
+#line 135 "tokenizer.l"
 { lval val = {yylineno, column, yytext, RETURN};
            char_count += yyleng;
            column += yyleng;
@@ -1072,7 +998,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 215 "tokenizer.l"
+#line 140 "tokenizer.l"
 { lval val = {yylineno, column, yytext, STRUCT};
            char_count += yyleng;
            column += yyleng;
@@ -1081,7 +1007,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 220 "tokenizer.l"
+#line 145 "tokenizer.l"
 { lval val = {yylineno, column, yytext, CONST};
            char_count += yyleng;
            column += yyleng;
@@ -1090,7 +1016,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 225 "tokenizer.l"
+#line 150 "tokenizer.l"
 { lval val = {yylineno, column, yytext, BREAK};
            char_count += yyleng;
            column += yyleng;
@@ -1099,7 +1025,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 230 "tokenizer.l"
+#line 155 "tokenizer.l"
 { lval val = {yylineno, column, yytext, CONTINUE};
            char_count += yyleng;
            column += yyleng;
@@ -1108,7 +1034,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 235 "tokenizer.l"
+#line 160 "tokenizer.l"
 { lval val = {yylineno, column, yytext, READ};
            char_count += yyleng;
            column += yyleng;
@@ -1117,7 +1043,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 240 "tokenizer.l"
+#line 165 "tokenizer.l"
 { lval val = {yylineno, column, yytext, WRITE};
            char_count += yyleng;
            column += yyleng;
@@ -1126,7 +1052,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 245 "tokenizer.l"
+#line 170 "tokenizer.l"
 { lval val = {yylineno, column, yytext, EXIT};
            char_count += yyleng;
            column += yyleng;
@@ -1135,7 +1061,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 250 "tokenizer.l"
+#line 175 "tokenizer.l"
 { lval val = {yylineno, column, yytext, WHEN};
            char_count += yyleng;
            column += yyleng;
@@ -1144,7 +1070,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 256 "tokenizer.l"
+#line 181 "tokenizer.l"
 { lval val = {yylineno, column, yytext, FUNCTION};
            char_count += yyleng;
            column += yyleng;
@@ -1153,7 +1079,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 262 "tokenizer.l"
+#line 187 "tokenizer.l"
 { lval val = {yylineno, column, yytext, INT};
        char_count += yyleng;
        column += yyleng;
@@ -1162,7 +1088,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 267 "tokenizer.l"
+#line 192 "tokenizer.l"
 { lval val = {yylineno, column, yytext, REAL};
        char_count += yyleng;
        column += yyleng;
@@ -1171,7 +1097,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 272 "tokenizer.l"
+#line 197 "tokenizer.l"
 { lval val = {yylineno, column, yytext, CHAR};
        char_count += yyleng;
        column += yyleng;
@@ -1180,7 +1106,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 277 "tokenizer.l"
+#line 202 "tokenizer.l"
 { lval val = {yylineno, column, yytext, STR};
        char_count += yyleng;
        column += yyleng;
@@ -1189,7 +1115,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 282 "tokenizer.l"
+#line 207 "tokenizer.l"
 { lval val = {yylineno, column, yytext, BOOL};
        char_count += yyleng;
        column += yyleng;
@@ -1198,7 +1124,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 287 "tokenizer.l"
+#line 212 "tokenizer.l"
 { lval val = {yylineno, column, yytext, VOID};
        char_count += yyleng;
        column += yyleng;
@@ -1207,7 +1133,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 293 "tokenizer.l"
+#line 218 "tokenizer.l"
 { lval val = {yylineno, column, yytext, PLUS};
       char_count += yyleng;
       column += yyleng;
@@ -1216,7 +1142,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 298 "tokenizer.l"
+#line 223 "tokenizer.l"
 { lval val = {yylineno, column, yytext, MINUS};
       char_count += yyleng;
       column += yyleng;
@@ -1225,7 +1151,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 303 "tokenizer.l"
+#line 228 "tokenizer.l"
 { lval val = {yylineno, column, yytext, TIMES};
       char_count += yyleng;
       column += yyleng;
@@ -1234,7 +1160,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 308 "tokenizer.l"
+#line 233 "tokenizer.l"
 { lval val = {yylineno, column, yytext, DIV};
       char_count += yyleng;
       column += yyleng;
@@ -1243,7 +1169,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 313 "tokenizer.l"
+#line 238 "tokenizer.l"
 { lval val = {yylineno, column, yytext, MOD};
       char_count += yyleng;
       column += yyleng;
@@ -1252,7 +1178,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 318 "tokenizer.l"
+#line 243 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN};
       char_count += yyleng;
       column += yyleng;
@@ -1261,7 +1187,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 323 "tokenizer.l"
+#line 248 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN_PLUS};
       char_count += yyleng;
       column += yyleng;
@@ -1270,7 +1196,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 328 "tokenizer.l"
+#line 253 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN_MINUS};
       char_count += yyleng;
       column += yyleng;
@@ -1279,7 +1205,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 333 "tokenizer.l"
+#line 258 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN_MULT};
       char_count += yyleng;
       column += yyleng;
@@ -1288,7 +1214,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 338 "tokenizer.l"
+#line 263 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN_DIV};
       char_count += yyleng;
       column += yyleng;
@@ -1297,7 +1223,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 343 "tokenizer.l"
+#line 268 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ASSIGN_MOD};
       char_count += yyleng;
       column += yyleng;
@@ -1306,7 +1232,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 348 "tokenizer.l"
+#line 273 "tokenizer.l"
 { lval val = {yylineno, column, yytext, EQUALS};
       char_count += yyleng;
       column += yyleng;
@@ -1315,7 +1241,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 353 "tokenizer.l"
+#line 278 "tokenizer.l"
 { lval val = {yylineno, column, yytext, DIFF};
       char_count += yyleng;
       column += yyleng;
@@ -1324,7 +1250,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 358 "tokenizer.l"
+#line 283 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LT};
       char_count += yyleng;
       column += yyleng;
@@ -1333,7 +1259,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 363 "tokenizer.l"
+#line 288 "tokenizer.l"
 { lval val = {yylineno, column, yytext, GT};
       char_count += yyleng;
       column += yyleng;
@@ -1342,7 +1268,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 368 "tokenizer.l"
+#line 293 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LEQ};
       char_count += yyleng;
       column += yyleng;
@@ -1351,7 +1277,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 373 "tokenizer.l"
+#line 298 "tokenizer.l"
 { lval val = {yylineno, column, yytext, GEQ};
       char_count += yyleng;
       column += yyleng;
@@ -1360,7 +1286,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 378 "tokenizer.l"
+#line 303 "tokenizer.l"
 { lval val = {yylineno, column, yytext, OR};
             char_count += yyleng;
             column += yyleng;
@@ -1369,7 +1295,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 383 "tokenizer.l"
+#line 308 "tokenizer.l"
 { lval val = {yylineno, column, yytext, AND};
             char_count += yyleng;
             column += yyleng;
@@ -1378,7 +1304,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 388 "tokenizer.l"
+#line 313 "tokenizer.l"
 { lval val = {yylineno, column, yytext, NOT};
             char_count += yyleng;
             column += yyleng;
@@ -1387,7 +1313,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 394 "tokenizer.l"
+#line 319 "tokenizer.l"
 { lval val = {yylineno, column, yytext, TRUE};
           char_count += yyleng;
           column += yyleng;
@@ -1396,7 +1322,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 399 "tokenizer.l"
+#line 324 "tokenizer.l"
 { lval val = {yylineno, column, yytext, FALSE};
           char_count += yyleng;
           column += yyleng;
@@ -1405,7 +1331,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 404 "tokenizer.l"
+#line 329 "tokenizer.l"
 { lval val = {yylineno, column, yytext, CHARACTER};
       char_count += yyleng;
       column += yyleng;
@@ -1414,7 +1340,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 409 "tokenizer.l"
+#line 334 "tokenizer.l"
 { lval val = {yylineno, column, yytext, NUMBER};
                      char_count += yyleng;
                      column += yyleng;
@@ -1424,7 +1350,7 @@ YY_RULE_SETUP
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 414 "tokenizer.l"
+#line 339 "tokenizer.l"
 { lval val = {yylineno, column, yytext, STRING};
                                   char_count += yyleng;
                                   column += yyleng;
@@ -1433,7 +1359,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 420 "tokenizer.l"
+#line 345 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LEFT_PAREN};
      char_count += yyleng;
      column += yyleng;
@@ -1442,7 +1368,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 425 "tokenizer.l"
+#line 350 "tokenizer.l"
 { lval val = {yylineno, column, yytext, RIGHT_PAREN};
      char_count += yyleng;
      column += yyleng;
@@ -1451,7 +1377,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 430 "tokenizer.l"
+#line 355 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LEFT_BRACE};
      char_count += yyleng;
      column += yyleng;
@@ -1460,7 +1386,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 435 "tokenizer.l"
+#line 360 "tokenizer.l"
 { lval val = {yylineno, column, yytext, RIGHT_BRACE};
      char_count += yyleng;
      column += yyleng;
@@ -1469,7 +1395,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 440 "tokenizer.l"
+#line 365 "tokenizer.l"
 { lval val = {yylineno, column, yytext, LEFT_BRACKET};
      char_count += yyleng;
      column += yyleng;
@@ -1478,7 +1404,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 445 "tokenizer.l"
+#line 370 "tokenizer.l"
 { lval val = {yylineno, column, yytext, RIGHT_BRACKET};
      char_count += yyleng;
      column += yyleng;
@@ -1487,7 +1413,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 451 "tokenizer.l"
+#line 376 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ID};
                          symbol sym = {-1, yytext, NULL, false, val};
                          //add(sym_table, yytext);
@@ -1498,7 +1424,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 459 "tokenizer.l"
+#line 384 "tokenizer.l"
 { lval val = {yylineno, column, yytext, SEMICOLON};
        char_count += yyleng;
        column += yyleng;
@@ -1507,7 +1433,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 464 "tokenizer.l"
+#line 389 "tokenizer.l"
 { lval val = {yylineno, column, yytext, QUESTION_MARK};
        char_count += yyleng;
        column += yyleng;
@@ -1516,7 +1442,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 469 "tokenizer.l"
+#line 394 "tokenizer.l"
 { lval val = {yylineno, column, yytext, COLON};
        char_count += yyleng;
        column += yyleng;
@@ -1525,7 +1451,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 474 "tokenizer.l"
+#line 399 "tokenizer.l"
 { lval val = {yylineno, column, yytext, DOT};
        char_count += yyleng;
        column += yyleng;
@@ -1534,7 +1460,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 479 "tokenizer.l"
+#line 404 "tokenizer.l"
 { lval val = {yylineno, column, yytext, POINTER_VAL};
        char_count += yyleng;
        column += yyleng;
@@ -1543,7 +1469,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 484 "tokenizer.l"
+#line 409 "tokenizer.l"
 { lval val = {yylineno, column, yytext, ARROW};
        char_count += yyleng;
        column += yyleng;
@@ -1552,7 +1478,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 489 "tokenizer.l"
+#line 414 "tokenizer.l"
 { lval val = {yylineno, column, yytext, COMMA};
        char_count += yyleng;
        column += yyleng;
@@ -1561,7 +1487,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 494 "tokenizer.l"
+#line 419 "tokenizer.l"
 { lval val = {yylineno, column, yytext, INCREMENT};
        char_count += yyleng;
        column += yyleng;
@@ -1570,7 +1496,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 499 "tokenizer.l"
+#line 424 "tokenizer.l"
 { lval val = {yylineno, column, yytext, DECREMENT};
        char_count += yyleng;
        column += yyleng;
@@ -1579,7 +1505,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 504 "tokenizer.l"
+#line 429 "tokenizer.l"
 { lval val = {yylineno, column, yytext, REFERENCE};
        char_count += yyleng;
        column += yyleng;
@@ -1588,7 +1514,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 509 "tokenizer.l"
+#line 434 "tokenizer.l"
 { lval val = {yylineno, column, yytext, TERNARY};
        char_count += yyleng;
        column += yyleng;
@@ -1597,15 +1523,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 515 "tokenizer.l"
+#line 440 "tokenizer.l"
 { char_count += yyleng; }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 516 "tokenizer.l"
+#line 441 "tokenizer.l"
 ECHO;
 	YY_BREAK
-#line 1609 "lex.yy.c"
+#line 1535 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2610,7 +2536,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 516 "tokenizer.l"
+#line 441 "tokenizer.l"
 
 
 void print(node *root)

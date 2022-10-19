@@ -1,82 +1,8 @@
 %option noyywrap
 
 %{
-enum tokens {
-    /* reserved words */
-    ENDOFFILE, //0
-    IF,
-    ENDIF,
-    ELSE,
-    SWITCH,
-    CASE,
-    FOR,
-    LOOP,
-    RETURN,
-    STRUCT,
-    CONST,
-    BREAK,
-    CONTINUE,
-    READ,
-    WRITE,
-    EXIT,
-    WHEN,
-    FUNCTION,
-    /* primitive types */
-    INT,
-    REAL,
-    CHAR,
-    STR,
-    BOOL,
-    VOID,
-    /* operations (arithmetic, boolean, etc) */
-    PLUS,
-    MINUS,
-    TIMES,
-    DIV,
-    MOD,
-    ASSIGN,
-    ASSIGN_PLUS,
-    ASSIGN_MINUS,
-    ASSIGN_MULT,
-    ASSIGN_DIV,
-    ASSIGN_MOD,
-    EQUALS,
-    DIFF,
-    LT,
-    GT,
-    LEQ,
-    GEQ,
-    OR,
-    AND,
-    NOT,
-    /* primitive values */
-    TRUE,
-    FALSE,
-    NUMBER,
-    CHARACTER,
-    STRING,
-    /* pairs */
-    LEFT_PAREN,
-    RIGHT_PAREN,
-    LEFT_BRACE,
-    RIGHT_BRACE,
-    LEFT_BRACKET,
-    RIGHT_BRACKET,
-    /* other constructs */
-    ID,
-    DOT,
-    COLON,
-    COMMA,
-    SEMICOLON,
-    QUESTION_MARK,
-    POINTER_VAL,                /* # */
-    ARROW,						/* -> */
-    INCREMENT,                  /* ++ */
-    DECREMENT,                  /* -- */
-    REFERENCE,                  /* & */
-    TERNARY                     /* $ */
+#include "y.tab.h"
 
-};
 
 
 int column = 0;
@@ -90,7 +16,7 @@ typedef struct lval_s {
     int token;
 } lval;
 
-//typedef enum { false, true } bool;
+typedef enum { false, true } bool;
 
 /* all we have as symbols for the symbol table are identifiers. other possible
    symbols are, for example, goto labels */
@@ -158,7 +84,6 @@ node *find(node *root, char *word)
     return tmp;
 }
 
-node *sym_table;
 %}
 
 dig         [0-9]
