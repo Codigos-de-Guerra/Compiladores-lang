@@ -105,7 +105,7 @@ literal : NUMBER {}
       | CHARACTER {}
       | TRUE {}
       | FALSE {}
-      | STRING {};;
+      | STRING {};
 cochetezeromais : /*epsilon*/ {}
       | LEFT_BRACKET inside_cochete RIGHT_BRACKET cochetezeromais {};
 inside_cochete : idAfterRule {}

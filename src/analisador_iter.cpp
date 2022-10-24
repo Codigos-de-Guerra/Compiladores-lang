@@ -2255,6 +2255,8 @@ void T_EXPR_BINMAYBE(void) {
 }
 
 int main(){
+  int a = 1-2;
+  cout<<a<<endl;
     advance();
     T_S();
 }

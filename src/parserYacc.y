@@ -1,10 +1,93 @@
 %{
 #include <stdio.h>
-
+#include<stdlib.h>
 int yylex(void);
 int yyerror(char *s);
 extern int yylineno;
 extern char * yytext;
+
+
+
+typedef struct lval_s {
+    int line;
+    int col;
+    /* the value of the token. if it is the number 0, this is going to be 0 */
+    char *lexeme;
+    int token;
+} lval;
+
+typedef enum { false, true } bool;
+
+/* all we have as symbols for the symbol table are identifiers. other possible
+   symbols are, for example, goto labels */
+typedef struct symbol_s {
+    int scope;
+    /* this is the actual name of the symbol. an id 'foo' has the name foo */
+    char *name;
+    char *type;
+    bool is_const;
+    lval val;
+} symbol;
+
+// since we have 128 ASCII characters, that's the max number of children our
+// trie can have, even though we won't use all of them
+#define N 128
+
+typedef struct node_s {
+    struct node_s *children[N];
+    symbol sym;
+    bool is_leaf;
+} node;
+
+node* root;
+
+node *initialize()
+{
+    node *novo = (node*) calloc(1, sizeof(node));
+    for (int i = 0; i < N; i++) novo->children[i] = NULL;
+    novo->is_leaf = 0;
+
+    return novo;
+}
+
+void adiciona(symbol simbolo)
+{
+    node *tmp = root;
+      char* word = simbolo.name;
+    for (int i = 0; word[i] != '\0'; i++) {
+        /* get the relative position in the alphabet list */
+        int position = (int) word[i] - 'a';
+
+        if (tmp->children[position] == NULL)
+            tmp->children[position] = initialize();
+
+        tmp = tmp->children[position];
+    }
+
+    tmp->is_leaf = 1;
+
+      tmp->sym = simbolo;
+}
+
+node *acha(symbol simbolo)
+{
+    /* searches for word in the trie */
+    node *tmp = root;
+char* word = simbolo.name;
+    for(int i = 0; word[i] != '\0'; i++)
+    {
+        int position = word[i] - 'a';
+        if (tmp->children[position] == NULL) return NULL;
+        tmp = tmp->children[position];
+    }
+
+    if (tmp != NULL && tmp->is_leaf == 1) return tmp;
+
+    return NULL;
+}
+
+
+
 
 %}
 
@@ -21,171 +104,183 @@ extern char * yytext;
 %nonassoc EQUALS DIFF LT GT LEQ GEQ
 %% /* Inicio da segunda seção, onde colocamos as regras BNF */
 
-prog : stmts {printf(" stmts ");};
+prog : stmts {
+      char* c1 = "adicionar";
+      symbol s;
+      s.name = c1;
+      adiciona(s);
+      printf("%d",acha(s)==NULL);
+};
 
-stmts : /* epsilon */ {printf(" /* epsilon */ ");}
-      | stmt stmts {printf(" stmt stmts ");};
+stmts : /* epsilon */ {}
+      | stmt stmts {};
 
-stmt : decl_fun {printf(" decl_fun ");}
-      | cmd {printf(" cmd ");};
+stmt : decl_fun {}
+      | cmd {};
 
-decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {printf(" FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block ");};
+decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {};
 
-cmd : cmd_decl_var SEMICOLON {printf(" cmd_decl_var SEMICOLON ");}
-      | inOut SEMICOLON {printf(" inOut SEMICOLON ");}
-      | cmd_loop {printf(" cmd_loop ");}
-      | cmd_cond {printf(" cmd_cond ");}
-      | cmd_switch {printf(" cmd_switch ");}
-      | expr SEMICOLON {printf(" expr SEMICOLON ");}
-      | RETURN expr SEMICOLON {printf(" RETURN expr SEMICOLON ");}
-      | BREAK SEMICOLON {printf(" BREAK SEMICOLON ");}
-      | CONTINUE SEMICOLON {printf(" CONTINUE SEMICOLON ");}
-      | EXIT WHEN expr SEMICOLON {printf(" EXIT WHEN expr SEMICOLON ");}
-      | block {printf(" block ");};
+cmd :  identifier assign_expr SEMICOLON {}
+      |cmd_decl_var SEMICOLON {}
+      | inOut SEMICOLON {}
+      | cmd_loop {}
+      | cmd_cond {}
+      | cmd_switch {}
+      | expr SEMICOLON {}
+      | RETURN expr SEMICOLON {}
+      | BREAK SEMICOLON {}
+      | CONTINUE SEMICOLON {}
+      | EXIT WHEN expr SEMICOLON {}
+      | block {};
 
-cmd_decl_var : all_decl_var assign_expr_maybe {printf(" all_decl_var assign_expr_maybe ");};
+cmd_decl_var : all_decl_var assign_expr_maybe {};
 
-assign_expr_maybe : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | assign_expr {printf(" assign_expr ");};
-
-all_decl_var : decl_var_prim {printf(" decl_var_prim ");}
-            | const_decl_var {printf(" const_decl_var ");};
-
-decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {printf(" primitivos hashtagzeromais cochetezeromais ID ");};
-
-const_decl_var : CONST decl_var_prim {printf(" CONST decl_var_prim ");};
-
-hashtagzeromais : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | POINTER_VAL hashtagzeromais {printf(" POINTER_VAL hashtagzeromais ");};
+assign_expr_maybe : /*epsilon*/ {}
+      | assign_expr {};
 
 
-cochetezeromais : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | LEFT_BRACKET NUMBER RIGHT_BRACKET cochetezeromais {printf(" LEFT_BRACKET NUMBER RIGHT_BRACKET cochetezeromais ");};
+all_decl_var : decl_var_prim {}
+            | const_decl_var {};
 
-assign_expr : ASSIGN expr {printf(" ASSIGN expr ");}
-            | assign_extra expr {printf(" assign_extra expr ");}
-            | inc {printf(" inc ");};
+decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {};
+const_decl_var : CONST decl_var_prim {}; 
 
-assign_extra : ASSIGN_PLUS {printf(" ASSIGN_PLUS ");}
-      | ASSIGN_MINUS {printf(" ASSIGN_MINUS ");}
-      | ASSIGN_MULT {printf(" ASSIGN_MULT ");}
-      | ASSIGN_DIV {printf(" ASSIGN_DIV ");}
-      | ASSIGN_MOD {printf(" ASSIGN_MOD ");};
-
-inc : DECREMENT {printf(" DECREMENT ");}
-      | INCREMENT {printf(" INCREMENT ");};
-
-inOut : in {printf(" in ");}
-      | out {printf(" out ");};
-in : READ LEFT_PAREN ID RIGHT_PAREN {printf(" READ LEFT_PAREN ID RIGHT_PAREN ");};
-out : WRITE LEFT_PAREN ID RIGHT_PAREN {printf(" WRITE LEFT_PAREN ID RIGHT_PAREN ");};
-
-cmd_loop : for {printf(" for ");}
-      | loop {printf(" loop ");}
-
-cmd_cond : if {printf(" if ");};
-
-cmd_switch : switch {printf(" switch ");};
-
-for : FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd {printf(" FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd ");};
+hashtagzeromais : /*epsilon*/ {}
+      | POINTER_VAL hashtagzeromais {};
 
 
-loop : LOOP cmd {printf(" LOOP cmd ");};
+cochetezeromais : /*epsilon*/ {}
+      | LEFT_BRACKET NUMBER RIGHT_BRACKET cochetezeromais {};
 
-if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {printf(" IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else ");};
+assign_expr : ASSIGN expr {}
+            | assign_extra expr {}
+            | inc {};
 
-else :  /*epsilon*/ {printf("  /*epsilon*/ ");}
-      | ELSE cmd {printf(" ELSE cmd ");};
+assign_extra : ASSIGN_PLUS {}
+      | ASSIGN_MINUS {}
+      | ASSIGN_MULT {}
+      | ASSIGN_DIV {}
+      | ASSIGN_MOD {};
 
-switch : SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE {printf(" SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE ");};
+inc : DECREMENT {}
+      | INCREMENT {};
 
-casezeromais : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | case casezeromais {printf(" case casezeromais ");};
+inOut : in {}
+      | out {};
+in : READ LEFT_PAREN ID RIGHT_PAREN {};
+out : WRITE LEFT_PAREN ID RIGHT_PAREN {};
 
-case : CASE literal COLON stmts {printf(" CASE literal COLON stmts ");};
+cmd_loop : for {}
+      | loop {}
 
-type : typename {printf(" typename ");};
-typename : primitivos {printf(" primitivos ");}
-      | ID {printf(" ID ");};
+cmd_cond : if {};
 
-primitivos : INT {printf(" INT ");}
-      | REAL {printf(" REAL ");}
-      | CHAR {printf(" CHAR ");}
-      | BOOL {printf(" BOOL ");}
-      | STR {printf(" STR ");}
-      | VOID {printf(" VOID ");};
+cmd_switch : switch {};
 
-typedlpar : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | parameter typedlparAfter {printf(" parameter typedlparAfter ");}
-
-typedlparAfter : /*epsilon*/ {printf(" /*epsilon*/ ");}
-      | COMMA parameter typedlparAfter {printf(" COMMA parameter typedlparAfter ");};
-
-parameter : type parameterAfter {printf(" type parameterAfter ");};
-
-parameterAfter : ID {printf(" ID ");}
-      | REFERENCE ID {printf(" REFERENCE ID ");};
-
-block : LEFT_BRACE stmts RIGHT_BRACE {printf(" LEFT_BRACE stmts RIGHT_BRACE ");};
-
-expr : INCREMENT expr {printf(" INCREMENT expr ");}
-     | DECREMENT expr {printf(" DECREMENT expr ");}
-     | LEFT_PAREN expr RIGHT_PAREN {printf(" LEFT_PAREN expr RIGHT_PAREN ");}
-     | '-' identifier {printf(" '-' identifier ");}
-     | NOT expr {printf(" NOT expr ");}
-     | expr AND expr {printf(" expr AND expr ");}
-     | expr OR expr {printf(" expr OR expr ");}
-     | expr '+' expr {printf(" expr '+' expr ");}
-     | expr '*' expr {printf(" expr '*' expr ");}
-     | expr '/' expr {printf(" expr '/' expr ");}
-     | expr '-' expr {printf(" expr '-' expr ");} 
-     | expr '%' expr {printf(" expr 'mod' expr ");}
-     | expr EQUALS expr {printf(" expr EQUALS expr ");}
-     | expr DIFF expr {printf(" expr DIFF expr ");}
-     | expr LT expr {printf(" expr LT expr ");}
-     | expr GT expr {printf(" expr GT expr ");}
-     | expr LEQ expr {printf(" expr LEQ expr ");}
-     | expr GEQ expr {printf(" expr GEQ expr ");}
-     | expr_tern {printf(" expr_tern ");}
-     | NUMBER {printf(" NUMBER ");}
-     | identifier {printf(" identifier ");}
-     | TRUE {printf(" TRUE ");}
-     | FALSE {printf(" FALSE ");}
-     | CHARACTER {printf(" CHARACTER ");}
-     | STRING {printf(" STRING ");};
-
-expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {printf(" TERNARY expr QUESTION_MARK expr COLON expr TERNARY ");};
+for : FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd {};
 
 
+loop : LOOP cmd {};
 
-identifier : ID {printf(" ID ");} %prec '@'
-          | ID arrayAccess {printf(" ID arrayAccess ");}
-          | ID LEFT_PAREN lpar RIGHT_PAREN {printf(" ID LEFT_PAREN lpar RIGHT_PAREN ");}
-          | ID pointerAccess {printf(" ID pointerAccess ");};
+if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {};
+
+else :  /*epsilon*/ {}
+      | ELSE cmd {};
+
+switch : SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE {};
+
+casezeromais : /*epsilon*/ {}
+      | case casezeromais {};
+
+case : CASE literal COLON stmts {};
+
+type : typename {};
+typename : primitivos {}
+      | ID {};
+
+primitivos : INT {}
+      | REAL {}
+      | CHAR {}
+      | BOOL {}
+      | STR {}
+      | VOID {};
+
+typedlpar : /*epsilon*/ {}
+      | parameter typedlparAfter {}
+
+typedlparAfter : /*epsilon*/ {}
+      | COMMA parameter typedlparAfter {};
+
+parameter : type parameterAfter {};
+
+parameterAfter : ID {}
+      | REFERENCE ID {};
+
+block : LEFT_BRACE stmts RIGHT_BRACE {};
+
+expr : INCREMENT expr {}
+     | DECREMENT expr {}
+     | LEFT_PAREN expr RIGHT_PAREN {}
+     | '-' identifier {}
+     | NOT expr {}
+     | expr AND expr {}
+     | expr OR expr {}
+     | expr '+' expr {}
+     | expr '*' expr {}
+     | expr '/' expr {}
+     | expr '-' expr {} 
+     | expr '%' expr {}
+     | expr EQUALS expr {}
+     | expr DIFF expr {}
+     | expr LT expr {}
+     | expr GT expr {}
+     | expr LEQ expr {}
+     | expr GEQ expr {}
+     | expr_tern {}
+     | NUMBER {}
+     | identifier {}
+     | TRUE {}
+     | FALSE {}
+     | CHARACTER {}
+     | STRING {};
+
+expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
 
-arrayAccess : LEFT_BRACKET expr RIGHT_BRACKET {printf(" LEFT_BRACKET expr RIGHT_BRACKET ");}
-               | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess {printf(" LEFT_BRACKET expr RIGHT_BRACKET arrayAccess ");};
+
+identifier : ID {} %prec '@'
+          | ID arrayAccess {}
+          | ID LEFT_PAREN lpar RIGHT_PAREN {}
+          | ID pointerAccess {};
+
+
+arrayAccess : LEFT_BRACKET expr RIGHT_BRACKET {}
+               | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess {};
 
 
 lpar : /*epsilon*/ |
        expr lparAfter {};
 
-lparAfter :  /*epsilon*/ {printf("  /*epsilon*/ ");}
-      | COMMA expr lparAfter {printf(" COMMA expr lparAfter ");};
+lparAfter :  /*epsilon*/ {}
+      | COMMA expr lparAfter {};
 
-pointerAccess : ARROW ID {printf(" ARROW ID ");}
-               | ARROW ID pointerAccess {printf(" ARROW ID pointerAccess ");};
+pointerAccess : ARROW ID {}
+               | ARROW ID pointerAccess {};
 
-literal : NUMBER {printf(" NUMBER ");}
-      | CHARACTER {printf(" CHARACTER ");}
-      | TRUE {printf(" TRUE ");}
-      | FALSE {printf(" FALSE ");}
-      | STRING {printf(" STRING ");};
+literal : NUMBER {}
+      | CHARACTER {}
+      | TRUE {}
+      | FALSE {}
+      | STRING {};
 
 %% /* Fim da segunda seção */
 
+
+
+
+
 int main (void) {
+      root = initialize();
 	return yyparse();
 }
 

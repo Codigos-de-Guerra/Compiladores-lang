@@ -81,7 +81,7 @@ node *find(node *root, char *word)
 
     if (tmp != NULL && tmp->is_leaf == 1) return tmp;
 
-    return tmp;
+    return NULL;
 }
 
 %}
