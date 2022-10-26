@@ -1,6 +1,8 @@
 %{
 #include <stdio.h>
 #include<stdlib.h>
+#include <string.h>
+#include "customString.c"
 int yylex(void);
 int yyerror(char *s);
 extern int yylineno;
@@ -86,10 +88,104 @@ char* word = simbolo.name;
     return NULL;
 }
 
+//<string implementation from https://gist.github.com/water-air-flash/fb74ab18c53c485769c2a6cd1b81f082>
 
+string *str_create(char *init) {
+    string *s = (string *)malloc(sizeof(string));
+
+    if(!s) return NULL;
+
+    s->size = MAX(strlen(init) + 1, STRSIZE);
+    s->str = (char *)malloc(s->size);
+
+    strcpy(s->str, init);
+
+    return s;
+}
+
+void str_free(string *s) {
+    free(s->str);
+    free(s);
+}
+
+void str_growto(string *s, unsigned int newsize) {
+    if(newsize <= s->size) return;
+
+    unsigned int oldsize = s->size;
+
+    while(s->size < newsize)
+        s->size *= 2;
+    
+    s->str = (char *)realloc((void *)s->str, s->size);
+
+    memset((void *)(s->str + oldsize), '\0', s->size - oldsize);
+}
+
+void str_grow(string *s) {
+    str_growto(s, s->size * 2);
+}
+
+void str_shrink(string *s) {
+    s->size /= 2;
+    s->size = MAX(s->size, STRSIZE);
+    s->str = (char *)realloc((void *)s->str, s->size);
+    s->str[s->size-1] = '\0';
+}
+
+unsigned int str_sizeof(string *s) {
+    return s->size;
+}
+
+unsigned int str_length(string *s) {
+    return strlen(s->str);
+}
+
+char str_getc(string *s, unsigned int index) {
+    if(index >= s->size) return '\0';
+
+    return s->str[index];
+}
+
+char *str_get(string *s) {
+    return s->str;
+}
+
+void str_append(string *s, char *app) {
+    int len = strlen(s->str);
+
+    str_growto(s, s->size + len);
+
+    int i;
+    for(i = 0; i < strlen(app); i++) {
+        s->str[len+i] = app[i];
+    }
+}
+
+void str_cappend(string *s, char c) {
+    unsigned int len = strlen(s->str);
+
+    if(len >= s->size-1)
+        str_grow(s);
+
+    s->str[len] = c;
+}
+
+void str_set(string *s, char *newstr) {
+    str_growto(s, s->size + strlen(newstr));
+    strcpy(s->str, newstr);
+}
+
+//</string implementation>
 
 
 %}
+
+
+
+
+%union {
+       string* tipo;
+      }
 
 %token '[' IF ENDIF ELSE SWITCH CASE FOR LOOP RETURN STRUCT CONST BREAK CONTINUE READ WRITE EXIT WHEN FUNCTION INT REAL CHAR STR BOOL VOID PLUS MINUS TIMES DIV MOD TRUE FALSE NUMBER CHARACTER STRING LEFT_BRACE RIGHT_BRACE LEFT_BRACKET RIGHT_BRACKET ID SEMICOLON QUESTION_MARK COLON DOT POINTER_VAL ARROW COMMA REFERENCE TERNARY ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MULT ASSIGN_DIV ASSIGN_MOD ASSIGN
 %start prog
@@ -102,6 +198,7 @@ char* word = simbolo.name;
 %left '-' '+'
 %left '*' '/' '%'
 %nonassoc EQUALS DIFF LT GT LEQ GEQ
+
 %% /* Inicio da segunda seção, onde colocamos as regras BNF */
 
 prog : stmts {
@@ -150,7 +247,7 @@ hashtagzeromais : /*epsilon*/ {}
 
 
 cochetezeromais : /*epsilon*/ {}
-      | LEFT_BRACKET NUMBER RIGHT_BRACKET cochetezeromais {};
+      | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {};
 
 assign_expr : ASSIGN expr {}
             | assign_extra expr {}
@@ -237,12 +334,8 @@ expr : INCREMENT expr {}
      | expr LEQ expr {}
      | expr GEQ expr {}
      | expr_tern {}
-     | NUMBER {}
-     | identifier {}
-     | TRUE {}
-     | FALSE {}
-     | CHARACTER {}
-     | STRING {};
+     | literal {}
+     | identifier {};
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
@@ -258,7 +351,7 @@ arrayAccess : LEFT_BRACKET expr RIGHT_BRACKET {}
                | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess {};
 
 
-lpar : /*epsilon*/ |
+lpar : /*epsilon*/ { }|
        expr lparAfter {};
 
 lparAfter :  /*epsilon*/ {}
@@ -267,11 +360,11 @@ lparAfter :  /*epsilon*/ {}
 pointerAccess : ARROW ID {}
                | ARROW ID pointerAccess {};
 
-literal : NUMBER {}
-      | CHARACTER {}
-      | TRUE {}
-      | FALSE {}
-      | STRING {};
+literal : NUMBER {$<tipo>$ = str_create("NUMBER");}
+      | CHARACTER {$<tipo>$ = str_create("CHAR");}
+      | TRUE {$<tipo>$ = str_create("BOOL");}
+      | FALSE {$<tipo>$ = str_create("BOOL");}
+      | STRING {$<tipo>$ = str_create("STRING");};
 
 %% /* Fim da segunda seção */
 
@@ -281,7 +374,8 @@ literal : NUMBER {}
 
 int main (void) {
       root = initialize();
-	return yyparse();
+
+      //return yyparse();
 }
 
 int yyerror (char *msg) {

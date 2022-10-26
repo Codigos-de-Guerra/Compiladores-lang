@@ -1,6 +1,8 @@
 %option noyywrap
 
 %{
+#include "customString.c"
+
 #include "y.tab.h"
 
 
