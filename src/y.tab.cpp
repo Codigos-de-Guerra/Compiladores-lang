@@ -79,36 +79,41 @@ extern int yylineno;
 extern char * yytext;
 
 
-
-typedef struct lval_s {
+ struct lval {
     int line;
     int col;
     /* the value of the token. if it is the number 0, this is going to be 0 */
-    char *lexeme;
+    string lexeme;
     int token;
-} lval;
+    lval(){
+
+    }
+};
 
 
 /* all we have as symbols for the symbol table are identifiers. other possible
    symbols are, for example, goto labels */
-typedef struct symbol_s {
-    int scope;
+struct symbol {
+    int scope = 0;
     /* this is the actual name of the symbol. an id 'foo' has the name foo */
-    char *name;
-    char *type;
-    bool is_const;
+    string name = "";
+    string type = "";
+    bool is_const= false;
     lval val;
-} symbol;
+    symbol(){
+
+    }
+};
 
 // since we have 128 ASCII characters, that's the max number of children our
 // trie can have, even though we won't use all of them
 #define N 128
 
-typedef struct node_s {
-    struct node_s *children[N];
+struct node {
+    struct node *children[N];
     symbol sym;
     bool is_leaf;
-} node;
+};
 
 node* root;
 
@@ -124,28 +129,31 @@ node *initialize()
 void adiciona(symbol simbolo)
 {
     node *tmp = root;
-      char* word = simbolo.name;
-    for (int i = 0; word[i] != '\0'; i++) {
+    string word = simbolo.name;
+    for (int i = 0; i<word.size(); i++) {
         /* get the relative position in the alphabet list */
+        
         int position = (int) word[i] - 'a';
 
-        if (tmp->children[position] == NULL)
+        if (tmp->children[position] == NULL){
+            
             tmp->children[position] = initialize();
+        }
 
         tmp = tmp->children[position];
     }
 
-    tmp->is_leaf = 1;
-
-      tmp->sym = simbolo;
+      
+      tmp->is_leaf = 1;
+      tmp->sym.name =  simbolo.name;
 }
 
 node *acha(symbol simbolo)
 {
     /* searches for word in the trie */
     node *tmp = root;
-char* word = simbolo.name;
-    for(int i = 0; word[i] != '\0'; i++)
+    string word = simbolo.name;
+    for(int i = 0; i<word.size(); i++)
     {
         int position = word[i] - 'a';
         if (tmp->children[position] == NULL) return NULL;
@@ -158,10 +166,10 @@ char* word = simbolo.name;
 }
 
 
+map<string,string> symtable;
 
 
-
-#line 165 "y.tab.cpp"
+#line 173 "y.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -721,18 +729,18 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   116,   116,   120,   121,   123,   124,   126,   128,   129,
-     130,   131,   132,   133,   134,   135,   136,   137,   138,   139,
-     141,   143,   144,   147,   148,   150,   151,   153,   154,   157,
-     158,   160,   161,   162,   164,   165,   166,   167,   168,   170,
-     171,   173,   174,   175,   176,   178,   179,   181,   183,   185,
-     188,   190,   192,   193,   195,   197,   198,   200,   202,   203,
-     204,   206,   207,   208,   209,   210,   211,   213,   214,   216,
-     217,   219,   221,   222,   224,   226,   227,   228,   229,   230,
-     231,   232,   233,   234,   235,   236,   237,   238,   239,   240,
-     241,   242,   243,   244,   245,   246,   248,   252,   253,   254,
-     255,   258,   259,   262,   263,   265,   266,   268,   269,   271,
-     272,   273,   274,   275
+       0,   134,   134,   137,   138,   140,   141,   143,   145,   148,
+     149,   150,   151,   152,   153,   154,   155,   156,   157,   158,
+     160,   164,   165,   167,   168,   170,   173,   177,   178,   181,
+     182,   184,   185,   186,   188,   189,   190,   191,   192,   194,
+     195,   197,   198,   199,   200,   202,   203,   205,   207,   209,
+     212,   214,   216,   217,   219,   221,   222,   224,   226,   227,
+     228,   230,   231,   232,   233,   234,   235,   237,   238,   240,
+     241,   243,   245,   246,   248,   250,   251,   252,   253,   254,
+     255,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   272,   276,   279,   280,
+     281,   284,   285,   288,   289,   291,   292,   294,   295,   297,
+     298,   299,   300,   301
 };
 #endif
 
@@ -1744,681 +1752,690 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 116 "parserYacc.y"
+#line 134 "parserYacc.y"
              {
-
 }
-#line 1752 "y.tab.cpp"
+#line 1759 "y.tab.cpp"
     break;
 
   case 3:
-#line 120 "parserYacc.y"
+#line 137 "parserYacc.y"
                       {}
-#line 1758 "y.tab.cpp"
+#line 1765 "y.tab.cpp"
     break;
 
   case 4:
-#line 121 "parserYacc.y"
+#line 138 "parserYacc.y"
                    {}
-#line 1764 "y.tab.cpp"
+#line 1771 "y.tab.cpp"
     break;
 
   case 5:
-#line 123 "parserYacc.y"
+#line 140 "parserYacc.y"
                 {}
-#line 1770 "y.tab.cpp"
+#line 1777 "y.tab.cpp"
     break;
 
   case 6:
-#line 124 "parserYacc.y"
+#line 141 "parserYacc.y"
             {}
-#line 1776 "y.tab.cpp"
+#line 1783 "y.tab.cpp"
     break;
 
   case 7:
-#line 126 "parserYacc.y"
+#line 143 "parserYacc.y"
                                                                    {}
-#line 1782 "y.tab.cpp"
+#line 1789 "y.tab.cpp"
     break;
 
   case 8:
-#line 128 "parserYacc.y"
-                                        {}
-#line 1788 "y.tab.cpp"
+#line 145 "parserYacc.y"
+                                        {
+            (yyval.cmdRetorno) = new cmd((yyvsp[-2].identifierRetorno),(yyvsp[-1].assign_exprRetorno));
+      }
+#line 1797 "y.tab.cpp"
     break;
 
   case 9:
-#line 129 "parserYacc.y"
-                              {}
-#line 1794 "y.tab.cpp"
+#line 148 "parserYacc.y"
+                              {(yyval.cmdRetorno) = new cmd((yyvsp[-1].cmd_decl_varRetorno));}
+#line 1803 "y.tab.cpp"
     break;
 
   case 10:
-#line 130 "parserYacc.y"
+#line 149 "parserYacc.y"
                         {}
-#line 1800 "y.tab.cpp"
+#line 1809 "y.tab.cpp"
     break;
 
   case 11:
-#line 131 "parserYacc.y"
+#line 150 "parserYacc.y"
                  {}
-#line 1806 "y.tab.cpp"
+#line 1815 "y.tab.cpp"
     break;
 
   case 12:
-#line 132 "parserYacc.y"
+#line 151 "parserYacc.y"
                  {}
-#line 1812 "y.tab.cpp"
+#line 1821 "y.tab.cpp"
     break;
 
   case 13:
-#line 133 "parserYacc.y"
+#line 152 "parserYacc.y"
                    {}
-#line 1818 "y.tab.cpp"
+#line 1827 "y.tab.cpp"
     break;
 
   case 14:
-#line 134 "parserYacc.y"
+#line 153 "parserYacc.y"
                        {}
-#line 1824 "y.tab.cpp"
+#line 1833 "y.tab.cpp"
     break;
 
   case 15:
-#line 135 "parserYacc.y"
+#line 154 "parserYacc.y"
                               {}
-#line 1830 "y.tab.cpp"
+#line 1839 "y.tab.cpp"
     break;
 
   case 16:
-#line 136 "parserYacc.y"
+#line 155 "parserYacc.y"
                         {}
-#line 1836 "y.tab.cpp"
+#line 1845 "y.tab.cpp"
     break;
 
   case 17:
-#line 137 "parserYacc.y"
+#line 156 "parserYacc.y"
                            {}
-#line 1842 "y.tab.cpp"
+#line 1851 "y.tab.cpp"
     break;
 
   case 18:
-#line 138 "parserYacc.y"
+#line 157 "parserYacc.y"
                                  {}
-#line 1848 "y.tab.cpp"
+#line 1857 "y.tab.cpp"
     break;
 
   case 19:
-#line 139 "parserYacc.y"
+#line 158 "parserYacc.y"
               {}
-#line 1854 "y.tab.cpp"
+#line 1863 "y.tab.cpp"
     break;
 
   case 20:
-#line 141 "parserYacc.y"
-                                              {}
-#line 1860 "y.tab.cpp"
+#line 160 "parserYacc.y"
+                                              {
+      (yyval.cmd_decl_varRetorno) = new cmd_decl_var((yyvsp[-1].all_decl_varRetorno),(yyvsp[0].assign_expr_maybeRetorno));
+      }
+#line 1871 "y.tab.cpp"
     break;
 
   case 21:
-#line 143 "parserYacc.y"
-                                {}
-#line 1866 "y.tab.cpp"
+#line 164 "parserYacc.y"
+                                {(yyval.assign_expr_maybeRetorno) = NULL;}
+#line 1877 "y.tab.cpp"
     break;
 
   case 22:
-#line 144 "parserYacc.y"
-                    {}
-#line 1872 "y.tab.cpp"
+#line 165 "parserYacc.y"
+                    {(yyval.assign_expr_maybeRetorno) = new assign_expr_maybe();}
+#line 1883 "y.tab.cpp"
     break;
 
   case 23:
-#line 147 "parserYacc.y"
-                             {}
-#line 1878 "y.tab.cpp"
+#line 167 "parserYacc.y"
+                             {(yyval.all_decl_varRetorno) = new all_decl_var((yyvsp[0].decl_var_primRetorno),symtable);}
+#line 1889 "y.tab.cpp"
     break;
 
   case 24:
-#line 148 "parserYacc.y"
-                             {}
-#line 1884 "y.tab.cpp"
+#line 168 "parserYacc.y"
+                             {(yyval.all_decl_varRetorno) = new all_decl_var((yyvsp[0].const_decl_varRetorno),symtable);}
+#line 1895 "y.tab.cpp"
     break;
 
   case 25:
-#line 150 "parserYacc.y"
-                                                              {}
-#line 1890 "y.tab.cpp"
+#line 170 "parserYacc.y"
+                                                              {
+      (yyval.decl_var_primRetorno) = new decl_var_prim((yyvsp[-3].primitivosRetorno),(yyvsp[-2].hashtagzeromaisRetorno),(yyvsp[-1].cochetezeromaisRetorno),yytext);
+}
+#line 1903 "y.tab.cpp"
     break;
 
   case 26:
-#line 151 "parserYacc.y"
-                                     {}
-#line 1896 "y.tab.cpp"
+#line 173 "parserYacc.y"
+                                     {
+      (yyval.const_decl_varRetorno) = new const_decl_var((yyvsp[0].decl_var_primRetorno));
+}
+#line 1911 "y.tab.cpp"
     break;
 
   case 27:
-#line 153 "parserYacc.y"
-                              {}
-#line 1902 "y.tab.cpp"
+#line 177 "parserYacc.y"
+                              {(yyval.hashtagzeromaisRetorno) = NULL;}
+#line 1917 "y.tab.cpp"
     break;
 
   case 28:
-#line 154 "parserYacc.y"
-                                    {}
-#line 1908 "y.tab.cpp"
+#line 178 "parserYacc.y"
+                                    {(yyval.hashtagzeromaisRetorno) = new hashtagzeromais((yyvsp[0].hashtagzeromaisRetorno));}
+#line 1923 "y.tab.cpp"
     break;
 
   case 29:
-#line 157 "parserYacc.y"
-                              {}
-#line 1914 "y.tab.cpp"
+#line 181 "parserYacc.y"
+                              {(yyval.cochetezeromaisRetorno) = NULL;}
+#line 1929 "y.tab.cpp"
     break;
 
   case 30:
-#line 158 "parserYacc.y"
-                                                        {}
-#line 1920 "y.tab.cpp"
+#line 182 "parserYacc.y"
+                                                        {(yyval.cochetezeromaisRetorno) = new cochetezeromais((yyvsp[0].cochetezeromaisRetorno));}
+#line 1935 "y.tab.cpp"
     break;
 
   case 31:
-#line 160 "parserYacc.y"
-                          {}
-#line 1926 "y.tab.cpp"
+#line 184 "parserYacc.y"
+                          {(yyval.assign_exprRetorno) = new assign_expr();}
+#line 1941 "y.tab.cpp"
     break;
 
   case 32:
-#line 161 "parserYacc.y"
-                                {}
-#line 1932 "y.tab.cpp"
+#line 185 "parserYacc.y"
+                                {(yyval.assign_exprRetorno) = new assign_expr();}
+#line 1947 "y.tab.cpp"
     break;
 
   case 33:
-#line 162 "parserYacc.y"
-                  {}
-#line 1938 "y.tab.cpp"
+#line 186 "parserYacc.y"
+                  {(yyval.assign_exprRetorno) = new assign_expr();}
+#line 1953 "y.tab.cpp"
     break;
 
   case 34:
-#line 164 "parserYacc.y"
+#line 188 "parserYacc.y"
                            {}
-#line 1944 "y.tab.cpp"
+#line 1959 "y.tab.cpp"
     break;
 
   case 35:
-#line 165 "parserYacc.y"
+#line 189 "parserYacc.y"
                      {}
-#line 1950 "y.tab.cpp"
+#line 1965 "y.tab.cpp"
     break;
 
   case 36:
-#line 166 "parserYacc.y"
+#line 190 "parserYacc.y"
                     {}
-#line 1956 "y.tab.cpp"
+#line 1971 "y.tab.cpp"
     break;
 
   case 37:
-#line 167 "parserYacc.y"
+#line 191 "parserYacc.y"
                    {}
-#line 1962 "y.tab.cpp"
+#line 1977 "y.tab.cpp"
     break;
 
   case 38:
-#line 168 "parserYacc.y"
+#line 192 "parserYacc.y"
                    {}
-#line 1968 "y.tab.cpp"
+#line 1983 "y.tab.cpp"
     break;
 
   case 39:
-#line 170 "parserYacc.y"
+#line 194 "parserYacc.y"
                 {}
-#line 1974 "y.tab.cpp"
+#line 1989 "y.tab.cpp"
     break;
 
   case 40:
-#line 171 "parserYacc.y"
+#line 195 "parserYacc.y"
                   {}
-#line 1980 "y.tab.cpp"
+#line 1995 "y.tab.cpp"
     break;
 
   case 41:
-#line 173 "parserYacc.y"
+#line 197 "parserYacc.y"
            {}
-#line 1986 "y.tab.cpp"
+#line 2001 "y.tab.cpp"
     break;
 
   case 42:
-#line 174 "parserYacc.y"
+#line 198 "parserYacc.y"
             {}
-#line 1992 "y.tab.cpp"
+#line 2007 "y.tab.cpp"
     break;
 
   case 43:
-#line 175 "parserYacc.y"
+#line 199 "parserYacc.y"
                                     {}
-#line 1998 "y.tab.cpp"
+#line 2013 "y.tab.cpp"
     break;
 
   case 44:
-#line 176 "parserYacc.y"
+#line 200 "parserYacc.y"
                                       {}
-#line 2004 "y.tab.cpp"
+#line 2019 "y.tab.cpp"
     break;
 
   case 45:
-#line 178 "parserYacc.y"
+#line 202 "parserYacc.y"
                {}
-#line 2010 "y.tab.cpp"
+#line 2025 "y.tab.cpp"
     break;
 
   case 46:
-#line 179 "parserYacc.y"
+#line 203 "parserYacc.y"
              {}
-#line 2016 "y.tab.cpp"
+#line 2031 "y.tab.cpp"
     break;
 
   case 47:
-#line 181 "parserYacc.y"
+#line 205 "parserYacc.y"
               {}
-#line 2022 "y.tab.cpp"
+#line 2037 "y.tab.cpp"
     break;
 
   case 48:
-#line 183 "parserYacc.y"
+#line 207 "parserYacc.y"
                     {}
-#line 2028 "y.tab.cpp"
+#line 2043 "y.tab.cpp"
     break;
 
   case 49:
-#line 185 "parserYacc.y"
+#line 209 "parserYacc.y"
                                                                         {}
-#line 2034 "y.tab.cpp"
+#line 2049 "y.tab.cpp"
     break;
 
   case 50:
-#line 188 "parserYacc.y"
+#line 212 "parserYacc.y"
                 {}
-#line 2040 "y.tab.cpp"
+#line 2055 "y.tab.cpp"
     break;
 
   case 51:
-#line 190 "parserYacc.y"
+#line 214 "parserYacc.y"
                                                    {}
-#line 2046 "y.tab.cpp"
+#line 2061 "y.tab.cpp"
     break;
 
   case 52:
-#line 192 "parserYacc.y"
+#line 216 "parserYacc.y"
                     {}
-#line 2052 "y.tab.cpp"
+#line 2067 "y.tab.cpp"
     break;
 
   case 53:
-#line 193 "parserYacc.y"
+#line 217 "parserYacc.y"
                  {}
-#line 2058 "y.tab.cpp"
+#line 2073 "y.tab.cpp"
     break;
 
   case 54:
-#line 195 "parserYacc.y"
+#line 219 "parserYacc.y"
                                                                                 {}
-#line 2064 "y.tab.cpp"
+#line 2079 "y.tab.cpp"
     break;
 
   case 55:
-#line 197 "parserYacc.y"
+#line 221 "parserYacc.y"
                            {}
-#line 2070 "y.tab.cpp"
+#line 2085 "y.tab.cpp"
     break;
 
   case 56:
-#line 198 "parserYacc.y"
+#line 222 "parserYacc.y"
                           {}
-#line 2076 "y.tab.cpp"
+#line 2091 "y.tab.cpp"
     break;
 
   case 57:
-#line 200 "parserYacc.y"
+#line 224 "parserYacc.y"
                                 {}
-#line 2082 "y.tab.cpp"
+#line 2097 "y.tab.cpp"
     break;
 
   case 58:
-#line 202 "parserYacc.y"
+#line 226 "parserYacc.y"
                 {}
-#line 2088 "y.tab.cpp"
+#line 2103 "y.tab.cpp"
     break;
 
   case 59:
-#line 203 "parserYacc.y"
+#line 227 "parserYacc.y"
                       {}
-#line 2094 "y.tab.cpp"
+#line 2109 "y.tab.cpp"
     break;
 
   case 60:
-#line 204 "parserYacc.y"
+#line 228 "parserYacc.y"
            {}
-#line 2100 "y.tab.cpp"
+#line 2115 "y.tab.cpp"
     break;
 
   case 61:
-#line 206 "parserYacc.y"
-                 {}
-#line 2106 "y.tab.cpp"
+#line 230 "parserYacc.y"
+                 {(yyval.primitivosRetorno) = new primitivos("INT");}
+#line 2121 "y.tab.cpp"
     break;
 
   case 62:
-#line 207 "parserYacc.y"
-             {}
-#line 2112 "y.tab.cpp"
+#line 231 "parserYacc.y"
+             {(yyval.primitivosRetorno) = new primitivos("REAL");}
+#line 2127 "y.tab.cpp"
     break;
 
   case 63:
-#line 208 "parserYacc.y"
-             {}
-#line 2118 "y.tab.cpp"
+#line 232 "parserYacc.y"
+             {(yyval.primitivosRetorno) = new primitivos("CHAR");}
+#line 2133 "y.tab.cpp"
     break;
 
   case 64:
-#line 209 "parserYacc.y"
-             {}
-#line 2124 "y.tab.cpp"
+#line 233 "parserYacc.y"
+             {(yyval.primitivosRetorno) = new primitivos("BOOL");}
+#line 2139 "y.tab.cpp"
     break;
 
   case 65:
-#line 210 "parserYacc.y"
-            {}
-#line 2130 "y.tab.cpp"
+#line 234 "parserYacc.y"
+            {(yyval.primitivosRetorno) = new primitivos("STRING");}
+#line 2145 "y.tab.cpp"
     break;
 
   case 66:
-#line 211 "parserYacc.y"
-             {}
-#line 2136 "y.tab.cpp"
+#line 235 "parserYacc.y"
+             {(yyval.primitivosRetorno) = new primitivos("VOID");}
+#line 2151 "y.tab.cpp"
     break;
 
   case 67:
-#line 213 "parserYacc.y"
+#line 237 "parserYacc.y"
                         {}
-#line 2142 "y.tab.cpp"
+#line 2157 "y.tab.cpp"
     break;
 
   case 68:
-#line 214 "parserYacc.y"
+#line 238 "parserYacc.y"
                                  {}
-#line 2148 "y.tab.cpp"
+#line 2163 "y.tab.cpp"
     break;
 
   case 69:
-#line 216 "parserYacc.y"
+#line 240 "parserYacc.y"
                              {}
-#line 2154 "y.tab.cpp"
+#line 2169 "y.tab.cpp"
     break;
 
   case 70:
-#line 217 "parserYacc.y"
+#line 241 "parserYacc.y"
                                        {}
-#line 2160 "y.tab.cpp"
+#line 2175 "y.tab.cpp"
     break;
 
   case 71:
-#line 219 "parserYacc.y"
+#line 243 "parserYacc.y"
                                 {}
-#line 2166 "y.tab.cpp"
+#line 2181 "y.tab.cpp"
     break;
 
   case 72:
-#line 221 "parserYacc.y"
+#line 245 "parserYacc.y"
                     {}
-#line 2172 "y.tab.cpp"
+#line 2187 "y.tab.cpp"
     break;
 
   case 73:
-#line 222 "parserYacc.y"
+#line 246 "parserYacc.y"
                      {}
-#line 2178 "y.tab.cpp"
+#line 2193 "y.tab.cpp"
     break;
 
   case 74:
-#line 224 "parserYacc.y"
+#line 248 "parserYacc.y"
                                      {}
-#line 2184 "y.tab.cpp"
+#line 2199 "y.tab.cpp"
     break;
 
   case 75:
-#line 226 "parserYacc.y"
+#line 250 "parserYacc.y"
                       {}
-#line 2190 "y.tab.cpp"
+#line 2205 "y.tab.cpp"
     break;
 
   case 76:
-#line 227 "parserYacc.y"
+#line 251 "parserYacc.y"
                       {}
-#line 2196 "y.tab.cpp"
+#line 2211 "y.tab.cpp"
     break;
 
   case 77:
-#line 228 "parserYacc.y"
+#line 252 "parserYacc.y"
                                    {}
-#line 2202 "y.tab.cpp"
+#line 2217 "y.tab.cpp"
     break;
 
   case 78:
-#line 229 "parserYacc.y"
+#line 253 "parserYacc.y"
                         {}
-#line 2208 "y.tab.cpp"
+#line 2223 "y.tab.cpp"
     break;
 
   case 79:
-#line 230 "parserYacc.y"
+#line 254 "parserYacc.y"
                 {}
-#line 2214 "y.tab.cpp"
+#line 2229 "y.tab.cpp"
     break;
 
   case 80:
-#line 231 "parserYacc.y"
+#line 255 "parserYacc.y"
                      {}
-#line 2220 "y.tab.cpp"
+#line 2235 "y.tab.cpp"
     break;
 
   case 81:
-#line 232 "parserYacc.y"
+#line 256 "parserYacc.y"
                     {}
-#line 2226 "y.tab.cpp"
+#line 2241 "y.tab.cpp"
     break;
 
   case 82:
-#line 233 "parserYacc.y"
+#line 257 "parserYacc.y"
                       {}
-#line 2232 "y.tab.cpp"
+#line 2247 "y.tab.cpp"
     break;
 
   case 83:
-#line 234 "parserYacc.y"
+#line 258 "parserYacc.y"
                        {}
-#line 2238 "y.tab.cpp"
+#line 2253 "y.tab.cpp"
     break;
 
   case 84:
-#line 235 "parserYacc.y"
+#line 259 "parserYacc.y"
                      {}
-#line 2244 "y.tab.cpp"
+#line 2259 "y.tab.cpp"
     break;
 
   case 85:
-#line 236 "parserYacc.y"
+#line 260 "parserYacc.y"
                        {}
-#line 2250 "y.tab.cpp"
+#line 2265 "y.tab.cpp"
     break;
 
   case 86:
-#line 237 "parserYacc.y"
+#line 261 "parserYacc.y"
                      {}
-#line 2256 "y.tab.cpp"
+#line 2271 "y.tab.cpp"
     break;
 
   case 87:
-#line 238 "parserYacc.y"
+#line 262 "parserYacc.y"
                         {}
-#line 2262 "y.tab.cpp"
+#line 2277 "y.tab.cpp"
     break;
 
   case 88:
-#line 239 "parserYacc.y"
+#line 263 "parserYacc.y"
                       {}
-#line 2268 "y.tab.cpp"
+#line 2283 "y.tab.cpp"
     break;
 
   case 89:
-#line 240 "parserYacc.y"
+#line 264 "parserYacc.y"
                     {}
-#line 2274 "y.tab.cpp"
+#line 2289 "y.tab.cpp"
     break;
 
   case 90:
-#line 241 "parserYacc.y"
+#line 265 "parserYacc.y"
                     {}
-#line 2280 "y.tab.cpp"
+#line 2295 "y.tab.cpp"
     break;
 
   case 91:
-#line 242 "parserYacc.y"
+#line 266 "parserYacc.y"
                      {}
-#line 2286 "y.tab.cpp"
+#line 2301 "y.tab.cpp"
     break;
 
   case 92:
-#line 243 "parserYacc.y"
+#line 267 "parserYacc.y"
                      {}
-#line 2292 "y.tab.cpp"
+#line 2307 "y.tab.cpp"
     break;
 
   case 93:
-#line 244 "parserYacc.y"
+#line 268 "parserYacc.y"
                  {}
-#line 2298 "y.tab.cpp"
+#line 2313 "y.tab.cpp"
     break;
 
   case 94:
-#line 245 "parserYacc.y"
+#line 269 "parserYacc.y"
                {}
-#line 2304 "y.tab.cpp"
+#line 2319 "y.tab.cpp"
     break;
 
   case 95:
-#line 246 "parserYacc.y"
+#line 270 "parserYacc.y"
                   {}
-#line 2310 "y.tab.cpp"
+#line 2325 "y.tab.cpp"
     break;
 
   case 96:
-#line 248 "parserYacc.y"
+#line 272 "parserYacc.y"
                                                                {}
-#line 2316 "y.tab.cpp"
+#line 2331 "y.tab.cpp"
     break;
 
   case 97:
-#line 252 "parserYacc.y"
-                {}
-#line 2322 "y.tab.cpp"
+#line 276 "parserYacc.y"
+                {
+            (yyval.identifierRetorno) = new identifier(yytext);
+      }
+#line 2339 "y.tab.cpp"
     break;
 
   case 98:
-#line 253 "parserYacc.y"
-                           {}
-#line 2328 "y.tab.cpp"
+#line 279 "parserYacc.y"
+                           {(yyval.identifierRetorno) = new identifier(yytext);}
+#line 2345 "y.tab.cpp"
     break;
 
   case 99:
-#line 254 "parserYacc.y"
-                                           {}
-#line 2334 "y.tab.cpp"
+#line 280 "parserYacc.y"
+                                           {(yyval.identifierRetorno) = new identifier(yytext);}
+#line 2351 "y.tab.cpp"
     break;
 
   case 100:
-#line 255 "parserYacc.y"
-                             {}
-#line 2340 "y.tab.cpp"
+#line 281 "parserYacc.y"
+                             {(yyval.identifierRetorno) = new identifier(yytext);}
+#line 2357 "y.tab.cpp"
     break;
 
   case 101:
-#line 258 "parserYacc.y"
+#line 284 "parserYacc.y"
                                               {}
-#line 2346 "y.tab.cpp"
+#line 2363 "y.tab.cpp"
     break;
 
   case 102:
-#line 259 "parserYacc.y"
+#line 285 "parserYacc.y"
                                                              {}
-#line 2352 "y.tab.cpp"
+#line 2369 "y.tab.cpp"
     break;
 
   case 103:
-#line 262 "parserYacc.y"
+#line 288 "parserYacc.y"
                    { }
-#line 2358 "y.tab.cpp"
+#line 2375 "y.tab.cpp"
     break;
 
   case 104:
-#line 263 "parserYacc.y"
+#line 289 "parserYacc.y"
                       {}
-#line 2364 "y.tab.cpp"
+#line 2381 "y.tab.cpp"
     break;
 
   case 105:
-#line 265 "parserYacc.y"
+#line 291 "parserYacc.y"
                          {}
-#line 2370 "y.tab.cpp"
+#line 2387 "y.tab.cpp"
     break;
 
   case 106:
-#line 266 "parserYacc.y"
+#line 292 "parserYacc.y"
                              {}
-#line 2376 "y.tab.cpp"
+#line 2393 "y.tab.cpp"
     break;
 
   case 107:
-#line 268 "parserYacc.y"
+#line 294 "parserYacc.y"
                          {}
-#line 2382 "y.tab.cpp"
+#line 2399 "y.tab.cpp"
     break;
 
   case 108:
-#line 269 "parserYacc.y"
+#line 295 "parserYacc.y"
                                         {}
-#line 2388 "y.tab.cpp"
+#line 2405 "y.tab.cpp"
     break;
 
   case 109:
-#line 271 "parserYacc.y"
+#line 297 "parserYacc.y"
                  {(yyval.literalRetorno) = new literal("NUMBER",yytext);}
-#line 2394 "y.tab.cpp"
+#line 2411 "y.tab.cpp"
     break;
 
   case 110:
-#line 272 "parserYacc.y"
+#line 298 "parserYacc.y"
                   {(yyval.literalRetorno) = new literal("CHAR",yytext);}
-#line 2400 "y.tab.cpp"
+#line 2417 "y.tab.cpp"
     break;
 
   case 111:
-#line 273 "parserYacc.y"
+#line 299 "parserYacc.y"
              {(yyval.literalRetorno) = new literal("BOOL",yytext);}
-#line 2406 "y.tab.cpp"
+#line 2423 "y.tab.cpp"
     break;
 
   case 112:
-#line 274 "parserYacc.y"
+#line 300 "parserYacc.y"
               {(yyval.literalRetorno) = new literal("BOOL",yytext);}
-#line 2412 "y.tab.cpp"
+#line 2429 "y.tab.cpp"
     break;
 
   case 113:
-#line 275 "parserYacc.y"
+#line 301 "parserYacc.y"
                {(yyval.literalRetorno) = new literal("STRING",yytext);}
-#line 2418 "y.tab.cpp"
+#line 2435 "y.tab.cpp"
     break;
 
 
-#line 2422 "y.tab.cpp"
+#line 2439 "y.tab.cpp"
 
       default: break;
     }
@@ -2650,7 +2667,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 277 "parserYacc.y"
+#line 303 "parserYacc.y"
  /* Fim da segunda seção */
 
 

@@ -256,31 +256,31 @@ Nonterminals, with rules where they appear
     decl_fun (75)
         on left: 6
         on right: 4
-    cmd (76)
+    cmd <cmdRetorno> (76)
         on left: 7 8 9 10 11 12 13 14 15 16 17 18
         on right: 5 48 49 50 52
-    cmd_decl_var (77)
+    cmd_decl_var <cmd_decl_varRetorno> (77)
         on left: 19
         on right: 8
-    assign_expr_maybe (78)
+    assign_expr_maybe <assign_expr_maybeRetorno> (78)
         on left: 20 21
         on right: 19
-    all_decl_var (79)
+    all_decl_var <all_decl_varRetorno> (79)
         on left: 22 23
         on right: 19
-    decl_var_prim (80)
+    decl_var_prim <decl_var_primRetorno> (80)
         on left: 24
         on right: 22 25
-    const_decl_var (81)
+    const_decl_var <const_decl_varRetorno> (81)
         on left: 25
         on right: 23
-    hashtagzeromais (82)
+    hashtagzeromais <hashtagzeromaisRetorno> (82)
         on left: 26 27
         on right: 24 27
-    cochetezeromais (83)
+    cochetezeromais <cochetezeromaisRetorno> (83)
         on left: 28 29
         on right: 24 29
-    assign_expr (84)
+    assign_expr <assign_exprRetorno> (84)
         on left: 30 31 32
         on right: 7 21
     assign_extra (85)
@@ -334,7 +334,7 @@ Nonterminals, with rules where they appear
     typename (101)
         on left: 58 59
         on right: 57
-    primitivos (102)
+    primitivos <primitivosRetorno> (102)
         on left: 60 61 62 63 64 65
         on right: 24 58
     typedlpar (103)
@@ -358,7 +358,7 @@ Nonterminals, with rules where they appear
     expr_tern (109)
         on left: 95
         on right: 92
-    identifier (110)
+    identifier <identifierRetorno> (110)
         on left: 96 97 98 99
         on right: 7 77 94
     arrayAccess (111)

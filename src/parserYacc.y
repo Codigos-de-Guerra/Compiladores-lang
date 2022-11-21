@@ -10,36 +10,41 @@ extern int yylineno;
 extern char * yytext;
 
 
-
-typedef struct lval_s {
+ struct lval {
     int line;
     int col;
     /* the value of the token. if it is the number 0, this is going to be 0 */
-    char *lexeme;
+    string lexeme;
     int token;
-} lval;
+    lval(){
+
+    }
+};
 
 
 /* all we have as symbols for the symbol table are identifiers. other possible
    symbols are, for example, goto labels */
-typedef struct symbol_s {
-    int scope;
+struct symbol {
+    int scope = 0;
     /* this is the actual name of the symbol. an id 'foo' has the name foo */
-    char *name;
-    char *type;
-    bool is_const;
+    string name = "";
+    string type = "";
+    bool is_const= false;
     lval val;
-} symbol;
+    symbol(){
+
+    }
+};
 
 // since we have 128 ASCII characters, that's the max number of children our
 // trie can have, even though we won't use all of them
 #define N 128
 
-typedef struct node_s {
-    struct node_s *children[N];
+struct node {
+    struct node *children[N];
     symbol sym;
     bool is_leaf;
-} node;
+};
 
 node* root;
 
@@ -55,28 +60,31 @@ node *initialize()
 void adiciona(symbol simbolo)
 {
     node *tmp = root;
-    char* word = simbolo.name;
-    for (int i = 0; word[i] != '\0'; i++) {
+    string word = simbolo.name;
+    for (int i = 0; i<word.size(); i++) {
         /* get the relative position in the alphabet list */
+        
         int position = (int) word[i] - 'a';
 
-        if (tmp->children[position] == NULL)
+        if (tmp->children[position] == NULL){
+            
             tmp->children[position] = initialize();
+        }
 
         tmp = tmp->children[position];
     }
 
-    tmp->is_leaf = 1;
-
-      tmp->sym = simbolo;
+      
+      tmp->is_leaf = 1;
+      tmp->sym.name =  simbolo.name;
 }
 
 node *acha(symbol simbolo)
 {
     /* searches for word in the trie */
     node *tmp = root;
-    char* word = simbolo.name;
-    for(int i = 0; word[i] != '\0'; i++)
+    string word = simbolo.name;
+    for(int i = 0; i<word.size(); i++)
     {
         int position = word[i] - 'a';
         if (tmp->children[position] == NULL) return NULL;
@@ -89,7 +97,7 @@ node *acha(symbol simbolo)
 }
 
 
-
+map<string,string> symtable;
 
 %}
 
@@ -97,7 +105,17 @@ node *acha(symbol simbolo)
 
 
 %type <literalRetorno> literal
-
+%type <cmdRetorno> cmd
+%type <identifierRetorno> identifier
+%type <assign_exprRetorno> assign_expr
+%type<all_decl_varRetorno> all_decl_var
+%type<cmd_decl_varRetorno> cmd_decl_var
+%type<assign_expr_maybeRetorno> assign_expr_maybe
+%type<decl_var_primRetorno> decl_var_prim
+%type<primitivosRetorno> primitivos
+%type<cochetezeromaisRetorno> cochetezeromais
+%type<hashtagzeromaisRetorno>hashtagzeromais
+%type<const_decl_varRetorno> const_decl_var
 
 %token '[' IF ENDIF ELSE SWITCH CASE FOR LOOP RETURN STRUCT CONST BREAK CONTINUE READ WRITE EXIT WHEN FUNCTION INT REAL CHAR STR BOOL VOID PLUS MINUS TIMES DIV MOD TRUE FALSE NUMBER CHARACTER STRING LEFT_BRACE RIGHT_BRACE LEFT_BRACKET RIGHT_BRACKET ID SEMICOLON QUESTION_MARK COLON DOT POINTER_VAL ARROW COMMA REFERENCE TERNARY ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MULT ASSIGN_DIV ASSIGN_MOD ASSIGN
 %start prog
@@ -114,7 +132,6 @@ node *acha(symbol simbolo)
 %% /* Inicio da segunda seção, onde colocamos as regras BNF */
 
 prog : stmts {
-
 };
 
 stmts : /* epsilon */ {}
@@ -125,8 +142,10 @@ stmt : decl_fun {}
 
 decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {};
 
-cmd :  identifier assign_expr SEMICOLON {}
-      |cmd_decl_var SEMICOLON {}
+cmd :  identifier assign_expr SEMICOLON {
+            $$ = new cmd($1,$2);
+      }
+      |cmd_decl_var SEMICOLON {$$ = new cmd($1);}
       | inOut SEMICOLON {}
       | cmd_loop {}
       | cmd_cond {}
@@ -138,28 +157,33 @@ cmd :  identifier assign_expr SEMICOLON {}
       | EXIT WHEN expr SEMICOLON {}
       | block {};
 
-cmd_decl_var : all_decl_var assign_expr_maybe {};
+cmd_decl_var : all_decl_var assign_expr_maybe {
+      $$ = new cmd_decl_var($1,$2);
+      };
 
-assign_expr_maybe : /*epsilon*/ {}
-      | assign_expr {};
+assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
+      | assign_expr {$$ = new assign_expr_maybe();};
+
+all_decl_var : decl_var_prim {$$ = new all_decl_var($1,symtable);}
+            | const_decl_var {$$ = new all_decl_var($1,symtable);};
+
+decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {
+      $$ = new decl_var_prim($1,$2,$3,yytext);
+};
+const_decl_var : CONST decl_var_prim {
+      $$ = new const_decl_var($2);
+}; 
+
+hashtagzeromais : /*epsilon*/ {$$ = NULL;}
+      | POINTER_VAL hashtagzeromais {$$ = new hashtagzeromais($2);};
 
 
-all_decl_var : decl_var_prim {}
-            | const_decl_var {};
+cochetezeromais : /*epsilon*/ {$$ = NULL;}
+      | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {$$ = new cochetezeromais($4);};
 
-decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {};
-const_decl_var : CONST decl_var_prim {}; 
-
-hashtagzeromais : /*epsilon*/ {}
-      | POINTER_VAL hashtagzeromais {};
-
-
-cochetezeromais : /*epsilon*/ {}
-      | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {};
-
-assign_expr : ASSIGN expr {}
-            | assign_extra expr {}
-            | inc {};
+assign_expr : ASSIGN expr {$$ = new assign_expr();}
+            | assign_extra expr {$$ = new assign_expr();}
+            | inc {$$ = new assign_expr();};
 
 assign_extra : ASSIGN_PLUS {}
       | ASSIGN_MINUS {}
@@ -203,12 +227,12 @@ type : typename {};
 typename : primitivos {}
       | ID {};
 
-primitivos : INT {}
-      | REAL {}
-      | CHAR {}
-      | BOOL {}
-      | STR {}
-      | VOID {};
+primitivos : INT {$$ = new primitivos("INT");}
+      | REAL {$$ = new primitivos("REAL");}
+      | CHAR {$$ = new primitivos("CHAR");}
+      | BOOL {$$ = new primitivos("BOOL");}
+      | STR {$$ = new primitivos("STRING");}
+      | VOID {$$ = new primitivos("VOID");};
 
 typedlpar : /*epsilon*/ {}
       | parameter typedlparAfter {}
@@ -249,10 +273,12 @@ expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
 
 
-identifier : ID {} %prec '@'
-          | ID arrayAccess {}
-          | ID LEFT_PAREN lpar RIGHT_PAREN {}
-          | ID pointerAccess {};
+identifier : ID {
+            $$ = new identifier(yytext);
+      } %prec '@'
+          | ID arrayAccess {$$ = new identifier(yytext);}
+          | ID LEFT_PAREN lpar RIGHT_PAREN {$$ = new identifier(yytext);}
+          | ID pointerAccess {$$ = new identifier(yytext);};
 
 
 arrayAccess : LEFT_BRACKET expr RIGHT_BRACKET {}

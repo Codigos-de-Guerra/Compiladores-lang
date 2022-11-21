@@ -3,7 +3,6 @@
 %{
 #include "tipos.hpp"
 
-#include "customString.c"
 
 #include "y.tab.h"
 
