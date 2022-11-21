@@ -1,6 +1,8 @@
 %option noyywrap
 
 %{
+#include "tipos.hpp"
+
 #include "customString.c"
 
 #include "y.tab.h"
@@ -18,7 +20,6 @@ typedef struct lval_s {
     int token;
 } lval;
 
-typedef enum { false, true } bool;
 
 /* all we have as symbols for the symbol table are identifiers. other possible
    symbols are, for example, goto labels */
