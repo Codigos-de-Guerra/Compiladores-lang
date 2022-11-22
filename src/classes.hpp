@@ -1,6 +1,7 @@
 #ifndef CLASSES
 #define CLASSES
 
+#include "symbol.hpp"
 #include <functional>
 #include <iostream>
 #include <map>
@@ -9,37 +10,6 @@
 
 using namespace std;
 
-class Symbol {
-public:
-  int scope = 1;
-  string type = "";
-  bool is_const = false;
-
-  Symbol() : scope(1), type(""), is_const(false) {}
-
-  Symbol(string type) : scope(1), type(type), is_const(false) {}
-
-  Symbol(string type, bool is_const)
-      : scope(1), type(type), is_const(is_const) {}
-
-  friend ostream &operator<<(ostream &os, Symbol const &sym) {
-    string sym_str = sym.type + "(" + to_string(sym.scope) + ")";
-    if (sym.is_const)
-      sym_str = "CONST " + sym_str;
-    return os << sym_str;
-  }
-};
-
-typedef map<string, Symbol> SymTable;
-
-class cmd_decl_var;
-class all_decl_var;
-class assign_expr_maybe;
-class decl_var_prim;
-class primitivos;
-class hashtagzeromais;
-class cochetezeromais;
-class const_decl_var;
 class Node {
 public:
   vector<Node *> children;
@@ -75,18 +45,6 @@ class assign_expr : public Node {
 public:
 };
 
-class cmd : public Node {
-public:
-  cmd(identifier *a, assign_expr *b) {}
-  cmd(cmd_decl_var *a) {}
-};
-
-class cmd_decl_var : public Node {
-public:
-  cmd_decl_var() {}
-  cmd_decl_var(all_decl_var *a, assign_expr_maybe *b) {}
-};
-
 class assign_expr_maybe : public Node {
 public:
   assign_expr_maybe() {}
@@ -98,6 +56,16 @@ public:
   primitivos(string x) { type = x; }
 };
 
+class cochetezeromais : public Node {
+public:
+  cochetezeromais(cochetezeromais *a) {}
+};
+
+class hashtagzeromais : public Node {
+public:
+  hashtagzeromais(hashtagzeromais *a) {}
+};
+
 class decl_var_prim : public Node {
 public:
   string name = "";
@@ -107,16 +75,6 @@ public:
     name = d;
     type = a->type;
   }
-};
-
-class cochetezeromais : public Node {
-public:
-  cochetezeromais(cochetezeromais *a) {}
-};
-
-class hashtagzeromais : public Node {
-public:
-  hashtagzeromais(hashtagzeromais *a) {}
 };
 
 class const_decl_var : public Node {
@@ -135,23 +93,37 @@ class all_decl_var : public Node {
 public:
   all_decl_var() {}
 
-  all_decl_var(decl_var_prim *a, SymTable &symtable) {
-    if (symtable.find(a->name) != symtable.end()) {
-      cout << a->name << " já foi declarado como " << symtable[a->name].type
-           << endl;
-    } else {
-      symtable.insert({a->name, Symbol(a->type)});
-    }
+  all_decl_var(decl_var_prim *a, list<SymTable> &tables) {
+    optional<Symbol> sym = lookup(tables, a->name);
+
+    if (sym.has_value())
+      cout << a->name << " já foi declarado como " << sym.value().type << endl;
+    else
+      add_sym(tables, a->name, Symbol(a->type));
+
+    print_symtable(current_table(tables));
   }
 
-  all_decl_var(const_decl_var *a, SymTable &symtable) {
-    if (symtable.find(a->name) != symtable.end()) {
-      cout << a->name << " já foi declarado como " << symtable[a->name].type
-           << endl;
-    } else {
-      symtable.insert({a->name, Symbol(a->type, a->is_const)});
-    }
+  all_decl_var(const_decl_var *a, list<SymTable> &tables) {
+    optional<Symbol> sym = lookup(tables, a->name);
+
+    if (sym.has_value())
+      cout << a->name << " já foi declarado como " << sym.value().type << endl;
+    else
+      add_sym(tables, a->name, Symbol(a->type));
   }
+};
+
+class cmd_decl_var : public Node {
+public:
+  cmd_decl_var() {}
+  cmd_decl_var(all_decl_var *a, assign_expr_maybe *b) {}
+};
+
+class cmd : public Node {
+public:
+  cmd(identifier *a, assign_expr *b) {}
+  cmd(cmd_decl_var *a) {}
 };
 
 class block : public Node {

@@ -16,7 +16,7 @@ typedef union{
     cochetezeromais* cochetezeromaisRetorno;
     hashtagzeromais* hashtagzeromaisRetorno;
     const_decl_var* const_decl_varRetorno;
-	string* name;
+    string* name;
 } YYSTYPE;
 
 extern YYSTYPE yylval;

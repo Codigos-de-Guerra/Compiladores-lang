@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string>
 #include "tipos.hpp"
+#include "symbol.cpp"
 
 int yylex(void);
 int yyerror(char *s);
@@ -93,16 +94,7 @@ node *acha(symbol simbolo)
 }
 */
 
-SymTable symtable;
-
-void print_symtable(SymTable &symtable) {
-  for (auto const &sym : symtable) {
-    string key = sym.first;
-    Symbol val = sym.second;
-
-    cout << "{" << key << " = " << val << "}" << endl;
-  }
-}
+list<SymTable> tables {{}};
 %}
 
 %type <literalRetorno> literal
@@ -163,10 +155,8 @@ cmd_decl_var : all_decl_var assign_expr_maybe {
 assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
       | assign_expr {$$ = new assign_expr_maybe();};
 
-all_decl_var : decl_var_prim {$$ = new all_decl_var($1,symtable);
-                              print_symtable(symtable);}
-             | const_decl_var {$$ = new all_decl_var($1,symtable);
-                              print_symtable(symtable);};
+all_decl_var : decl_var_prim {$$ = new all_decl_var($1,tables);}
+             | const_decl_var {$$ = new all_decl_var($1,tables);};
 
 decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {
       $$ = new decl_var_prim($1,$2,$3,yytext);
