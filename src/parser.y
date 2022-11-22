@@ -94,7 +94,7 @@ node *acha(symbol simbolo)
 }
 */
 
-list<SymTable> tables {{}};
+list<symtable> tables {{}};
 %}
 
 %type <literalRet> literal

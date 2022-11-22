@@ -96,22 +96,22 @@ class all_decl_var : public Node {
 public:
   all_decl_var() {}
 
-  all_decl_var(decl_var_prim *var, list<SymTable> &tables) {
-    optional<Symbol> sym = lookup(tables, var->name);
+  all_decl_var(decl_var_prim *var, list<symtable> &tables) {
+    optional<symbol> sym = lookup(tables, var->name);
 
     if (sym.has_value())
       cout << var->name << " já foi declarado como " << sym.value().type << endl;
     else
-      add_sym(tables, var->name, Symbol(var->type));
+      add_sym(tables, var->name, symbol(var->type));
   }
 
-  all_decl_var(const_decl_var *a, list<SymTable> &tables) {
-    optional<Symbol> sym = lookup(tables, a->name);
+  all_decl_var(const_decl_var *a, list<symtable> &tables) {
+    optional<symbol> sym = lookup(tables, a->name);
 
     if (sym.has_value())
       cout << a->name << " já foi declarado como " << sym.value().type << endl;
     else
-      add_sym(tables, a->name, Symbol(a->type));
+      add_sym(tables, a->name, symbol(a->type));
   }
 };
 
@@ -137,7 +137,7 @@ public:
   vector<string> symbol_names;
   string type = "";
 
-  expr(expr *left, expr *right, list<SymTable> &tables) {
+  expr(expr *left, expr *right, list<symtable> &tables) {
     if (left->symbol_names.size() < (1 << 30))
       for (string sym_name : left->symbol_names)
         symbol_names.push_back(sym_name);
@@ -153,7 +153,7 @@ public:
     type = left->type;
   }
 
-  expr(expr *exp, list<SymTable> &tables) {
+  expr(expr *exp, list<symtable> &tables) {
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
@@ -161,12 +161,12 @@ public:
     type = exp->type;
   }
 
-  expr(identifier *id, list<SymTable> &tables) {
+  expr(identifier *id, list<symtable> &tables) {
     symbol_names.push_back(id->name);
 
     if (symbol_names.size() < (1 << 30))
       for (string sym_name : symbol_names) {
-        optional<Symbol> sym = lookup(tables, sym_name);
+        optional<symbol> sym = lookup(tables, sym_name);
 
         if (sym.has_value()) {
           type = sym.value().type;
@@ -180,7 +180,7 @@ public:
     // type = lookup(tables, id->name).value().type;
   }
 
-  expr(literal *lit, list<SymTable> &tables) { type = lit->type; }
+  expr(literal *lit, list<symtable> &tables) { type = lit->type; }
 };
 
 #endif

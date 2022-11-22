@@ -4,36 +4,36 @@
 
 using namespace std;
 
-SymTable current_table(list<SymTable> &tables) {
-  SymTable final;
-  for (SymTable &table : tables)
+symtable current_table(list<symtable> &tables) {
+  symtable final;
+  for (symtable &table : tables)
     final.merge(table);
 
   return final;
 }
 
-void print_symtable(SymTable &symtable) {
-  for (pair<string, Symbol> const &sym : symtable) {
+void print_symtable(symtable &table) {
+  for (pair<string, symbol> const &sym : table) {
     string key = sym.first;
-    Symbol val = sym.second;
+    symbol val = sym.second;
 
     cout << "{" << key << " = " << val << "}" << endl;
   }
 }
 
-void print_current_symtable(list<SymTable> &tables) {
-  SymTable symtable = current_table(tables);
+void print_current_symtable(list<symtable> &tables) {
+  symtable table = current_table(tables);
 
-  for (pair<string, Symbol> const &sym : symtable) {
+  for (pair<string, symbol> const &sym : table) {
     string key = sym.first;
-    Symbol val = sym.second;
+    symbol val = sym.second;
 
     cout << "{" << key << " = " << val << "}" << endl;
   }
 }
 
-optional<Symbol> lookup(list<SymTable> &tables, string sym_name) {
-  SymTable current = current_table(tables);
+optional<symbol> lookup(list<symtable> &tables, string sym_name) {
+  symtable current = current_table(tables);
 
   if (current.find(sym_name) == current.end())
     return {};
@@ -41,12 +41,12 @@ optional<Symbol> lookup(list<SymTable> &tables, string sym_name) {
   return current[sym_name];
 }
 
-void add_sym(list<SymTable> &tables, string sym_name, Symbol sym) {
+void add_sym(list<symtable> &tables, string sym_name, symbol sym) {
   tables.back().insert({sym_name, sym});
 }
 
-void push_scope(list<SymTable> &tables, SymTable new_table) {
+void push_scope(list<symtable> &tables, symtable new_table) {
   tables.push_back(new_table);
 }
 
-void pop_scope(list<SymTable> &tables) { tables.pop_back(); }
+void pop_scope(list<symtable> &tables) { tables.pop_back(); }

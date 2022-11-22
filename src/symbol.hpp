@@ -9,18 +9,18 @@
 
 using namespace std;
 
-class Symbol {
+class symbol {
 public:
   string type = "";
   bool is_const = false;
 
-  Symbol() : type(""), is_const(false) {}
+  symbol() : type(""), is_const(false) {}
 
-  Symbol(string type) : type(type), is_const(false) {}
+  symbol(string type) : type(type), is_const(false) {}
 
-  Symbol(string type, bool is_const) : type(type), is_const(is_const) {}
+  symbol(string type, bool is_const) : type(type), is_const(is_const) {}
 
-  friend ostream &operator<<(ostream &os, Symbol const &sym) {
+  friend ostream &operator<<(ostream &os, symbol const &sym) {
     string sym_str = sym.type;
     if (sym.is_const)
       sym_str = "CONST " + sym_str;
@@ -28,20 +28,20 @@ public:
   }
 };
 
-typedef map<string, Symbol> SymTable;
+typedef map<string, symbol> symtable;
 
-void print_symtable(SymTable &table);
+void print_symtable(symtable &table);
 
-void print_current_symtable(list<SymTable> &tables);
+void print_current_symtable(list<symtable> &tables);
 
-void push_scope(list<SymTable> &tables, SymTable new_table);
+void push_scope(list<symtable> &tables, symtable new_table);
 
-void pop_scope(list<SymTable> &tables);
+void pop_scope(list<symtable> &tables);
 
-SymTable current_table(list<SymTable> &tables);
+symtable current_table(list<symtable> &tables);
 
-optional<Symbol> lookup(list<SymTable> &tables, string sym_name);
+optional<symbol> lookup(list<symtable> &tables, string sym_name);
 
-void add_sym(list<SymTable> &tables, string sym_name, Symbol sym);
+void add_sym(list<symtable> &tables, string sym_name, symbol sym);
 
 #endif
