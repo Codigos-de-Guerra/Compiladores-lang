@@ -12,8 +12,19 @@ SymTable current_table(list<SymTable> &tables) {
   return final;
 }
 
-void print_symtable(SymTable symtable) {
-  for (auto const &sym : symtable) {
+void print_symtable(SymTable &symtable) {
+  for (pair<string, Symbol> const &sym : symtable) {
+    string key = sym.first;
+    Symbol val = sym.second;
+
+    cout << "{" << key << " = " << val << "}" << endl;
+  }
+}
+
+void print_current_symtable(list<SymTable> &tables) {
+  SymTable symtable = current_table(tables);
+
+  for (pair<string, Symbol> const &sym : symtable) {
     string key = sym.first;
     Symbol val = sym.second;
 
@@ -31,11 +42,11 @@ optional<Symbol> lookup(list<SymTable> &tables, string sym_name) {
 }
 
 void add_sym(list<SymTable> &tables, string sym_name, Symbol sym) {
-  tables.front().insert({sym_name, sym});
+  tables.back().insert({sym_name, sym});
 }
 
 void push_scope(list<SymTable> &tables, SymTable new_table) {
-  tables.push_front(new_table);
+  tables.push_back(new_table);
 }
 
-void pop_scope(list<SymTable> &tables) { tables.pop_front(); }
+void pop_scope(list<SymTable> &tables) { tables.pop_back(); }

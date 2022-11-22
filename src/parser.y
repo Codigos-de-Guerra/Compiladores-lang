@@ -97,20 +97,75 @@ node *acha(symbol simbolo)
 list<SymTable> tables {{}};
 %}
 
-%type <literalRetorno> literal
-%type <cmdRetorno> cmd
-%type <identifierRetorno> identifier
-%type <assign_exprRetorno> assign_expr
-%type <all_decl_varRetorno> all_decl_var
-%type <cmd_decl_varRetorno> cmd_decl_var
-%type <assign_expr_maybeRetorno> assign_expr_maybe
-%type <decl_var_primRetorno> decl_var_prim
-%type <primitivosRetorno> primitivos
-%type <cochetezeromaisRetorno> cochetezeromais
-%type <hashtagzeromaisRetorno>hashtagzeromais
-%type <const_decl_varRetorno> const_decl_var
+%type <literalRet> literal
+%type <cmdRet> cmd
+%type <identifierRet> identifier
+%type <assign_exprRet> assign_expr
+%type <all_decl_varRet> all_decl_var
+%type <cmd_decl_varRet> cmd_decl_var
+%type <assign_expr_maybeRet> assign_expr_maybe
+%type <decl_var_primRet> decl_var_prim
+%type <primitiveRet> primitive
+%type <cochetezeromaisRet> cochetezeromais
+%type <hashtagzeromaisRet>hashtagzeromais
+%type <const_decl_varRet> const_decl_var
+%type <exprRet> expr
 
-%token '[' IF ENDIF ELSE SWITCH CASE FOR LOOP RETURN STRUCT CONST BREAK CONTINUE READ WRITE EXIT WHEN FUNCTION INT REAL CHAR STR BOOL VOID PLUS MINUS TIMES DIV MOD TRUE FALSE NUMBER CHARACTER STRING LEFT_BRACE RIGHT_BRACE LEFT_BRACKET RIGHT_BRACKET ID SEMICOLON QUESTION_MARK COLON DOT POINTER_VAL ARROW COMMA REFERENCE TERNARY ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MULT ASSIGN_DIV ASSIGN_MOD ASSIGN
+%token '['
+%token IF
+%token ENDIF
+%token ELSE
+%token SWITCH
+%token CASE
+%token FOR
+%token LOOP
+%token RETURN
+%token STRUCT
+%token CONST
+%token BREAK
+%token CONTINUE
+%token READ
+%token WRITE
+%token EXIT
+%token WHEN
+%token FUNCTION
+%token INT
+%token REAL
+%token CHAR
+%token STR
+%token BOOL
+%token VOID
+%token PLUS
+%token MINUS
+%token TIMES
+%token DIV
+%token MOD
+%token TRUE
+%token FALSE
+%token NUMBER
+%token CHARACTER
+%token STRING
+%token LEFT_BRACE
+%token RIGHT_BRACE
+%token LEFT_BRACKET
+%token RIGHT_BRACKET
+%token SEMICOLON
+%token QUESTION_MARK
+%token COLON
+%token DOT
+%token POINTER_VAL
+%token ARROW
+%token COMMA
+%token REFERENCE
+%token TERNARY
+%token ASSIGN_PLUS
+%token ASSIGN_MINUS
+%token ASSIGN_MULT
+%token ASSIGN_DIV
+%token ASSIGN_MOD
+%token ASSIGN
+%token <name> ID
+
 %start prog
 %left '@'
 %left LEFT_PAREN
@@ -136,41 +191,37 @@ stmt : decl_fun {}
 decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {};
 
 cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
-      | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
-      | inOut SEMICOLON {}
-      | cmd_loop {}
-      | cmd_cond {}
-      | cmd_switch {}
-      | expr SEMICOLON {}
-      | RETURN expr SEMICOLON {}
-      | BREAK SEMICOLON {}
-      | CONTINUE SEMICOLON {}
-      | EXIT WHEN expr SEMICOLON {}
-      | block {};
+    | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
+    | inOut SEMICOLON {}
+    | cmd_loop {}
+    | cmd_cond {}
+    | cmd_switch {}
+    | expr SEMICOLON {}
+    | RETURN expr SEMICOLON {}
+    | BREAK SEMICOLON {}
+    | CONTINUE SEMICOLON {}
+    | EXIT WHEN expr SEMICOLON {}
+    | block {};
 
-cmd_decl_var : all_decl_var assign_expr_maybe {
-      $$ = new cmd_decl_var($1,$2);
-};
+cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var($1,$2);};
 
 assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
-      | assign_expr {$$ = new assign_expr_maybe();};
+                  | assign_expr {$$ = new assign_expr_maybe();};
 
 all_decl_var : decl_var_prim {$$ = new all_decl_var($1,tables);}
              | const_decl_var {$$ = new all_decl_var($1,tables);};
 
-decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {
-      $$ = new decl_var_prim($1,$2,$3,yytext);
+decl_var_prim : primitive hashtagzeromais cochetezeromais ID {
+    $$ = new decl_var_prim($1,*$4);
 };
-const_decl_var : CONST decl_var_prim {
-      $$ = new const_decl_var($2);
-}; 
+
+const_decl_var : CONST decl_var_prim {$$ = new const_decl_var($2);};
 
 hashtagzeromais : /*epsilon*/ {$$ = NULL;}
-      | POINTER_VAL hashtagzeromais {$$ = new hashtagzeromais($2);};
-
+                | POINTER_VAL hashtagzeromais {$$ = new hashtagzeromais($2);};
 
 cochetezeromais : /*epsilon*/ {$$ = NULL;}
-      | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {$$ = new cochetezeromais($4);};
+                | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {$$ = new cochetezeromais($4);};
 
 assign_expr : ASSIGN expr {$$ = new assign_expr();}
             | assign_extra expr {$$ = new assign_expr();}
@@ -199,7 +250,6 @@ cmd_switch : switch {};
 
 for : FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd {};
 
-
 loop : LOOP cmd {};
 
 if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {};
@@ -215,81 +265,76 @@ casezeromais : /*epsilon*/ {}
 case : CASE literal COLON stmts {};
 
 type : typename {};
-typename : primitivos {}
+
+typename : primitive {}
          | ID {};
 
-primitivos : INT {$$ = new primitivos("INT");}
-           | REAL {$$ = new primitivos("REAL");}
-           | CHAR {$$ = new primitivos("CHAR");}
-           | BOOL {$$ = new primitivos("BOOL");}
-           | STR {$$ = new primitivos("STRING");}
-           | VOID {$$ = new primitivos("VOID");};
+primitive : INT {$$ = new primitive("INT");}
+          | REAL {$$ = new primitive("REAL");}
+          | CHAR {$$ = new primitive("CHAR");}
+          | BOOL {$$ = new primitive("BOOL");}
+          | STR {$$ = new primitive("STRING");}
+          | VOID {$$ = new primitive("VOID");};
 
 typedlpar : /*epsilon*/ {}
-      | parameter typedlparAfter {}
+          | parameter typedlparAfter {}
 
 typedlparAfter : /*epsilon*/ {}
-      | COMMA parameter typedlparAfter {};
+               | COMMA parameter typedlparAfter {};
 
 parameter : type parameterAfter {};
 
 parameterAfter : ID {}
-      | REFERENCE ID {};
+               | REFERENCE ID {};
 
 block : LEFT_BRACE stmts RIGHT_BRACE {};
 
-expr : INCREMENT expr {}
-     | DECREMENT expr {}
-     | LEFT_PAREN expr RIGHT_PAREN {}
-     | MINUS identifier {}
-     | NOT expr {}
-     | expr AND expr {}
-     | expr OR expr {}
-     | expr PLUS expr {}
-     | expr TIMES expr {}
-     | expr DIV expr {}
-     | expr MINUS expr {} 
-     | expr MOD expr {}
-     | expr EQUALS expr {}
-     | expr DIFF expr {}
-     | expr LT expr {}
-     | expr GT expr {}
-     | expr LEQ expr {}
-     | expr GEQ expr {}
+expr : INCREMENT expr {$$ = new expr($2,tables);}
+     | DECREMENT expr {$$ = new expr($2,tables);}
+     | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr($2,tables);}
+     | MINUS identifier {$$ = new expr($2,tables);}
+     | NOT expr {$$ = new expr($2,tables);}
+     | expr AND expr {$$ = new expr($1,$3,tables);}
+     | expr OR expr {$$ = new expr($1,$3,tables);}
+     | expr PLUS expr {$$ = new expr($1,$3,tables);}
+     | expr TIMES expr {$$ = new expr($1,$3,tables);}
+     | expr DIV expr {$$ = new expr($1,$3,tables);}
+     | expr MINUS expr {$$ = new expr($1,$3,tables);}
+     | expr MOD expr {$$ = new expr($1,$3,tables);}
+     | expr EQUALS expr {$$ = new expr($1,$3,tables);}
+     | expr DIFF expr {$$ = new expr($1,$3,tables);}
+     | expr LT expr {$$ = new expr($1,$3,tables);}
+     | expr GT expr {$$ = new expr($1,$3,tables);}
+     | expr LEQ expr {$$ = new expr($1,$3,tables);}
+     | expr GEQ expr {$$ = new expr($1,$3,tables);}
      | expr_tern {}
-     | literal {}
-     | identifier {};
+     | literal {$$ = new expr($1,tables);}
+     | identifier {$$ = new expr($1,tables);};
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
-
-
-identifier : ID {
-            $$ = new identifier(yytext);
-      } %prec '@'
-          | ID arrayAccess {$$ = new identifier(yytext);}
-          | ID LEFT_PAREN lpar RIGHT_PAREN {$$ = new identifier(yytext);}
-          | ID pointerAccess {$$ = new identifier(yytext);};
-
+identifier : ID {$$ = new identifier(*$1);} %prec '@'
+           | ID arrayAccess {$$ = new identifier(*$1);}
+           | ID LEFT_PAREN lpar RIGHT_PAREN {$$ = new identifier(*$1);}
+           | ID pointerAccess {$$ = new identifier(*$1);};
 
 arrayAccess : LEFT_BRACKET expr RIGHT_BRACKET {}
-               | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess {};
+              | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess {};
 
+lpar : /*epsilon*/ {}
+     | expr lparAfter {};
 
-lpar : /*epsilon*/ { }|
-       expr lparAfter {};
-
-lparAfter :  /*epsilon*/ {}
-      | COMMA expr lparAfter {};
+lparAfter : /*epsilon*/ {}
+          | COMMA expr lparAfter {};
 
 pointerAccess : ARROW ID {}
-               | ARROW ID pointerAccess {};
+              | ARROW ID pointerAccess {};
 
 literal : NUMBER {$$ = new literal("NUMBER",yytext);}
-      | CHARACTER {$$ = new literal("CHAR",yytext);}
-      | TRUE {$$ = new literal("BOOL",yytext);}
-      | FALSE {$$ = new literal("BOOL",yytext);}
-      | STRING {$$ = new literal("STRING",yytext);};
+        | CHARACTER {$$ = new literal("CHAR",yytext);}
+        | TRUE {$$ = new literal("BOOL",yytext);}
+        | FALSE {$$ = new literal("BOOL",yytext);}
+        | STRING {$$ = new literal("STRING",yytext);};
 
 %% /* Fim da segunda seção */
 

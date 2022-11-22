@@ -91,22 +91,22 @@ extern int yydebug;
     RIGHT_BRACE = 292,             /* RIGHT_BRACE  */
     LEFT_BRACKET = 293,            /* LEFT_BRACKET  */
     RIGHT_BRACKET = 294,           /* RIGHT_BRACKET  */
-    ID = 295,                      /* ID  */
-    SEMICOLON = 296,               /* SEMICOLON  */
-    QUESTION_MARK = 297,           /* QUESTION_MARK  */
-    COLON = 298,                   /* COLON  */
-    DOT = 299,                     /* DOT  */
-    POINTER_VAL = 300,             /* POINTER_VAL  */
-    ARROW = 301,                   /* ARROW  */
-    COMMA = 302,                   /* COMMA  */
-    REFERENCE = 303,               /* REFERENCE  */
-    TERNARY = 304,                 /* TERNARY  */
-    ASSIGN_PLUS = 305,             /* ASSIGN_PLUS  */
-    ASSIGN_MINUS = 306,            /* ASSIGN_MINUS  */
-    ASSIGN_MULT = 307,             /* ASSIGN_MULT  */
-    ASSIGN_DIV = 308,              /* ASSIGN_DIV  */
-    ASSIGN_MOD = 309,              /* ASSIGN_MOD  */
-    ASSIGN = 310,                  /* ASSIGN  */
+    SEMICOLON = 295,               /* SEMICOLON  */
+    QUESTION_MARK = 296,           /* QUESTION_MARK  */
+    COLON = 297,                   /* COLON  */
+    DOT = 298,                     /* DOT  */
+    POINTER_VAL = 299,             /* POINTER_VAL  */
+    ARROW = 300,                   /* ARROW  */
+    COMMA = 301,                   /* COMMA  */
+    REFERENCE = 302,               /* REFERENCE  */
+    TERNARY = 303,                 /* TERNARY  */
+    ASSIGN_PLUS = 304,             /* ASSIGN_PLUS  */
+    ASSIGN_MINUS = 305,            /* ASSIGN_MINUS  */
+    ASSIGN_MULT = 306,             /* ASSIGN_MULT  */
+    ASSIGN_DIV = 307,              /* ASSIGN_DIV  */
+    ASSIGN_MOD = 308,              /* ASSIGN_MOD  */
+    ASSIGN = 309,                  /* ASSIGN  */
+    ID = 310,                      /* ID  */
     LEFT_PAREN = 311,              /* LEFT_PAREN  */
     RIGHT_PAREN = 312,             /* RIGHT_PAREN  */
     INCREMENT = 313,               /* INCREMENT  */
@@ -165,22 +165,22 @@ extern int yydebug;
 #define RIGHT_BRACE 292
 #define LEFT_BRACKET 293
 #define RIGHT_BRACKET 294
-#define ID 295
-#define SEMICOLON 296
-#define QUESTION_MARK 297
-#define COLON 298
-#define DOT 299
-#define POINTER_VAL 300
-#define ARROW 301
-#define COMMA 302
-#define REFERENCE 303
-#define TERNARY 304
-#define ASSIGN_PLUS 305
-#define ASSIGN_MINUS 306
-#define ASSIGN_MULT 307
-#define ASSIGN_DIV 308
-#define ASSIGN_MOD 309
-#define ASSIGN 310
+#define SEMICOLON 295
+#define QUESTION_MARK 296
+#define COLON 297
+#define DOT 298
+#define POINTER_VAL 299
+#define ARROW 300
+#define COMMA 301
+#define REFERENCE 302
+#define TERNARY 303
+#define ASSIGN_PLUS 304
+#define ASSIGN_MINUS 305
+#define ASSIGN_MULT 306
+#define ASSIGN_DIV 307
+#define ASSIGN_MOD 308
+#define ASSIGN 309
+#define ID 310
 #define LEFT_PAREN 311
 #define RIGHT_PAREN 312
 #define INCREMENT 313

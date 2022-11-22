@@ -40,7 +40,7 @@ Grammar
    22 all_decl_var: decl_var_prim
    23             | const_decl_var
 
-   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais ID
+   24 decl_var_prim: primitive hashtagzeromais cochetezeromais ID
 
    25 const_decl_var: CONST decl_var_prim
 
@@ -95,15 +95,15 @@ Grammar
 
    57 type: typename
 
-   58 typename: primitivos
+   58 typename: primitive
    59         | ID
 
-   60 primitivos: INT
-   61           | REAL
-   62           | CHAR
-   63           | BOOL
-   64           | STR
-   65           | VOID
+   60 primitive: INT
+   61          | REAL
+   62          | CHAR
+   63          | BOOL
+   64          | STR
+   65          | VOID
 
    66 typedlpar: ε
    67          | parameter typedlparAfter
@@ -209,22 +209,22 @@ Terminals, with rules where they appear
     RIGHT_BRACE (292) 53 73
     LEFT_BRACKET (293) 29 100 101
     RIGHT_BRACKET (294) 29 100 101
-    ID (295) 6 24 42 43 59 71 72 96 97 98 99 106 107
-    SEMICOLON (296) 7 8 9 13 14 15 16 17 48
-    QUESTION_MARK (297) 95
-    COLON (298) 56 95
-    DOT (299)
-    POINTER_VAL (300) 27
-    ARROW (301) 106 107
-    COMMA (302) 69 105
-    REFERENCE (303) 72
-    TERNARY (304) 95
-    ASSIGN_PLUS (305) 33
-    ASSIGN_MINUS (306) 34
-    ASSIGN_MULT (307) 35
-    ASSIGN_DIV (308) 36
-    ASSIGN_MOD (309) 37
-    ASSIGN (310) 30
+    SEMICOLON (295) 7 8 9 13 14 15 16 17 48
+    QUESTION_MARK (296) 95
+    COLON (297) 56 95
+    DOT (298)
+    POINTER_VAL (299) 27
+    ARROW (300) 106 107
+    COMMA (301) 69 105
+    REFERENCE (302) 72
+    TERNARY (303) 95
+    ASSIGN_PLUS (304) 33
+    ASSIGN_MINUS (305) 34
+    ASSIGN_MULT (306) 35
+    ASSIGN_DIV (307) 36
+    ASSIGN_MOD (308) 37
+    ASSIGN (309) 30
+    ID <name> (310) 6 24 42 43 59 71 72 96 97 98 99 106 107
     LEFT_PAREN (311) 6 42 43 48 50 53 76 98
     RIGHT_PAREN (312) 6 42 43 48 50 53 76 98
     INCREMENT (313) 39 74
@@ -256,31 +256,31 @@ Nonterminals, with rules where they appear
     decl_fun (75)
         on left: 6
         on right: 4
-    cmd <cmdRetorno> (76)
+    cmd <cmdRet> (76)
         on left: 7 8 9 10 11 12 13 14 15 16 17 18
         on right: 5 48 49 50 52
-    cmd_decl_var <cmd_decl_varRetorno> (77)
+    cmd_decl_var <cmd_decl_varRet> (77)
         on left: 19
         on right: 8
-    assign_expr_maybe <assign_expr_maybeRetorno> (78)
+    assign_expr_maybe <assign_expr_maybeRet> (78)
         on left: 20 21
         on right: 19
-    all_decl_var <all_decl_varRetorno> (79)
+    all_decl_var <all_decl_varRet> (79)
         on left: 22 23
         on right: 19
-    decl_var_prim <decl_var_primRetorno> (80)
+    decl_var_prim <decl_var_primRet> (80)
         on left: 24
         on right: 22 25
-    const_decl_var <const_decl_varRetorno> (81)
+    const_decl_var <const_decl_varRet> (81)
         on left: 25
         on right: 23
-    hashtagzeromais <hashtagzeromaisRetorno> (82)
+    hashtagzeromais <hashtagzeromaisRet> (82)
         on left: 26 27
         on right: 24 27
-    cochetezeromais <cochetezeromaisRetorno> (83)
+    cochetezeromais <cochetezeromaisRet> (83)
         on left: 28 29
         on right: 24 29
-    assign_expr <assign_exprRetorno> (84)
+    assign_expr <assign_exprRet> (84)
         on left: 30 31 32
         on right: 7 21
     assign_extra (85)
@@ -334,7 +334,7 @@ Nonterminals, with rules where they appear
     typename (101)
         on left: 58 59
         on right: 57
-    primitivos <primitivosRetorno> (102)
+    primitive <primitiveRet> (102)
         on left: 60 61 62 63 64 65
         on right: 24 58
     typedlpar (103)
@@ -352,13 +352,13 @@ Nonterminals, with rules where they appear
     block (107)
         on left: 73
         on right: 6 18
-    expr (108)
+    expr <exprRet> (108)
         on left: 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94
         on right: 13 14 17 29 30 31 48 50 53 74 75 76 78 79 80 81 82 83 84 85 86 87 88 89 90 91 95 100 101 103 105
     expr_tern (109)
         on left: 95
         on right: 92
-    identifier <identifierRetorno> (110)
+    identifier <identifierRet> (110)
         on left: 96 97 98 99
         on right: 7 77 94
     arrayAccess (111)
@@ -373,7 +373,7 @@ Nonterminals, with rules where they appear
     pointerAccess (114)
         on left: 106 107
         on right: 99 107
-    literal <literalRetorno> (115)
+    literal <literalRet> (115)
         on left: 108 109 110 111 112
         on right: 56 93
 
@@ -407,8 +407,8 @@ State 0
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -435,7 +435,7 @@ State 0
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -492,8 +492,8 @@ State 4
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -514,7 +514,7 @@ State 4
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -532,8 +532,8 @@ State 5
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -557,7 +557,7 @@ State 6
     VOID  shift, and go to state 18
 
     decl_var_prim  go to state 63
-    primitivos     go to state 51
+    primitive      go to state 51
 
 
 State 7
@@ -607,58 +607,58 @@ State 12
     VOID  shift, and go to state 18
     ID    shift, and go to state 69
 
-    type        go to state 70
-    typename    go to state 71
-    primitivos  go to state 72
+    type       go to state 70
+    typename   go to state 71
+    primitive  go to state 72
 
 
 State 13
 
-   60 primitivos: INT •
+   60 primitive: INT •
 
-    $default  reduce using rule 60 (primitivos)
+    $default  reduce using rule 60 (primitive)
 
 
 State 14
 
-   61 primitivos: REAL •
+   61 primitive: REAL •
 
-    $default  reduce using rule 61 (primitivos)
+    $default  reduce using rule 61 (primitive)
 
 
 State 15
 
-   62 primitivos: CHAR •
+   62 primitive: CHAR •
 
-    $default  reduce using rule 62 (primitivos)
+    $default  reduce using rule 62 (primitive)
 
 
 State 16
 
-   64 primitivos: STR •
+   64 primitive: STR •
 
-    $default  reduce using rule 64 (primitivos)
+    $default  reduce using rule 64 (primitive)
 
 
 State 17
 
-   63 primitivos: BOOL •
+   63 primitive: BOOL •
 
-    $default  reduce using rule 63 (primitivos)
+    $default  reduce using rule 63 (primitive)
 
 
 State 18
 
-   65 primitivos: VOID •
+   65 primitive: VOID •
 
-    $default  reduce using rule 65 (primitivos)
+    $default  reduce using rule 65 (primitive)
 
 
 State 19
 
    77 expr: MINUS • identifier
 
-    ID  shift, and go to state 26
+    ID  shift, and go to state 27
 
     identifier  go to state 73
 
@@ -727,8 +727,8 @@ State 25
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -754,7 +754,7 @@ State 25
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -764,23 +764,6 @@ State 25
 
 State 26
 
-   96 identifier: ID •
-   97           | ID • arrayAccess
-   98           | ID • LEFT_PAREN lpar RIGHT_PAREN
-   99           | ID • pointerAccess
-
-    LEFT_BRACKET  shift, and go to state 75
-    ARROW         shift, and go to state 76
-    LEFT_PAREN    shift, and go to state 77
-
-    $default  reduce using rule 96 (identifier)
-
-    arrayAccess    go to state 78
-    pointerAccess  go to state 79
-
-
-State 27
-
    95 expr_tern: TERNARY • expr QUESTION_MARK expr COLON expr TERNARY
 
     MINUS       shift, and go to state 19
@@ -789,17 +772,34 @@ State 27
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
     NOT         shift, and go to state 31
 
-    expr        go to state 80
+    expr        go to state 75
     expr_tern   go to state 54
     identifier  go to state 62
     literal     go to state 56
+
+
+State 27
+
+   96 identifier: ID •
+   97           | ID • arrayAccess
+   98           | ID • LEFT_PAREN lpar RIGHT_PAREN
+   99           | ID • pointerAccess
+
+    LEFT_BRACKET  shift, and go to state 76
+    ARROW         shift, and go to state 77
+    LEFT_PAREN    shift, and go to state 78
+
+    $default  reduce using rule 96 (identifier)
+
+    arrayAccess    go to state 79
+    pointerAccess  go to state 80
 
 
 State 28
@@ -812,8 +812,8 @@ State 28
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -835,8 +835,8 @@ State 29
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -858,8 +858,8 @@ State 30
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -881,8 +881,8 @@ State 31
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -937,8 +937,8 @@ State 34
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -964,7 +964,7 @@ State 34
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -1100,7 +1100,7 @@ State 50
 
 State 51
 
-   24 decl_var_prim: primitivos • hashtagzeromais cochetezeromais ID
+   24 decl_var_prim: primitive • hashtagzeromais cochetezeromais ID
 
     POINTER_VAL  shift, and go to state 101
 
@@ -1194,8 +1194,8 @@ State 57
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1217,8 +1217,8 @@ State 58
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1240,8 +1240,8 @@ State 59
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1345,8 +1345,8 @@ State 68
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1381,7 +1381,7 @@ State 71
 
 State 72
 
-   58 typename: primitivos •
+   58 typename: primitive •
 
     $default  reduce using rule 58 (typename)
 
@@ -1401,78 +1401,6 @@ State 74
 
 
 State 75
-
-  100 arrayAccess: LEFT_BRACKET • expr RIGHT_BRACKET
-  101            | LEFT_BRACKET • expr RIGHT_BRACKET arrayAccess
-
-    MINUS       shift, and go to state 19
-    TRUE        shift, and go to state 20
-    FALSE       shift, and go to state 21
-    NUMBER      shift, and go to state 22
-    CHARACTER   shift, and go to state 23
-    STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
-    LEFT_PAREN  shift, and go to state 28
-    INCREMENT   shift, and go to state 29
-    DECREMENT   shift, and go to state 30
-    NOT         shift, and go to state 31
-
-    expr        go to state 127
-    expr_tern   go to state 54
-    identifier  go to state 62
-    literal     go to state 56
-
-
-State 76
-
-  106 pointerAccess: ARROW • ID
-  107              | ARROW • ID pointerAccess
-
-    ID  shift, and go to state 128
-
-
-State 77
-
-   98 identifier: ID LEFT_PAREN • lpar RIGHT_PAREN
-
-    MINUS       shift, and go to state 19
-    TRUE        shift, and go to state 20
-    FALSE       shift, and go to state 21
-    NUMBER      shift, and go to state 22
-    CHARACTER   shift, and go to state 23
-    STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
-    LEFT_PAREN  shift, and go to state 28
-    INCREMENT   shift, and go to state 29
-    DECREMENT   shift, and go to state 30
-    NOT         shift, and go to state 31
-
-    $default  reduce using rule 102 (lpar)
-
-    expr        go to state 129
-    expr_tern   go to state 54
-    identifier  go to state 62
-    lpar        go to state 130
-    literal     go to state 56
-
-
-State 78
-
-   97 identifier: ID arrayAccess •
-
-    $default  reduce using rule 97 (identifier)
-
-
-State 79
-
-   99 identifier: ID pointerAccess •
-
-    $default  reduce using rule 99 (identifier)
-
-
-State 80
 
    79 expr: expr • AND expr
    80     | expr • OR expr
@@ -1494,7 +1422,7 @@ State 80
     TIMES          shift, and go to state 105
     DIV            shift, and go to state 106
     MOD            shift, and go to state 107
-    QUESTION_MARK  shift, and go to state 131
+    QUESTION_MARK  shift, and go to state 127
     OR             shift, and go to state 109
     AND            shift, and go to state 110
     EQUALS         shift, and go to state 111
@@ -1503,6 +1431,78 @@ State 80
     GT             shift, and go to state 114
     LEQ            shift, and go to state 115
     GEQ            shift, and go to state 116
+
+
+State 76
+
+  100 arrayAccess: LEFT_BRACKET • expr RIGHT_BRACKET
+  101            | LEFT_BRACKET • expr RIGHT_BRACKET arrayAccess
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 128
+    expr_tern   go to state 54
+    identifier  go to state 62
+    literal     go to state 56
+
+
+State 77
+
+  106 pointerAccess: ARROW • ID
+  107              | ARROW • ID pointerAccess
+
+    ID  shift, and go to state 129
+
+
+State 78
+
+   98 identifier: ID LEFT_PAREN • lpar RIGHT_PAREN
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 102 (lpar)
+
+    expr        go to state 130
+    expr_tern   go to state 54
+    identifier  go to state 62
+    lpar        go to state 131
+    literal     go to state 56
+
+
+State 79
+
+   97 identifier: ID arrayAccess •
+
+    $default  reduce using rule 97 (identifier)
+
+
+State 80
+
+   99 identifier: ID pointerAccess •
+
+    $default  reduce using rule 99 (identifier)
 
 
 State 81
@@ -1706,8 +1706,8 @@ State 93
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1757,8 +1757,8 @@ State 98
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1797,7 +1797,7 @@ State 101
 
 State 102
 
-   24 decl_var_prim: primitivos hashtagzeromais • cochetezeromais ID
+   24 decl_var_prim: primitive hashtagzeromais • cochetezeromais ID
 
     LEFT_BRACKET  shift, and go to state 136
 
@@ -1816,8 +1816,8 @@ State 103
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1839,8 +1839,8 @@ State 104
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1862,8 +1862,8 @@ State 105
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1885,8 +1885,8 @@ State 106
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1908,8 +1908,8 @@ State 107
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1938,8 +1938,8 @@ State 109
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1961,8 +1961,8 @@ State 110
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -1984,8 +1984,8 @@ State 111
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2007,8 +2007,8 @@ State 112
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2030,8 +2030,8 @@ State 113
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2053,8 +2053,8 @@ State 114
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2076,8 +2076,8 @@ State 115
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2099,8 +2099,8 @@ State 116
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2288,6 +2288,29 @@ State 126
 
 State 127
 
+   95 expr_tern: TERNARY expr QUESTION_MARK • expr COLON expr TERNARY
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 159
+    expr_tern   go to state 54
+    identifier  go to state 62
+    literal     go to state 56
+
+
+State 128
+
    79 expr: expr • AND expr
    80     | expr • OR expr
    81     | expr • PLUS expr
@@ -2309,7 +2332,7 @@ State 127
     TIMES          shift, and go to state 105
     DIV            shift, and go to state 106
     MOD            shift, and go to state 107
-    RIGHT_BRACKET  shift, and go to state 159
+    RIGHT_BRACKET  shift, and go to state 160
     OR             shift, and go to state 109
     AND            shift, and go to state 110
     EQUALS         shift, and go to state 111
@@ -2320,19 +2343,19 @@ State 127
     GEQ            shift, and go to state 116
 
 
-State 128
+State 129
 
   106 pointerAccess: ARROW ID •
   107              | ARROW ID • pointerAccess
 
-    ARROW  shift, and go to state 76
+    ARROW  shift, and go to state 77
 
     $default  reduce using rule 106 (pointerAccess)
 
-    pointerAccess  go to state 160
+    pointerAccess  go to state 161
 
 
-State 129
+State 130
 
    79 expr: expr • AND expr
    80     | expr • OR expr
@@ -2354,7 +2377,7 @@ State 129
     TIMES   shift, and go to state 105
     DIV     shift, and go to state 106
     MOD     shift, and go to state 107
-    COMMA   shift, and go to state 161
+    COMMA   shift, and go to state 162
     OR      shift, and go to state 109
     AND     shift, and go to state 110
     EQUALS  shift, and go to state 111
@@ -2366,37 +2389,14 @@ State 129
 
     $default  reduce using rule 104 (lparAfter)
 
-    lparAfter  go to state 162
-
-
-State 130
-
-   98 identifier: ID LEFT_PAREN lpar • RIGHT_PAREN
-
-    RIGHT_PAREN  shift, and go to state 163
+    lparAfter  go to state 163
 
 
 State 131
 
-   95 expr_tern: TERNARY expr QUESTION_MARK • expr COLON expr TERNARY
+   98 identifier: ID LEFT_PAREN lpar • RIGHT_PAREN
 
-    MINUS       shift, and go to state 19
-    TRUE        shift, and go to state 20
-    FALSE       shift, and go to state 21
-    NUMBER      shift, and go to state 22
-    CHARACTER   shift, and go to state 23
-    STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
-    LEFT_PAREN  shift, and go to state 28
-    INCREMENT   shift, and go to state 29
-    DECREMENT   shift, and go to state 30
-    NOT         shift, and go to state 31
-
-    expr        go to state 164
-    expr_tern   go to state 54
-    identifier  go to state 62
-    literal     go to state 56
+    RIGHT_PAREN  shift, and go to state 164
 
 
 State 132
@@ -2491,8 +2491,8 @@ State 136
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2506,7 +2506,7 @@ State 136
 
 State 137
 
-   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais • ID
+   24 decl_var_prim: primitive hashtagzeromais cochetezeromais • ID
 
     ID  shift, and go to state 166
 
@@ -2913,8 +2913,8 @@ State 152
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -2935,7 +2935,7 @@ State 152
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -2960,8 +2960,8 @@ State 154
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -3008,70 +3008,14 @@ State 158
 
     $default  reduce using rule 66 (typedlpar)
 
-    type        go to state 170
-    typename    go to state 71
-    primitivos  go to state 72
-    typedlpar   go to state 171
-    parameter   go to state 172
+    type       go to state 170
+    typename   go to state 71
+    primitive  go to state 72
+    typedlpar  go to state 171
+    parameter  go to state 172
 
 
 State 159
-
-  100 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET •
-  101            | LEFT_BRACKET expr RIGHT_BRACKET • arrayAccess
-
-    LEFT_BRACKET  shift, and go to state 75
-
-    $default  reduce using rule 100 (arrayAccess)
-
-    arrayAccess  go to state 173
-
-
-State 160
-
-  107 pointerAccess: ARROW ID pointerAccess •
-
-    $default  reduce using rule 107 (pointerAccess)
-
-
-State 161
-
-  105 lparAfter: COMMA • expr lparAfter
-
-    MINUS       shift, and go to state 19
-    TRUE        shift, and go to state 20
-    FALSE       shift, and go to state 21
-    NUMBER      shift, and go to state 22
-    CHARACTER   shift, and go to state 23
-    STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
-    LEFT_PAREN  shift, and go to state 28
-    INCREMENT   shift, and go to state 29
-    DECREMENT   shift, and go to state 30
-    NOT         shift, and go to state 31
-
-    expr        go to state 174
-    expr_tern   go to state 54
-    identifier  go to state 62
-    literal     go to state 56
-
-
-State 162
-
-  103 lpar: expr lparAfter •
-
-    $default  reduce using rule 103 (lpar)
-
-
-State 163
-
-   98 identifier: ID LEFT_PAREN lpar RIGHT_PAREN •
-
-    $default  reduce using rule 98 (identifier)
-
-
-State 164
 
    79 expr: expr • AND expr
    80     | expr • OR expr
@@ -3093,7 +3037,7 @@ State 164
     TIMES   shift, and go to state 105
     DIV     shift, and go to state 106
     MOD     shift, and go to state 107
-    COLON   shift, and go to state 175
+    COLON   shift, and go to state 173
     OR      shift, and go to state 109
     AND     shift, and go to state 110
     EQUALS  shift, and go to state 111
@@ -3102,6 +3046,62 @@ State 164
     GT      shift, and go to state 114
     LEQ     shift, and go to state 115
     GEQ     shift, and go to state 116
+
+
+State 160
+
+  100 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET •
+  101            | LEFT_BRACKET expr RIGHT_BRACKET • arrayAccess
+
+    LEFT_BRACKET  shift, and go to state 76
+
+    $default  reduce using rule 100 (arrayAccess)
+
+    arrayAccess  go to state 174
+
+
+State 161
+
+  107 pointerAccess: ARROW ID pointerAccess •
+
+    $default  reduce using rule 107 (pointerAccess)
+
+
+State 162
+
+  105 lparAfter: COMMA • expr lparAfter
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 175
+    expr_tern   go to state 54
+    identifier  go to state 62
+    literal     go to state 56
+
+
+State 163
+
+  103 lpar: expr lparAfter •
+
+    $default  reduce using rule 103 (lpar)
+
+
+State 164
+
+   98 identifier: ID LEFT_PAREN lpar RIGHT_PAREN •
+
+    $default  reduce using rule 98 (identifier)
 
 
 State 165
@@ -3139,7 +3139,7 @@ State 165
 
 State 166
 
-   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais ID •
+   24 decl_var_prim: primitive hashtagzeromais cochetezeromais ID •
 
     $default  reduce using rule 24 (decl_var_prim)
 
@@ -3200,8 +3200,8 @@ State 170
 
    70 parameter: type • parameterAfter
 
-    ID         shift, and go to state 182
-    REFERENCE  shift, and go to state 183
+    REFERENCE  shift, and go to state 182
+    ID         shift, and go to state 183
 
     parameterAfter  go to state 184
 
@@ -3226,12 +3226,35 @@ State 172
 
 State 173
 
+   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON • expr TERNARY
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 188
+    expr_tern   go to state 54
+    identifier  go to state 62
+    literal     go to state 56
+
+
+State 174
+
   101 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET arrayAccess •
 
     $default  reduce using rule 101 (arrayAccess)
 
 
-State 174
+State 175
 
    79 expr: expr • AND expr
    80     | expr • OR expr
@@ -3253,7 +3276,7 @@ State 174
     TIMES   shift, and go to state 105
     DIV     shift, and go to state 106
     MOD     shift, and go to state 107
-    COMMA   shift, and go to state 161
+    COMMA   shift, and go to state 162
     OR      shift, and go to state 109
     AND     shift, and go to state 110
     EQUALS  shift, and go to state 111
@@ -3265,30 +3288,7 @@ State 174
 
     $default  reduce using rule 104 (lparAfter)
 
-    lparAfter  go to state 188
-
-
-State 175
-
-   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON • expr TERNARY
-
-    MINUS       shift, and go to state 19
-    TRUE        shift, and go to state 20
-    FALSE       shift, and go to state 21
-    NUMBER      shift, and go to state 22
-    CHARACTER   shift, and go to state 23
-    STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
-    LEFT_PAREN  shift, and go to state 28
-    INCREMENT   shift, and go to state 29
-    DECREMENT   shift, and go to state 30
-    NOT         shift, and go to state 31
-
-    expr        go to state 189
-    expr_tern   go to state 54
-    identifier  go to state 62
-    literal     go to state 56
+    lparAfter  go to state 189
 
 
 State 176
@@ -3355,8 +3355,8 @@ State 181
     NUMBER      shift, and go to state 22
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -3370,16 +3370,16 @@ State 181
 
 State 182
 
-   71 parameterAfter: ID •
+   72 parameterAfter: REFERENCE • ID
 
-    $default  reduce using rule 71 (parameterAfter)
+    ID  shift, and go to state 197
 
 
 State 183
 
-   72 parameterAfter: REFERENCE • ID
+   71 parameterAfter: ID •
 
-    ID  shift, and go to state 197
+    $default  reduce using rule 71 (parameterAfter)
 
 
 State 184
@@ -3410,10 +3410,10 @@ State 186
     VOID  shift, and go to state 18
     ID    shift, and go to state 69
 
-    type        go to state 170
-    typename    go to state 71
-    primitivos  go to state 72
-    parameter   go to state 199
+    type       go to state 170
+    typename   go to state 71
+    primitive  go to state 72
+    parameter  go to state 199
 
 
 State 187
@@ -3424,13 +3424,6 @@ State 187
 
 
 State 188
-
-  105 lparAfter: COMMA expr lparAfter •
-
-    $default  reduce using rule 105 (lparAfter)
-
-
-State 189
 
    79 expr: expr • AND expr
    80     | expr • OR expr
@@ -3461,6 +3454,13 @@ State 189
     GT       shift, and go to state 114
     LEQ      shift, and go to state 115
     GEQ      shift, and go to state 116
+
+
+State 189
+
+  105 lparAfter: COMMA expr lparAfter •
+
+    $default  reduce using rule 105 (lparAfter)
 
 
 State 190
@@ -3498,8 +3498,8 @@ State 191
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -3520,7 +3520,7 @@ State 191
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -3657,8 +3657,8 @@ State 202
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -3684,7 +3684,7 @@ State 202
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54
@@ -3720,8 +3720,8 @@ State 203
     CHARACTER   shift, and go to state 23
     STRING      shift, and go to state 24
     LEFT_BRACE  shift, and go to state 25
-    ID          shift, and go to state 26
-    TERNARY     shift, and go to state 27
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
     LEFT_PAREN  shift, and go to state 28
     INCREMENT   shift, and go to state 29
     DECREMENT   shift, and go to state 30
@@ -3742,7 +3742,7 @@ State 203
     loop            go to state 48
     if              go to state 49
     switch          go to state 50
-    primitivos      go to state 51
+    primitive       go to state 51
     block           go to state 52
     expr            go to state 53
     expr_tern       go to state 54

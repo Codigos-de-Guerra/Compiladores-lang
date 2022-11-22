@@ -1419,11 +1419,12 @@ YY_RULE_SETUP
                          char_count += yyleng;
                          column += yyleng;
                          // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+                         yylval.name = new std::string(yytext);
                          return val.token; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 383 "./src/tokenizer.l"
+#line 384 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, SEMICOLON};
        char_count += yyleng;
        column += yyleng;
@@ -1432,7 +1433,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 388 "./src/tokenizer.l"
+#line 389 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, QUESTION_MARK};
        char_count += yyleng;
        column += yyleng;
@@ -1441,7 +1442,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 393 "./src/tokenizer.l"
+#line 394 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, COLON};
        char_count += yyleng;
        column += yyleng;
@@ -1450,7 +1451,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 398 "./src/tokenizer.l"
+#line 399 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, DOT};
        char_count += yyleng;
        column += yyleng;
@@ -1459,7 +1460,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 403 "./src/tokenizer.l"
+#line 404 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, POINTER_VAL};
        char_count += yyleng;
        column += yyleng;
@@ -1468,7 +1469,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 408 "./src/tokenizer.l"
+#line 409 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, ARROW};
        char_count += yyleng;
        column += yyleng;
@@ -1477,7 +1478,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 413 "./src/tokenizer.l"
+#line 414 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, COMMA};
        char_count += yyleng;
        column += yyleng;
@@ -1486,7 +1487,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 418 "./src/tokenizer.l"
+#line 419 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, INCREMENT};
        char_count += yyleng;
        column += yyleng;
@@ -1495,7 +1496,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 423 "./src/tokenizer.l"
+#line 424 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, DECREMENT};
        char_count += yyleng;
        column += yyleng;
@@ -1504,7 +1505,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 428 "./src/tokenizer.l"
+#line 429 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, REFERENCE};
        char_count += yyleng;
        column += yyleng;
@@ -1513,7 +1514,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 433 "./src/tokenizer.l"
+#line 434 "./src/tokenizer.l"
 { lval val = {yylineno, column, yytext, TERNARY};
        char_count += yyleng;
        column += yyleng;
@@ -1522,15 +1523,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 439 "./src/tokenizer.l"
+#line 440 "./src/tokenizer.l"
 { char_count += yyleng; }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 440 "./src/tokenizer.l"
+#line 441 "./src/tokenizer.l"
 ECHO;
 	YY_BREAK
-#line 1533 "./out/lex.yy.cpp"
+#line 1534 "./out/lex.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2535,7 +2536,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 440 "./src/tokenizer.l"
+#line 441 "./src/tokenizer.l"
 
 
 void print(node *root)
@@ -2549,4 +2550,3 @@ void print(node *root)
     }
     if (root->is_leaf) printf("\n");
 }
-

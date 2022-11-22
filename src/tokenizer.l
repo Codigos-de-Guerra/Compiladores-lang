@@ -378,6 +378,7 @@ void { lval val = {yylineno, column, yytext, VOID};
                          char_count += yyleng;
                          column += yyleng;
                          // printf("%d:%d %s %s\n", val.line, val.col, enumStr(val.token), val.lexeme);
+                         yylval.name = new std::string(yytext);
                          return val.token; }
 
 \;   { lval val = {yylineno, column, yytext, SEMICOLON};

@@ -30,7 +30,9 @@ public:
 
 typedef map<string, Symbol> SymTable;
 
-void print_symtable(SymTable table);
+void print_symtable(SymTable &table);
+
+void print_current_symtable(list<SymTable> &tables);
 
 void push_scope(list<SymTable> &tables, SymTable new_table);
 
