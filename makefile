@@ -1,53 +1,36 @@
-# Defines
-#CXXFLAGS = -fsanitize=address,undefined -fno-omit-frame-pointer -g -Wall -Wshadow -Wno-unused-result -Wno-sign-compare -Wno-char-subscripts
-CXXFLAGS = -std=c++17 #-g -Wall -Wshadow -Wno-unused-result -Wno-sign-compare
-CCOMPILER = g++
-
-# Folder
-BIN = ./bin
+# Folders
+OUT = ./out
 GRAMMAR = ./grammar
 EXAM = ./examples
-SCRIPTS = ./scripts
 SRC = ./src
 
+# Defines
+#CXXFLAGS = -fsanitize=address,undefined -fno-omit-frame-pointer -g -Wall -Wshadow -Wno-unused-result -Wno-sign-compare -Wno-char-subscripts
+CXXFLAGS = -std=c++17 -Wno-write-strings
+INCLUDES = -I$(SRC) -I$(OUT)
+CXX = g++
+
 # Vars
-clear = $(SCRIPTS)/clear_html.py
-table = output_table.txt
-auto_generate_iter = $(SCRIPTS)/script.py
-iter_anal = analisador_iter.cpp
-auto_generate_recur = $(SCRIPTS)/script.py
-recur_anal = analisador_recur.cpp
-iter = iter
-recur = recur
+TOKENIZER = $(SRC)/tokenizer.l
+LEX_OUT = $(OUT)/lex.yy.cpp
+YACC_OUT = $(OUT)/y.tab.cpp
+CMM = $(OUT)/c--
 
+.PHONY: all
+all: compile
 
-all: compile link
+lex:
+	mkdir -p $(OUT)
+	lex -o $(LEX_OUT) $(TOKENIZER)
 
-generate: treat
-	python3.10 $(auto_generate_iter) > $(SRC)/$(iter_anal)
-	python3.10 $(auto_generate_recur) > $(SRC)/$(recur_anal)
+yacc: lex
+	yacc -d -v $(SRC)/parser.y -o $(YACC_OUT)
 
-treat:
-	mkdir -p $(SRC)
-	python3.10 $(clear) > $(table)
+compile: yacc
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) -o $(CMM)
 
-
-compile: genLex
-	mkdir -p $(BIN)
-	$(CCOMPILER) $(SRC)/$(iter_anal) $(CXXFLAGS) -o $(BIN)/$(iter)
-	$(CCOMPILER) $(SRC)/$(recur_anal) $(CXXFLAGS) -o $(BIN)/$(recur)
-
-genLex:
-	mkdir -p $(SRC)
-	lex -o $(SRC)/lex.yy.c tokenizer.l
-
-link:
-	ln -sfv $(BIN)/$(iter) $(iter)
-	ln -sfv $(BIN)/$(recur) $(recur)
+test: compile
+	$(CMM) < $(EXAM)/t1.cmm
 
 clean:
-	rm -f $(SRC)/lex.yy.c
-	rm -f $(table)
-	rm -f $(iter)
-	rm -f $(recur)
-	rm -rf $(BIN)
+	rm -rf $(OUT)

@@ -3,10 +3,7 @@
 %{
 #include "tipos.hpp"
 
-
-#include "y.tab.h"
-
-
+#include "y.tab.hpp"
 
 int column = 0;
 int char_count = 0;

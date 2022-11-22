@@ -2,6 +2,7 @@
 #define TIPOS
 
 #include "classes.hpp"
+
 typedef union{
     literal* literalRetorno;
     cmd* cmdRetorno;
@@ -19,6 +20,5 @@ typedef union{
 } YYSTYPE;
 
 extern YYSTYPE yylval;
-
 
 #endif
