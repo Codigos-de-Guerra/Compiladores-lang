@@ -11,7 +11,7 @@ Grammar
 
     1 prog: stmts
 
-    2 stmts: %empty
+    2 stmts: ε
     3      | stmt stmts
 
     4 stmt: decl_fun
@@ -34,7 +34,7 @@ Grammar
 
    19 cmd_decl_var: all_decl_var assign_expr_maybe
 
-   20 assign_expr_maybe: %empty
+   20 assign_expr_maybe: ε
    21                  | assign_expr
 
    22 all_decl_var: decl_var_prim
@@ -44,10 +44,10 @@ Grammar
 
    25 const_decl_var: CONST decl_var_prim
 
-   26 hashtagzeromais: %empty
+   26 hashtagzeromais: ε
    27                | POINTER_VAL hashtagzeromais
 
-   28 cochetezeromais: %empty
+   28 cochetezeromais: ε
    29                | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais
 
    30 assign_expr: ASSIGN expr
@@ -83,12 +83,12 @@ Grammar
 
    50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else
 
-   51 else: %empty
+   51 else: ε
    52     | ELSE cmd
 
    53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
 
-   54 casezeromais: %empty
+   54 casezeromais: ε
    55             | case casezeromais
 
    56 case: CASE literal COLON stmts
@@ -105,10 +105,10 @@ Grammar
    64           | STR
    65           | VOID
 
-   66 typedlpar: %empty
+   66 typedlpar: ε
    67          | parameter typedlparAfter
 
-   68 typedlparAfter: %empty
+   68 typedlparAfter: ε
    69               | COMMA parameter typedlparAfter
 
    70 parameter: type parameterAfter
@@ -150,10 +150,10 @@ Grammar
   100 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET
   101            | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess
 
-  102 lpar: %empty
+  102 lpar: ε
   103     | expr lparAfter
 
-  104 lparAfter: %empty
+  104 lparAfter: ε
   105          | COMMA expr lparAfter
 
   106 pointerAccess: ARROW ID
@@ -380,7 +380,7 @@ Nonterminals, with rules where they appear
 
 State 0
 
-    0 $accept: . prog $end
+    0 $accept: • prog $end
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -445,28 +445,28 @@ State 0
 
 State 1
 
-   50 if: IF . LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else
+   50 if: IF • LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else
 
     LEFT_PAREN  shift, and go to state 57
 
 
 State 2
 
-   53 switch: SWITCH . LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+   53 switch: SWITCH • LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
 
     LEFT_PAREN  shift, and go to state 58
 
 
 State 3
 
-   48 for: FOR . LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
+   48 for: FOR • LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
 
     LEFT_PAREN  shift, and go to state 59
 
 
 State 4
 
-   49 loop: LOOP . cmd
+   49 loop: LOOP • cmd
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -524,7 +524,7 @@ State 4
 
 State 5
 
-   14 cmd: RETURN . expr SEMICOLON
+   14 cmd: RETURN • expr SEMICOLON
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -547,7 +547,7 @@ State 5
 
 State 6
 
-   25 const_decl_var: CONST . decl_var_prim
+   25 const_decl_var: CONST • decl_var_prim
 
     INT   shift, and go to state 13
     REAL  shift, and go to state 14
@@ -562,42 +562,42 @@ State 6
 
 State 7
 
-   15 cmd: BREAK . SEMICOLON
+   15 cmd: BREAK • SEMICOLON
 
     SEMICOLON  shift, and go to state 64
 
 
 State 8
 
-   16 cmd: CONTINUE . SEMICOLON
+   16 cmd: CONTINUE • SEMICOLON
 
     SEMICOLON  shift, and go to state 65
 
 
 State 9
 
-   42 in: READ . LEFT_PAREN ID RIGHT_PAREN
+   42 in: READ • LEFT_PAREN ID RIGHT_PAREN
 
     LEFT_PAREN  shift, and go to state 66
 
 
 State 10
 
-   43 out: WRITE . LEFT_PAREN ID RIGHT_PAREN
+   43 out: WRITE • LEFT_PAREN ID RIGHT_PAREN
 
     LEFT_PAREN  shift, and go to state 67
 
 
 State 11
 
-   17 cmd: EXIT . WHEN expr SEMICOLON
+   17 cmd: EXIT • WHEN expr SEMICOLON
 
     WHEN  shift, and go to state 68
 
 
 State 12
 
-    6 decl_fun: FUNCTION . type ID LEFT_PAREN typedlpar RIGHT_PAREN block
+    6 decl_fun: FUNCTION • type ID LEFT_PAREN typedlpar RIGHT_PAREN block
 
     INT   shift, and go to state 13
     REAL  shift, and go to state 14
@@ -614,49 +614,49 @@ State 12
 
 State 13
 
-   60 primitivos: INT .
+   60 primitivos: INT •
 
     $default  reduce using rule 60 (primitivos)
 
 
 State 14
 
-   61 primitivos: REAL .
+   61 primitivos: REAL •
 
     $default  reduce using rule 61 (primitivos)
 
 
 State 15
 
-   62 primitivos: CHAR .
+   62 primitivos: CHAR •
 
     $default  reduce using rule 62 (primitivos)
 
 
 State 16
 
-   64 primitivos: STR .
+   64 primitivos: STR •
 
     $default  reduce using rule 64 (primitivos)
 
 
 State 17
 
-   63 primitivos: BOOL .
+   63 primitivos: BOOL •
 
     $default  reduce using rule 63 (primitivos)
 
 
 State 18
 
-   65 primitivos: VOID .
+   65 primitivos: VOID •
 
     $default  reduce using rule 65 (primitivos)
 
 
 State 19
 
-   77 expr: MINUS . identifier
+   77 expr: MINUS • identifier
 
     ID  shift, and go to state 26
 
@@ -665,42 +665,42 @@ State 19
 
 State 20
 
-  110 literal: TRUE .
+  110 literal: TRUE •
 
     $default  reduce using rule 110 (literal)
 
 
 State 21
 
-  111 literal: FALSE .
+  111 literal: FALSE •
 
     $default  reduce using rule 111 (literal)
 
 
 State 22
 
-  108 literal: NUMBER .
+  108 literal: NUMBER •
 
     $default  reduce using rule 108 (literal)
 
 
 State 23
 
-  109 literal: CHARACTER .
+  109 literal: CHARACTER •
 
     $default  reduce using rule 109 (literal)
 
 
 State 24
 
-  112 literal: STRING .
+  112 literal: STRING •
 
     $default  reduce using rule 112 (literal)
 
 
 State 25
 
-   73 block: LEFT_BRACE . stmts RIGHT_BRACE
+   73 block: LEFT_BRACE • stmts RIGHT_BRACE
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -764,10 +764,10 @@ State 25
 
 State 26
 
-   96 identifier: ID .
-   97           | ID . arrayAccess
-   98           | ID . LEFT_PAREN lpar RIGHT_PAREN
-   99           | ID . pointerAccess
+   96 identifier: ID •
+   97           | ID • arrayAccess
+   98           | ID • LEFT_PAREN lpar RIGHT_PAREN
+   99           | ID • pointerAccess
 
     LEFT_BRACKET  shift, and go to state 75
     ARROW         shift, and go to state 76
@@ -781,7 +781,7 @@ State 26
 
 State 27
 
-   95 expr_tern: TERNARY . expr QUESTION_MARK expr COLON expr TERNARY
+   95 expr_tern: TERNARY • expr QUESTION_MARK expr COLON expr TERNARY
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -804,7 +804,7 @@ State 27
 
 State 28
 
-   76 expr: LEFT_PAREN . expr RIGHT_PAREN
+   76 expr: LEFT_PAREN • expr RIGHT_PAREN
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -827,7 +827,7 @@ State 28
 
 State 29
 
-   74 expr: INCREMENT . expr
+   74 expr: INCREMENT • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -850,7 +850,7 @@ State 29
 
 State 30
 
-   75 expr: DECREMENT . expr
+   75 expr: DECREMENT • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -873,7 +873,7 @@ State 30
 
 State 31
 
-   78 expr: NOT . expr
+   78 expr: NOT • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -896,21 +896,21 @@ State 31
 
 State 32
 
-    0 $accept: prog . $end
+    0 $accept: prog • $end
 
     $end  shift, and go to state 85
 
 
 State 33
 
-    1 prog: stmts .
+    1 prog: stmts •
 
     $default  reduce using rule 1 (prog)
 
 
 State 34
 
-    3 stmts: stmt . stmts
+    3 stmts: stmt • stmts
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -974,28 +974,28 @@ State 34
 
 State 35
 
-    4 stmt: decl_fun .
+    4 stmt: decl_fun •
 
     $default  reduce using rule 4 (stmt)
 
 
 State 36
 
-    5 stmt: cmd .
+    5 stmt: cmd •
 
     $default  reduce using rule 5 (stmt)
 
 
 State 37
 
-    8 cmd: cmd_decl_var . SEMICOLON
+    8 cmd: cmd_decl_var • SEMICOLON
 
     SEMICOLON  shift, and go to state 87
 
 
 State 38
 
-   19 cmd_decl_var: all_decl_var . assign_expr_maybe
+   19 cmd_decl_var: all_decl_var • assign_expr_maybe
 
     ASSIGN_PLUS   shift, and go to state 88
     ASSIGN_MINUS  shift, and go to state 89
@@ -1016,91 +1016,91 @@ State 38
 
 State 39
 
-   22 all_decl_var: decl_var_prim .
+   22 all_decl_var: decl_var_prim •
 
     $default  reduce using rule 22 (all_decl_var)
 
 
 State 40
 
-   23 all_decl_var: const_decl_var .
+   23 all_decl_var: const_decl_var •
 
     $default  reduce using rule 23 (all_decl_var)
 
 
 State 41
 
-    9 cmd: inOut . SEMICOLON
+    9 cmd: inOut • SEMICOLON
 
     SEMICOLON  shift, and go to state 100
 
 
 State 42
 
-   40 inOut: in .
+   40 inOut: in •
 
     $default  reduce using rule 40 (inOut)
 
 
 State 43
 
-   41 inOut: out .
+   41 inOut: out •
 
     $default  reduce using rule 41 (inOut)
 
 
 State 44
 
-   10 cmd: cmd_loop .
+   10 cmd: cmd_loop •
 
     $default  reduce using rule 10 (cmd)
 
 
 State 45
 
-   11 cmd: cmd_cond .
+   11 cmd: cmd_cond •
 
     $default  reduce using rule 11 (cmd)
 
 
 State 46
 
-   12 cmd: cmd_switch .
+   12 cmd: cmd_switch •
 
     $default  reduce using rule 12 (cmd)
 
 
 State 47
 
-   44 cmd_loop: for .
+   44 cmd_loop: for •
 
     $default  reduce using rule 44 (cmd_loop)
 
 
 State 48
 
-   45 cmd_loop: loop .
+   45 cmd_loop: loop •
 
     $default  reduce using rule 45 (cmd_loop)
 
 
 State 49
 
-   46 cmd_cond: if .
+   46 cmd_cond: if •
 
     $default  reduce using rule 46 (cmd_cond)
 
 
 State 50
 
-   47 cmd_switch: switch .
+   47 cmd_switch: switch •
 
     $default  reduce using rule 47 (cmd_switch)
 
 
 State 51
 
-   24 decl_var_prim: primitivos . hashtagzeromais cochetezeromais ID
+   24 decl_var_prim: primitivos • hashtagzeromais cochetezeromais ID
 
     POINTER_VAL  shift, and go to state 101
 
@@ -1111,27 +1111,27 @@ State 51
 
 State 52
 
-   18 cmd: block .
+   18 cmd: block •
 
     $default  reduce using rule 18 (cmd)
 
 
 State 53
 
-   13 cmd: expr . SEMICOLON
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   13 cmd: expr • SEMICOLON
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS       shift, and go to state 103
     MINUS      shift, and go to state 104
@@ -1151,15 +1151,15 @@ State 53
 
 State 54
 
-   92 expr: expr_tern .
+   92 expr: expr_tern •
 
     $default  reduce using rule 92 (expr)
 
 
 State 55
 
-    7 cmd: identifier . assign_expr SEMICOLON
-   94 expr: identifier .
+    7 cmd: identifier • assign_expr SEMICOLON
+   94 expr: identifier •
 
     ASSIGN_PLUS   shift, and go to state 88
     ASSIGN_MINUS  shift, and go to state 89
@@ -1179,14 +1179,14 @@ State 55
 
 State 56
 
-   93 expr: literal .
+   93 expr: literal •
 
     $default  reduce using rule 93 (expr)
 
 
 State 57
 
-   50 if: IF LEFT_PAREN . expr RIGHT_PAREN cmd ENDIF else
+   50 if: IF LEFT_PAREN • expr RIGHT_PAREN cmd ENDIF else
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1209,7 +1209,7 @@ State 57
 
 State 58
 
-   53 switch: SWITCH LEFT_PAREN . expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+   53 switch: SWITCH LEFT_PAREN • expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1232,7 +1232,7 @@ State 58
 
 State 59
 
-   48 for: FOR LEFT_PAREN . expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
+   48 for: FOR LEFT_PAREN • expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1255,27 +1255,27 @@ State 59
 
 State 60
 
-   49 loop: LOOP cmd .
+   49 loop: LOOP cmd •
 
     $default  reduce using rule 49 (loop)
 
 
 State 61
 
-   14 cmd: RETURN expr . SEMICOLON
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   14 cmd: RETURN expr • SEMICOLON
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS       shift, and go to state 103
     MINUS      shift, and go to state 104
@@ -1295,49 +1295,49 @@ State 61
 
 State 62
 
-   94 expr: identifier .
+   94 expr: identifier •
 
     $default  reduce using rule 94 (expr)
 
 
 State 63
 
-   25 const_decl_var: CONST decl_var_prim .
+   25 const_decl_var: CONST decl_var_prim •
 
     $default  reduce using rule 25 (const_decl_var)
 
 
 State 64
 
-   15 cmd: BREAK SEMICOLON .
+   15 cmd: BREAK SEMICOLON •
 
     $default  reduce using rule 15 (cmd)
 
 
 State 65
 
-   16 cmd: CONTINUE SEMICOLON .
+   16 cmd: CONTINUE SEMICOLON •
 
     $default  reduce using rule 16 (cmd)
 
 
 State 66
 
-   42 in: READ LEFT_PAREN . ID RIGHT_PAREN
+   42 in: READ LEFT_PAREN • ID RIGHT_PAREN
 
     ID  shift, and go to state 122
 
 
 State 67
 
-   43 out: WRITE LEFT_PAREN . ID RIGHT_PAREN
+   43 out: WRITE LEFT_PAREN • ID RIGHT_PAREN
 
     ID  shift, and go to state 123
 
 
 State 68
 
-   17 cmd: EXIT WHEN . expr SEMICOLON
+   17 cmd: EXIT WHEN • expr SEMICOLON
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1360,50 +1360,50 @@ State 68
 
 State 69
 
-   59 typename: ID .
+   59 typename: ID •
 
     $default  reduce using rule 59 (typename)
 
 
 State 70
 
-    6 decl_fun: FUNCTION type . ID LEFT_PAREN typedlpar RIGHT_PAREN block
+    6 decl_fun: FUNCTION type • ID LEFT_PAREN typedlpar RIGHT_PAREN block
 
     ID  shift, and go to state 125
 
 
 State 71
 
-   57 type: typename .
+   57 type: typename •
 
     $default  reduce using rule 57 (type)
 
 
 State 72
 
-   58 typename: primitivos .
+   58 typename: primitivos •
 
     $default  reduce using rule 58 (typename)
 
 
 State 73
 
-   77 expr: MINUS identifier .
+   77 expr: MINUS identifier •
 
     $default  reduce using rule 77 (expr)
 
 
 State 74
 
-   73 block: LEFT_BRACE stmts . RIGHT_BRACE
+   73 block: LEFT_BRACE stmts • RIGHT_BRACE
 
     RIGHT_BRACE  shift, and go to state 126
 
 
 State 75
 
-  100 arrayAccess: LEFT_BRACKET . expr RIGHT_BRACKET
-  101            | LEFT_BRACKET . expr RIGHT_BRACKET arrayAccess
+  100 arrayAccess: LEFT_BRACKET • expr RIGHT_BRACKET
+  101            | LEFT_BRACKET • expr RIGHT_BRACKET arrayAccess
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1426,15 +1426,15 @@ State 75
 
 State 76
 
-  106 pointerAccess: ARROW . ID
-  107              | ARROW . ID pointerAccess
+  106 pointerAccess: ARROW • ID
+  107              | ARROW • ID pointerAccess
 
     ID  shift, and go to state 128
 
 
 State 77
 
-   98 identifier: ID LEFT_PAREN . lpar RIGHT_PAREN
+   98 identifier: ID LEFT_PAREN • lpar RIGHT_PAREN
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1460,34 +1460,34 @@ State 77
 
 State 78
 
-   97 identifier: ID arrayAccess .
+   97 identifier: ID arrayAccess •
 
     $default  reduce using rule 97 (identifier)
 
 
 State 79
 
-   99 identifier: ID pointerAccess .
+   99 identifier: ID pointerAccess •
 
     $default  reduce using rule 99 (identifier)
 
 
 State 80
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-   95 expr_tern: TERNARY expr . QUESTION_MARK expr COLON expr TERNARY
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+   95 expr_tern: TERNARY expr • QUESTION_MARK expr COLON expr TERNARY
 
     PLUS           shift, and go to state 103
     MINUS          shift, and go to state 104
@@ -1507,20 +1507,20 @@ State 80
 
 State 81
 
-   76 expr: LEFT_PAREN expr . RIGHT_PAREN
-   79     | expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   76 expr: LEFT_PAREN expr • RIGHT_PAREN
+   79     | expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS         shift, and go to state 103
     MINUS        shift, and go to state 104
@@ -1540,20 +1540,20 @@ State 81
 
 State 82
 
-   74 expr: INCREMENT expr .
-   79     | expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   74 expr: INCREMENT expr •
+   79     | expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -1574,20 +1574,20 @@ State 82
 
 State 83
 
-   75 expr: DECREMENT expr .
-   79     | expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   75 expr: DECREMENT expr •
+   79     | expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -1608,20 +1608,20 @@ State 83
 
 State 84
 
-   78 expr: NOT expr .
-   79     | expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   78 expr: NOT expr •
+   79     | expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -1642,63 +1642,63 @@ State 84
 
 State 85
 
-    0 $accept: prog $end .
+    0 $accept: prog $end •
 
     $default  accept
 
 
 State 86
 
-    3 stmts: stmt stmts .
+    3 stmts: stmt stmts •
 
     $default  reduce using rule 3 (stmts)
 
 
 State 87
 
-    8 cmd: cmd_decl_var SEMICOLON .
+    8 cmd: cmd_decl_var SEMICOLON •
 
     $default  reduce using rule 8 (cmd)
 
 
 State 88
 
-   33 assign_extra: ASSIGN_PLUS .
+   33 assign_extra: ASSIGN_PLUS •
 
     $default  reduce using rule 33 (assign_extra)
 
 
 State 89
 
-   34 assign_extra: ASSIGN_MINUS .
+   34 assign_extra: ASSIGN_MINUS •
 
     $default  reduce using rule 34 (assign_extra)
 
 
 State 90
 
-   35 assign_extra: ASSIGN_MULT .
+   35 assign_extra: ASSIGN_MULT •
 
     $default  reduce using rule 35 (assign_extra)
 
 
 State 91
 
-   36 assign_extra: ASSIGN_DIV .
+   36 assign_extra: ASSIGN_DIV •
 
     $default  reduce using rule 36 (assign_extra)
 
 
 State 92
 
-   37 assign_extra: ASSIGN_MOD .
+   37 assign_extra: ASSIGN_MOD •
 
     $default  reduce using rule 37 (assign_extra)
 
 
 State 93
 
-   30 assign_expr: ASSIGN . expr
+   30 assign_expr: ASSIGN • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1721,35 +1721,35 @@ State 93
 
 State 94
 
-   39 inc: INCREMENT .
+   39 inc: INCREMENT •
 
     $default  reduce using rule 39 (inc)
 
 
 State 95
 
-   38 inc: DECREMENT .
+   38 inc: DECREMENT •
 
     $default  reduce using rule 38 (inc)
 
 
 State 96
 
-   19 cmd_decl_var: all_decl_var assign_expr_maybe .
+   19 cmd_decl_var: all_decl_var assign_expr_maybe •
 
     $default  reduce using rule 19 (cmd_decl_var)
 
 
 State 97
 
-   21 assign_expr_maybe: assign_expr .
+   21 assign_expr_maybe: assign_expr •
 
     $default  reduce using rule 21 (assign_expr_maybe)
 
 
 State 98
 
-   31 assign_expr: assign_extra . expr
+   31 assign_expr: assign_extra • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1772,21 +1772,21 @@ State 98
 
 State 99
 
-   32 assign_expr: inc .
+   32 assign_expr: inc •
 
     $default  reduce using rule 32 (assign_expr)
 
 
 State 100
 
-    9 cmd: inOut SEMICOLON .
+    9 cmd: inOut SEMICOLON •
 
     $default  reduce using rule 9 (cmd)
 
 
 State 101
 
-   27 hashtagzeromais: POINTER_VAL . hashtagzeromais
+   27 hashtagzeromais: POINTER_VAL • hashtagzeromais
 
     POINTER_VAL  shift, and go to state 101
 
@@ -1797,7 +1797,7 @@ State 101
 
 State 102
 
-   24 decl_var_prim: primitivos hashtagzeromais . cochetezeromais ID
+   24 decl_var_prim: primitivos hashtagzeromais • cochetezeromais ID
 
     LEFT_BRACKET  shift, and go to state 136
 
@@ -1808,7 +1808,7 @@ State 102
 
 State 103
 
-   81 expr: expr PLUS . expr
+   81 expr: expr PLUS • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1831,7 +1831,7 @@ State 103
 
 State 104
 
-   84 expr: expr MINUS . expr
+   84 expr: expr MINUS • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1854,7 +1854,7 @@ State 104
 
 State 105
 
-   82 expr: expr TIMES . expr
+   82 expr: expr TIMES • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1877,7 +1877,7 @@ State 105
 
 State 106
 
-   83 expr: expr DIV . expr
+   83 expr: expr DIV • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1900,7 +1900,7 @@ State 106
 
 State 107
 
-   85 expr: expr MOD . expr
+   85 expr: expr MOD • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1923,14 +1923,14 @@ State 107
 
 State 108
 
-   13 cmd: expr SEMICOLON .
+   13 cmd: expr SEMICOLON •
 
     $default  reduce using rule 13 (cmd)
 
 
 State 109
 
-   80 expr: expr OR . expr
+   80 expr: expr OR • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1953,7 +1953,7 @@ State 109
 
 State 110
 
-   79 expr: expr AND . expr
+   79 expr: expr AND • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1976,7 +1976,7 @@ State 110
 
 State 111
 
-   86 expr: expr EQUALS . expr
+   86 expr: expr EQUALS • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -1999,7 +1999,7 @@ State 111
 
 State 112
 
-   87 expr: expr DIFF . expr
+   87 expr: expr DIFF • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2022,7 +2022,7 @@ State 112
 
 State 113
 
-   88 expr: expr LT . expr
+   88 expr: expr LT • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2045,7 +2045,7 @@ State 113
 
 State 114
 
-   89 expr: expr GT . expr
+   89 expr: expr GT • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2068,7 +2068,7 @@ State 114
 
 State 115
 
-   90 expr: expr LEQ . expr
+   90 expr: expr LEQ • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2091,7 +2091,7 @@ State 115
 
 State 116
 
-   91 expr: expr GEQ . expr
+   91 expr: expr GEQ • expr
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2114,27 +2114,27 @@ State 116
 
 State 117
 
-    7 cmd: identifier assign_expr . SEMICOLON
+    7 cmd: identifier assign_expr • SEMICOLON
 
     SEMICOLON  shift, and go to state 151
 
 
 State 118
 
-   50 if: IF LEFT_PAREN expr . RIGHT_PAREN cmd ENDIF else
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   50 if: IF LEFT_PAREN expr • RIGHT_PAREN cmd ENDIF else
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS         shift, and go to state 103
     MINUS        shift, and go to state 104
@@ -2154,20 +2154,20 @@ State 118
 
 State 119
 
-   53 switch: SWITCH LEFT_PAREN expr . RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   53 switch: SWITCH LEFT_PAREN expr • RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS         shift, and go to state 103
     MINUS        shift, and go to state 104
@@ -2187,20 +2187,20 @@ State 119
 
 State 120
 
-   48 for: FOR LEFT_PAREN expr . SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   48 for: FOR LEFT_PAREN expr • SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS       shift, and go to state 103
     MINUS      shift, and go to state 104
@@ -2220,41 +2220,41 @@ State 120
 
 State 121
 
-   14 cmd: RETURN expr SEMICOLON .
+   14 cmd: RETURN expr SEMICOLON •
 
     $default  reduce using rule 14 (cmd)
 
 
 State 122
 
-   42 in: READ LEFT_PAREN ID . RIGHT_PAREN
+   42 in: READ LEFT_PAREN ID • RIGHT_PAREN
 
     RIGHT_PAREN  shift, and go to state 155
 
 
 State 123
 
-   43 out: WRITE LEFT_PAREN ID . RIGHT_PAREN
+   43 out: WRITE LEFT_PAREN ID • RIGHT_PAREN
 
     RIGHT_PAREN  shift, and go to state 156
 
 
 State 124
 
-   17 cmd: EXIT WHEN expr . SEMICOLON
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   17 cmd: EXIT WHEN expr • SEMICOLON
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS       shift, and go to state 103
     MINUS      shift, and go to state 104
@@ -2274,35 +2274,35 @@ State 124
 
 State 125
 
-    6 decl_fun: FUNCTION type ID . LEFT_PAREN typedlpar RIGHT_PAREN block
+    6 decl_fun: FUNCTION type ID • LEFT_PAREN typedlpar RIGHT_PAREN block
 
     LEFT_PAREN  shift, and go to state 158
 
 
 State 126
 
-   73 block: LEFT_BRACE stmts RIGHT_BRACE .
+   73 block: LEFT_BRACE stmts RIGHT_BRACE •
 
     $default  reduce using rule 73 (block)
 
 
 State 127
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-  100 arrayAccess: LEFT_BRACKET expr . RIGHT_BRACKET
-  101            | LEFT_BRACKET expr . RIGHT_BRACKET arrayAccess
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+  100 arrayAccess: LEFT_BRACKET expr • RIGHT_BRACKET
+  101            | LEFT_BRACKET expr • RIGHT_BRACKET arrayAccess
 
     PLUS           shift, and go to state 103
     MINUS          shift, and go to state 104
@@ -2322,8 +2322,8 @@ State 127
 
 State 128
 
-  106 pointerAccess: ARROW ID .
-  107              | ARROW ID . pointerAccess
+  106 pointerAccess: ARROW ID •
+  107              | ARROW ID • pointerAccess
 
     ARROW  shift, and go to state 76
 
@@ -2334,20 +2334,20 @@ State 128
 
 State 129
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-  103 lpar: expr . lparAfter
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+  103 lpar: expr • lparAfter
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -2371,14 +2371,14 @@ State 129
 
 State 130
 
-   98 identifier: ID LEFT_PAREN lpar . RIGHT_PAREN
+   98 identifier: ID LEFT_PAREN lpar • RIGHT_PAREN
 
     RIGHT_PAREN  shift, and go to state 163
 
 
 State 131
 
-   95 expr_tern: TERNARY expr QUESTION_MARK . expr COLON expr TERNARY
+   95 expr_tern: TERNARY expr QUESTION_MARK • expr COLON expr TERNARY
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2401,27 +2401,27 @@ State 131
 
 State 132
 
-   76 expr: LEFT_PAREN expr RIGHT_PAREN .
+   76 expr: LEFT_PAREN expr RIGHT_PAREN •
 
     $default  reduce using rule 76 (expr)
 
 
 State 133
 
-   30 assign_expr: ASSIGN expr .
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   30 assign_expr: ASSIGN expr •
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -2442,20 +2442,20 @@ State 133
 
 State 134
 
-   31 assign_expr: assign_extra expr .
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   31 assign_expr: assign_extra expr •
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -2476,14 +2476,14 @@ State 134
 
 State 135
 
-   27 hashtagzeromais: POINTER_VAL hashtagzeromais .
+   27 hashtagzeromais: POINTER_VAL hashtagzeromais •
 
     $default  reduce using rule 27 (hashtagzeromais)
 
 
 State 136
 
-   29 cochetezeromais: LEFT_BRACKET . expr RIGHT_BRACKET cochetezeromais
+   29 cochetezeromais: LEFT_BRACKET • expr RIGHT_BRACKET cochetezeromais
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2506,27 +2506,27 @@ State 136
 
 State 137
 
-   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais . ID
+   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais • ID
 
     ID  shift, and go to state 166
 
 
 State 138
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   81     | expr PLUS expr .
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   81     | expr PLUS expr •
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     TIMES   shift, and go to state 105
     DIV     shift, and go to state 106
@@ -2543,20 +2543,20 @@ State 138
 
 State 139
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   84     | expr MINUS expr .
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   84     | expr MINUS expr •
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     TIMES   shift, and go to state 105
     DIV     shift, and go to state 106
@@ -2573,20 +2573,20 @@ State 139
 
 State 140
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   82     | expr TIMES expr .
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   82     | expr TIMES expr •
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  shift, and go to state 111
     DIFF    shift, and go to state 112
@@ -2600,20 +2600,20 @@ State 140
 
 State 141
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   83     | expr DIV expr .
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   83     | expr DIV expr •
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  shift, and go to state 111
     DIFF    shift, and go to state 112
@@ -2627,20 +2627,20 @@ State 141
 
 State 142
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   85     | expr MOD expr .
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   85     | expr MOD expr •
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  shift, and go to state 111
     DIFF    shift, and go to state 112
@@ -2654,20 +2654,20 @@ State 142
 
 State 143
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   80     | expr OR expr .
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   80     | expr OR expr •
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -2686,20 +2686,20 @@ State 143
 
 State 144
 
-   79 expr: expr . AND expr
-   79     | expr AND expr .
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   79     | expr AND expr •
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -2718,20 +2718,20 @@ State 144
 
 State 145
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   86     | expr EQUALS expr .
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   86     | expr EQUALS expr •
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2745,20 +2745,20 @@ State 145
 
 State 146
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   87     | expr DIFF expr .
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   87     | expr DIFF expr •
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2772,20 +2772,20 @@ State 146
 
 State 147
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   88     | expr LT expr .
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   88     | expr LT expr •
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2799,20 +2799,20 @@ State 147
 
 State 148
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   89     | expr GT expr .
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   89     | expr GT expr •
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2826,20 +2826,20 @@ State 148
 
 State 149
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   90     | expr LEQ expr .
-   91     | expr . GEQ expr
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   90     | expr LEQ expr •
+   91     | expr • GEQ expr
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2853,20 +2853,20 @@ State 149
 
 State 150
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-   91     | expr GEQ expr .
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+   91     | expr GEQ expr •
 
     EQUALS  error (nonassociative)
     DIFF    error (nonassociative)
@@ -2880,14 +2880,14 @@ State 150
 
 State 151
 
-    7 cmd: identifier assign_expr SEMICOLON .
+    7 cmd: identifier assign_expr SEMICOLON •
 
     $default  reduce using rule 7 (cmd)
 
 
 State 152
 
-   50 if: IF LEFT_PAREN expr RIGHT_PAREN . cmd ENDIF else
+   50 if: IF LEFT_PAREN expr RIGHT_PAREN • cmd ENDIF else
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -2945,14 +2945,14 @@ State 152
 
 State 153
 
-   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN . LEFT_BRACE casezeromais RIGHT_BRACE
+   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN • LEFT_BRACE casezeromais RIGHT_BRACE
 
     LEFT_BRACE  shift, and go to state 168
 
 
 State 154
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON . expr SEMICOLON expr RIGHT_PAREN cmd
+   48 for: FOR LEFT_PAREN expr SEMICOLON • expr SEMICOLON expr RIGHT_PAREN cmd
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -2975,28 +2975,28 @@ State 154
 
 State 155
 
-   42 in: READ LEFT_PAREN ID RIGHT_PAREN .
+   42 in: READ LEFT_PAREN ID RIGHT_PAREN •
 
     $default  reduce using rule 42 (in)
 
 
 State 156
 
-   43 out: WRITE LEFT_PAREN ID RIGHT_PAREN .
+   43 out: WRITE LEFT_PAREN ID RIGHT_PAREN •
 
     $default  reduce using rule 43 (out)
 
 
 State 157
 
-   17 cmd: EXIT WHEN expr SEMICOLON .
+   17 cmd: EXIT WHEN expr SEMICOLON •
 
     $default  reduce using rule 17 (cmd)
 
 
 State 158
 
-    6 decl_fun: FUNCTION type ID LEFT_PAREN . typedlpar RIGHT_PAREN block
+    6 decl_fun: FUNCTION type ID LEFT_PAREN • typedlpar RIGHT_PAREN block
 
     INT   shift, and go to state 13
     REAL  shift, and go to state 14
@@ -3017,8 +3017,8 @@ State 158
 
 State 159
 
-  100 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET .
-  101            | LEFT_BRACKET expr RIGHT_BRACKET . arrayAccess
+  100 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET •
+  101            | LEFT_BRACKET expr RIGHT_BRACKET • arrayAccess
 
     LEFT_BRACKET  shift, and go to state 75
 
@@ -3029,14 +3029,14 @@ State 159
 
 State 160
 
-  107 pointerAccess: ARROW ID pointerAccess .
+  107 pointerAccess: ARROW ID pointerAccess •
 
     $default  reduce using rule 107 (pointerAccess)
 
 
 State 161
 
-  105 lparAfter: COMMA . expr lparAfter
+  105 lparAfter: COMMA • expr lparAfter
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -3059,34 +3059,34 @@ State 161
 
 State 162
 
-  103 lpar: expr lparAfter .
+  103 lpar: expr lparAfter •
 
     $default  reduce using rule 103 (lpar)
 
 
 State 163
 
-   98 identifier: ID LEFT_PAREN lpar RIGHT_PAREN .
+   98 identifier: ID LEFT_PAREN lpar RIGHT_PAREN •
 
     $default  reduce using rule 98 (identifier)
 
 
 State 164
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-   95 expr_tern: TERNARY expr QUESTION_MARK expr . COLON expr TERNARY
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+   95 expr_tern: TERNARY expr QUESTION_MARK expr • COLON expr TERNARY
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -3106,20 +3106,20 @@ State 164
 
 State 165
 
-   29 cochetezeromais: LEFT_BRACKET expr . RIGHT_BRACKET cochetezeromais
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   29 cochetezeromais: LEFT_BRACKET expr • RIGHT_BRACKET cochetezeromais
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS           shift, and go to state 103
     MINUS          shift, and go to state 104
@@ -3139,21 +3139,21 @@ State 165
 
 State 166
 
-   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais ID .
+   24 decl_var_prim: primitivos hashtagzeromais cochetezeromais ID •
 
     $default  reduce using rule 24 (decl_var_prim)
 
 
 State 167
 
-   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd . ENDIF else
+   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd • ENDIF else
 
     ENDIF  shift, and go to state 177
 
 
 State 168
 
-   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE . casezeromais RIGHT_BRACE
+   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE • casezeromais RIGHT_BRACE
 
     CASE  shift, and go to state 178
 
@@ -3165,20 +3165,20 @@ State 168
 
 State 169
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON expr . SEMICOLON expr RIGHT_PAREN cmd
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   48 for: FOR LEFT_PAREN expr SEMICOLON expr • SEMICOLON expr RIGHT_PAREN cmd
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS       shift, and go to state 103
     MINUS      shift, and go to state 104
@@ -3198,7 +3198,7 @@ State 169
 
 State 170
 
-   70 parameter: type . parameterAfter
+   70 parameter: type • parameterAfter
 
     ID         shift, and go to state 182
     REFERENCE  shift, and go to state 183
@@ -3208,14 +3208,14 @@ State 170
 
 State 171
 
-    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar . RIGHT_PAREN block
+    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar • RIGHT_PAREN block
 
     RIGHT_PAREN  shift, and go to state 185
 
 
 State 172
 
-   67 typedlpar: parameter . typedlparAfter
+   67 typedlpar: parameter • typedlparAfter
 
     COMMA  shift, and go to state 186
 
@@ -3226,27 +3226,27 @@ State 172
 
 State 173
 
-  101 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET arrayAccess .
+  101 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET arrayAccess •
 
     $default  reduce using rule 101 (arrayAccess)
 
 
 State 174
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-  105 lparAfter: COMMA expr . lparAfter
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+  105 lparAfter: COMMA expr • lparAfter
 
     PLUS    shift, and go to state 103
     MINUS   shift, and go to state 104
@@ -3270,7 +3270,7 @@ State 174
 
 State 175
 
-   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON . expr TERNARY
+   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON • expr TERNARY
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -3293,7 +3293,7 @@ State 175
 
 State 176
 
-   29 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET . cochetezeromais
+   29 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET • cochetezeromais
 
     LEFT_BRACKET  shift, and go to state 136
 
@@ -3304,7 +3304,7 @@ State 176
 
 State 177
 
-   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF . else
+   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF • else
 
     ELSE  shift, and go to state 191
 
@@ -3315,7 +3315,7 @@ State 177
 
 State 178
 
-   56 case: CASE . literal COLON stmts
+   56 case: CASE • literal COLON stmts
 
     TRUE       shift, and go to state 20
     FALSE      shift, and go to state 21
@@ -3328,14 +3328,14 @@ State 178
 
 State 179
 
-   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais . RIGHT_BRACE
+   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais • RIGHT_BRACE
 
     RIGHT_BRACE  shift, and go to state 194
 
 
 State 180
 
-   55 casezeromais: case . casezeromais
+   55 casezeromais: case • casezeromais
 
     CASE  shift, and go to state 178
 
@@ -3347,7 +3347,7 @@ State 180
 
 State 181
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON . expr RIGHT_PAREN cmd
+   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON • expr RIGHT_PAREN cmd
 
     MINUS       shift, and go to state 19
     TRUE        shift, and go to state 20
@@ -3370,28 +3370,28 @@ State 181
 
 State 182
 
-   71 parameterAfter: ID .
+   71 parameterAfter: ID •
 
     $default  reduce using rule 71 (parameterAfter)
 
 
 State 183
 
-   72 parameterAfter: REFERENCE . ID
+   72 parameterAfter: REFERENCE • ID
 
     ID  shift, and go to state 197
 
 
 State 184
 
-   70 parameter: type parameterAfter .
+   70 parameter: type parameterAfter •
 
     $default  reduce using rule 70 (parameter)
 
 
 State 185
 
-    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN . block
+    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN • block
 
     LEFT_BRACE  shift, and go to state 25
 
@@ -3400,7 +3400,7 @@ State 185
 
 State 186
 
-   69 typedlparAfter: COMMA . parameter typedlparAfter
+   69 typedlparAfter: COMMA • parameter typedlparAfter
 
     INT   shift, and go to state 13
     REAL  shift, and go to state 14
@@ -3418,34 +3418,34 @@ State 186
 
 State 187
 
-   67 typedlpar: parameter typedlparAfter .
+   67 typedlpar: parameter typedlparAfter •
 
     $default  reduce using rule 67 (typedlpar)
 
 
 State 188
 
-  105 lparAfter: COMMA expr lparAfter .
+  105 lparAfter: COMMA expr lparAfter •
 
     $default  reduce using rule 105 (lparAfter)
 
 
 State 189
 
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
-   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr . TERNARY
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
+   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr • TERNARY
 
     PLUS     shift, and go to state 103
     MINUS    shift, and go to state 104
@@ -3465,14 +3465,14 @@ State 189
 
 State 190
 
-   29 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais .
+   29 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais •
 
     $default  reduce using rule 29 (cochetezeromais)
 
 
 State 191
 
-   52 else: ELSE . cmd
+   52 else: ELSE • cmd
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -3530,48 +3530,48 @@ State 191
 
 State 192
 
-   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else .
+   50 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else •
 
     $default  reduce using rule 50 (if)
 
 
 State 193
 
-   56 case: CASE literal . COLON stmts
+   56 case: CASE literal • COLON stmts
 
     COLON  shift, and go to state 202
 
 
 State 194
 
-   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE .
+   53 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE •
 
     $default  reduce using rule 53 (switch)
 
 
 State 195
 
-   55 casezeromais: case casezeromais .
+   55 casezeromais: case casezeromais •
 
     $default  reduce using rule 55 (casezeromais)
 
 
 State 196
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr . RIGHT_PAREN cmd
-   79 expr: expr . AND expr
-   80     | expr . OR expr
-   81     | expr . PLUS expr
-   82     | expr . TIMES expr
-   83     | expr . DIV expr
-   84     | expr . MINUS expr
-   85     | expr . MOD expr
-   86     | expr . EQUALS expr
-   87     | expr . DIFF expr
-   88     | expr . LT expr
-   89     | expr . GT expr
-   90     | expr . LEQ expr
-   91     | expr . GEQ expr
+   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr • RIGHT_PAREN cmd
+   79 expr: expr • AND expr
+   80     | expr • OR expr
+   81     | expr • PLUS expr
+   82     | expr • TIMES expr
+   83     | expr • DIV expr
+   84     | expr • MINUS expr
+   85     | expr • MOD expr
+   86     | expr • EQUALS expr
+   87     | expr • DIFF expr
+   88     | expr • LT expr
+   89     | expr • GT expr
+   90     | expr • LEQ expr
+   91     | expr • GEQ expr
 
     PLUS         shift, and go to state 103
     MINUS        shift, and go to state 104
@@ -3591,21 +3591,21 @@ State 196
 
 State 197
 
-   72 parameterAfter: REFERENCE ID .
+   72 parameterAfter: REFERENCE ID •
 
     $default  reduce using rule 72 (parameterAfter)
 
 
 State 198
 
-    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block .
+    6 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block •
 
     $default  reduce using rule 6 (decl_fun)
 
 
 State 199
 
-   69 typedlparAfter: COMMA parameter . typedlparAfter
+   69 typedlparAfter: COMMA parameter • typedlparAfter
 
     COMMA  shift, and go to state 186
 
@@ -3616,21 +3616,21 @@ State 199
 
 State 200
 
-   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr TERNARY .
+   95 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr TERNARY •
 
     $default  reduce using rule 95 (expr_tern)
 
 
 State 201
 
-   52 else: ELSE cmd .
+   52 else: ELSE cmd •
 
     $default  reduce using rule 52 (else)
 
 
 State 202
 
-   56 case: CASE literal COLON . stmts
+   56 case: CASE literal COLON • stmts
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -3694,7 +3694,7 @@ State 202
 
 State 203
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN . cmd
+   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN • cmd
 
     IF          shift, and go to state 1
     SWITCH      shift, and go to state 2
@@ -3752,20 +3752,20 @@ State 203
 
 State 204
 
-   69 typedlparAfter: COMMA parameter typedlparAfter .
+   69 typedlparAfter: COMMA parameter typedlparAfter •
 
     $default  reduce using rule 69 (typedlparAfter)
 
 
 State 205
 
-   56 case: CASE literal COLON stmts .
+   56 case: CASE literal COLON stmts •
 
     $default  reduce using rule 56 (case)
 
 
 State 206
 
-   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd .
+   48 for: FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd •
 
     $default  reduce using rule 48 (for)
