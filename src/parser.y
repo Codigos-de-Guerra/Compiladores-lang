@@ -1,39 +1,35 @@
 %{
 #include <stdio.h>
-#include<stdlib.h>
-#include<string>
+#include <stdlib.h>
+#include <string>
 #include "tipos.hpp"
 
 int yylex(void);
 int yyerror(char *s);
 extern int yylineno;
-extern char * yytext;
+extern char* yytext;
 
-
- struct lval {
+/*
+struct lval {
     int line;
     int col;
-    /* the value of the token. if it is the number 0, this is going to be 0 */
+    // the value of the token. if it is the number 0, this is going to be 0
     string lexeme;
     int token;
-    lval(){
-
-    }
+    lval() {}
 };
 
 
-/* all we have as symbols for the symbol table are identifiers. other possible
-   symbols are, for example, goto labels */
-struct symbol {
+// all we have as symbols for the symbol table are identifiers. other possible
+// symbols are, for example, goto labels
+struct old_symbol {
     int scope = 0;
-    /* this is the actual name of the symbol. an id 'foo' has the name foo */
+    // this is the actual name of the symbol. an id 'foo' has the name foo
     string name = "";
     string type = "";
     bool is_const= false;
     lval val;
-    symbol(){
-
-    }
+    symbol() {}
 };
 
 // since we have 128 ASCII characters, that's the max number of children our
@@ -62,26 +58,26 @@ void adiciona(symbol simbolo)
     node *tmp = root;
     string word = simbolo.name;
     for (int i = 0; i<word.size(); i++) {
-        /* get the relative position in the alphabet list */
-        
+        // get the relative position in the alphabet list
+
         int position = (int) word[i] - 'a';
 
         if (tmp->children[position] == NULL){
-            
+
             tmp->children[position] = initialize();
         }
 
         tmp = tmp->children[position];
     }
 
-      
+
       tmp->is_leaf = 1;
       tmp->sym.name =  simbolo.name;
 }
 
 node *acha(symbol simbolo)
 {
-    /* searches for word in the trie */
+    // searches for word in the trie
     node *tmp = root;
     string word = simbolo.name;
     for(int i = 0; i<word.size(); i++)
@@ -95,27 +91,32 @@ node *acha(symbol simbolo)
 
     return NULL;
 }
+*/
 
+SymTable symtable;
 
-map<string,string> symtable;
+void print_symtable(SymTable &symtable) {
+  for (auto const &sym : symtable) {
+    string key = sym.first;
+    Symbol val = sym.second;
 
+    cout << "{" << key << " = " << val << "}" << endl;
+  }
+}
 %}
-
-
-
 
 %type <literalRetorno> literal
 %type <cmdRetorno> cmd
 %type <identifierRetorno> identifier
 %type <assign_exprRetorno> assign_expr
-%type<all_decl_varRetorno> all_decl_var
-%type<cmd_decl_varRetorno> cmd_decl_var
-%type<assign_expr_maybeRetorno> assign_expr_maybe
-%type<decl_var_primRetorno> decl_var_prim
-%type<primitivosRetorno> primitivos
-%type<cochetezeromaisRetorno> cochetezeromais
-%type<hashtagzeromaisRetorno>hashtagzeromais
-%type<const_decl_varRetorno> const_decl_var
+%type <all_decl_varRetorno> all_decl_var
+%type <cmd_decl_varRetorno> cmd_decl_var
+%type <assign_expr_maybeRetorno> assign_expr_maybe
+%type <decl_var_primRetorno> decl_var_prim
+%type <primitivosRetorno> primitivos
+%type <cochetezeromaisRetorno> cochetezeromais
+%type <hashtagzeromaisRetorno>hashtagzeromais
+%type <const_decl_varRetorno> const_decl_var
 
 %token '[' IF ENDIF ELSE SWITCH CASE FOR LOOP RETURN STRUCT CONST BREAK CONTINUE READ WRITE EXIT WHEN FUNCTION INT REAL CHAR STR BOOL VOID PLUS MINUS TIMES DIV MOD TRUE FALSE NUMBER CHARACTER STRING LEFT_BRACE RIGHT_BRACE LEFT_BRACKET RIGHT_BRACKET ID SEMICOLON QUESTION_MARK COLON DOT POINTER_VAL ARROW COMMA REFERENCE TERNARY ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MULT ASSIGN_DIV ASSIGN_MOD ASSIGN
 %start prog
@@ -138,14 +139,12 @@ stmts : /* epsilon */ {}
       | stmt stmts {};
 
 stmt : decl_fun {}
-      | cmd {};
+     | cmd {};
 
 decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {};
 
-cmd :  identifier assign_expr SEMICOLON {
-            $$ = new cmd($1,$2);
-      }
-      |cmd_decl_var SEMICOLON {$$ = new cmd($1);}
+cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
+      | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
       | inOut SEMICOLON {}
       | cmd_loop {}
       | cmd_cond {}
@@ -159,13 +158,15 @@ cmd :  identifier assign_expr SEMICOLON {
 
 cmd_decl_var : all_decl_var assign_expr_maybe {
       $$ = new cmd_decl_var($1,$2);
-      };
+};
 
 assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
       | assign_expr {$$ = new assign_expr_maybe();};
 
-all_decl_var : decl_var_prim {$$ = new all_decl_var($1,symtable);}
-            | const_decl_var {$$ = new all_decl_var($1,symtable);};
+all_decl_var : decl_var_prim {$$ = new all_decl_var($1,symtable);
+                              print_symtable(symtable);}
+             | const_decl_var {$$ = new all_decl_var($1,symtable);
+                              print_symtable(symtable);};
 
 decl_var_prim : primitivos hashtagzeromais cochetezeromais ID {
       $$ = new decl_var_prim($1,$2,$3,yytext);
@@ -225,14 +226,14 @@ case : CASE literal COLON stmts {};
 
 type : typename {};
 typename : primitivos {}
-      | ID {};
+         | ID {};
 
 primitivos : INT {$$ = new primitivos("INT");}
-      | REAL {$$ = new primitivos("REAL");}
-      | CHAR {$$ = new primitivos("CHAR");}
-      | BOOL {$$ = new primitivos("BOOL");}
-      | STR {$$ = new primitivos("STRING");}
-      | VOID {$$ = new primitivos("VOID");};
+           | REAL {$$ = new primitivos("REAL");}
+           | CHAR {$$ = new primitivos("CHAR");}
+           | BOOL {$$ = new primitivos("BOOL");}
+           | STR {$$ = new primitivos("STRING");}
+           | VOID {$$ = new primitivos("VOID");};
 
 typedlpar : /*epsilon*/ {}
       | parameter typedlparAfter {}
@@ -302,13 +303,8 @@ literal : NUMBER {$$ = new literal("NUMBER",yytext);}
 
 %% /* Fim da segunda seção */
 
-
-
-
-
 int main (void) {
-    
-      root = initialize();
+      /* root = initialize(); */
 
       return yyparse();
 }
