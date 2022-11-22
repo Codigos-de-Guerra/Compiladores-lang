@@ -2,7 +2,6 @@
 #define TIPOS
 
 #include "classes.hpp"
-
 typedef union{
     literal* literalRetorno;
     cmd* cmdRetorno;
@@ -16,9 +15,11 @@ typedef union{
     cochetezeromais* cochetezeromaisRetorno;
     hashtagzeromais* hashtagzeromaisRetorno;
     const_decl_var* const_decl_varRetorno;
+    expr* exprRetorno;
 	string* name;
 } YYSTYPE;
 
 extern YYSTYPE yylval;
+
 
 #endif

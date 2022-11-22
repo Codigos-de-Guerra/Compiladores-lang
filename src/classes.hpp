@@ -1,36 +1,13 @@
 #ifndef CLASSES
 #define CLASSES
-
-#include <functional>
-#include <iostream>
-#include <map>
-#include <string>
-#include <vector>
+#include<vector>
+#include<functional>
+#include<iostream>
+#include<string>
+#include<map>
+#include<algorithm>
 
 using namespace std;
-
-class Symbol {
-public:
-  int scope = 1;
-  string type = "";
-  bool is_const = false;
-
-  Symbol() : scope(1), type(""), is_const(false) {}
-
-  Symbol(string type) : scope(1), type(type), is_const(false) {}
-
-  Symbol(string type, bool is_const)
-      : scope(1), type(type), is_const(is_const) {}
-
-  friend ostream &operator<<(ostream &os, Symbol const &sym) {
-    string sym_str = sym.type + "(" + to_string(sym.scope) + ")";
-    if (sym.is_const)
-      sym_str = "CONST " + sym_str;
-    return os << sym_str;
-  }
-};
-
-typedef map<string, Symbol> SymTable;
 
 class cmd_decl_var;
 class all_decl_var;
@@ -40,123 +17,183 @@ class primitivos;
 class hashtagzeromais;
 class cochetezeromais;
 class const_decl_var;
-class Node {
+class Node{
 public:
-  vector<Node *> children;
+  vector<Node*> children;
   function<void(void)> exec;
 
-  Node(vector<Node *> _children = {})
-      : children(_children), exec([&]() { exec_children(); }) {}
+  Node(vector<Node*> _children = {})
+  :children(_children), exec([&](){
+    exec_children();
+  }){}
 
-  void exec_children() {
-    for (auto node : children) {
-      if (node)
-        node->exec();
+  void exec_children(){
+    for(auto node : children){
+      if(node) node->exec();
     }
   }
 };
 
-class literal : public Node {
-public:
-  string tipo;
-  string value;
-  literal(string t, string val) {
-    tipo = t;
-    value = val;
-  }
-};
-
-class identifier : public Node {
-public:
-  identifier(char *a) { string s = a; }
-};
-
-class assign_expr : public Node {
-public:
-};
-
-class cmd : public Node {
-public:
-  cmd(identifier *a, assign_expr *b) {}
-  cmd(cmd_decl_var *a) {}
-};
-
-class cmd_decl_var : public Node {
-public:
-  cmd_decl_var() {}
-  cmd_decl_var(all_decl_var *a, assign_expr_maybe *b) {}
-};
-
-class assign_expr_maybe : public Node {
-public:
-  assign_expr_maybe() {}
-};
-
-class primitivos : public Node {
-public:
-  string type = "";
-  primitivos(string x) { type = x; }
-};
-
-class decl_var_prim : public Node {
-public:
-  string name = "";
-  string type = "";
-  decl_var_prim(primitivos *a, hashtagzeromais *b, cochetezeromais *c,
-                char *d) {
-    name = d;
-    type = a->type;
-  }
-};
-
-class cochetezeromais : public Node {
-public:
-  cochetezeromais(cochetezeromais *a) {}
-};
-
-class hashtagzeromais : public Node {
-public:
-  hashtagzeromais(hashtagzeromais *a) {}
-};
-
-class const_decl_var : public Node {
-public:
-  string name = "";
-  string type = "";
-  bool is_const = true;
-
-  const_decl_var(decl_var_prim *a) {
-    name = a->name;
-    type = "CONST." + a->type;
-  }
-};
-
-class all_decl_var : public Node {
-public:
-  all_decl_var() {}
-
-  all_decl_var(decl_var_prim *a, SymTable &symtable) {
-    if (symtable.find(a->name) != symtable.end()) {
-      cout << a->name << " já foi declarado como " << symtable[a->name].type
-           << endl;
-    } else {
-      symtable.insert({a->name, Symbol(a->type)});
+class literal : public Node{
+    public:
+    string tipo;
+    string value;
+    literal(string t){
+        tipo = t;
+        value = "";
     }
-  }
+};
 
-  all_decl_var(const_decl_var *a, SymTable &symtable) {
-    if (symtable.find(a->name) != symtable.end()) {
-      cout << a->name << " já foi declarado como " << symtable[a->name].type
-           << endl;
-    } else {
-      symtable.insert({a->name, Symbol(a->type, a->is_const)});
-    }
+
+
+class identifier : public Node{
+  public:
+  string nome;
+  identifier(string a){
+    nome = a;
   }
 };
 
-class block : public Node {
-public:
-  block() {}
+class assign_expr : public Node{
+  public:
+
+};
+
+class cmd : public Node{
+  public:
+  cmd(identifier* a, assign_expr* b){
+
+  }
+  cmd(cmd_decl_var* a){
+
+  }
+};
+
+
+
+class cmd_decl_var : public Node{
+  public:
+  cmd_decl_var(){
+
+  }
+  cmd_decl_var(all_decl_var*a, assign_expr_maybe*b){
+
+  }
+};
+
+class assign_expr_maybe : public Node{
+  public:
+  assign_expr_maybe(){
+
+  }
+};
+
+class primitivos : public Node{
+  public:
+  string tipo = "";
+  primitivos(string x){
+    tipo = x;
+  }
+};
+
+
+class decl_var_prim : public Node{
+  public:
+  string nome = "";
+  string tipo = "";
+  decl_var_prim(primitivos*a, hashtagzeromais*b, cochetezeromais*c, string d){
+    nome = d;
+    tipo = a->tipo;
+  }
+};
+
+class cochetezeromais : public Node{
+  public:
+  cochetezeromais(cochetezeromais* a){
+
+  }
+};
+class hashtagzeromais: public Node{
+  public:
+  hashtagzeromais(hashtagzeromais* a){
+
+  }
+};
+class const_decl_var : public Node{
+  public:
+  string nome = "";
+  string tipo = "";
+  const_decl_var(decl_var_prim* a){
+    nome = a->nome;
+    tipo = "CONST."+a->tipo;
+  }
+};
+
+class all_decl_var : public Node{
+  public: 
+  all_decl_var(){
+
+  }
+  all_decl_var(decl_var_prim* a,map<string,string>&symtable){
+    if(symtable.find(a->nome)!=symtable.end()){
+      cout<<a->nome<<" já foi declarado como "<<symtable[a->nome]<<endl;
+    }
+    else symtable[a->nome] = a->tipo;
+  }
+  all_decl_var(const_decl_var* a,map<string,string>&symtable){
+    if(symtable.find(a->nome)!=symtable.end()){
+      cout<<a->nome<<" já foi declarado como "<<symtable[a->nome]<<endl;
+    }
+    else symtable[a->nome] = a->tipo;
+  }
+}; 
+
+
+class expr : public Node{
+  public:
+  vector<string> simbolosUsados;
+  string tipo ="UNDECLARED";
+  void checa(map<string,string> symtable){
+    if(simbolosUsados.size()<(1<<30))
+    for(auto k:simbolosUsados){
+      if(symtable.find(k)==symtable.end()){
+        cout<<k<<" nao foi declarado"<<endl;
+      }
+      else tipo = symtable[k];
+    }
+    
+  }
+  expr(expr*a,expr*b,map<string,string>& symtable){
+    if(a->simbolosUsados.size()<(1<<30))
+    for(auto k:a->simbolosUsados){
+      simbolosUsados.push_back(k);
+    }
+    if(b->simbolosUsados.size()<(1<<30))
+    for(auto k:b->simbolosUsados){
+      
+      simbolosUsados.push_back(k);
+    }
+
+    if(a->tipo != b->tipo){
+      cout<<a->tipo<<" e "<<b->tipo<<" sao incompativeis"<<endl;
+    }
+    tipo = a->tipo;
+  }
+  expr(expr*a,map<string,string>& symtable){
+    if(a->simbolosUsados.size()<(1<<30))
+    for(auto k:a->simbolosUsados)simbolosUsados.push_back(k);
+    tipo = a->tipo;
+  }
+  expr(identifier* a,map<string,string>& symtable){
+    simbolosUsados.push_back(a->nome);
+    checa(symtable);
+
+  }
+  expr(literal*a,map<string,string>& symtable){
+    
+    tipo = a->tipo;
+
+  }
 };
 
 #endif

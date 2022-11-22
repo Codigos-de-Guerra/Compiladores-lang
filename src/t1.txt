@@ -1,0 +1,4 @@
+function int main(){
+    char y = 'a';
+    int x = y + 20;
+}

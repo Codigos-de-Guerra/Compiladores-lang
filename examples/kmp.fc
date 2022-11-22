@@ -1,0 +1,36 @@
+
+function int# matching(string s,int n, string t,int m) {
+    int[n] p;
+    int j = 0;
+    for (int i = 1; i < n; i++) {
+		
+            loop{
+                  j--;
+                  j = p[j];
+            }
+
+		if (s[j] == s[i]){
+                  j++;
+            }
+            endif
+		p[i] = j;
+	}
+      int [n] match;
+      j=0;
+      int cont = 0;
+      for (int i = 0; i < m; i++) {
+		loop{
+                  exit when (j and s[j] != t[i]);
+                  j = p[j - 1];
+                  }
+		if (s[j] == t[i]) j++;
+            endif
+		if (j == n) {
+                  match[cont++] = i + j - 1; 
+                   j = p[j - 1];
+                  }
+                  endif
+	}
+
+	return match;
+}
