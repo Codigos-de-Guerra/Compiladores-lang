@@ -195,7 +195,9 @@ stmts : /* epsilon */ {}
 stmt : decl_fun {}
      | cmd {};
 
-decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {
+decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN {
+    new decl_fun(tables, $2, *$3);
+} block {
     $$ = new decl_fun(tables, $2, *$3);
 };
 
@@ -260,7 +262,12 @@ cmd_cond : if {};
 
 cmd_switch : switch {};
 
-for : FOR LEFT_PAREN expr SEMICOLON expr SEMICOLON expr RIGHT_PAREN cmd {};
+for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd {};
+
+para_for: cmd_decl_var {}
+        | expr {}
+        | expr INCREMENT {}
+        | expr DECREMENT {};
 
 loop : LOOP cmd {};
 

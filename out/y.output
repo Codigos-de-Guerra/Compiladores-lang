@@ -1,0 +1,3845 @@
+Terminals unused in grammar
+
+    '['
+    STRUCT
+    DOT
+
+
+Grammar
+
+    0 $accept: prog $end
+
+    1 prog: stmts
+
+    2 stmts: %empty
+    3      | stmt stmts
+
+    4 stmt: decl_fun
+    5     | cmd
+
+    6 $@1: %empty
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN $@1 block
+
+    8 cmd: identifier assign_expr SEMICOLON
+    9    | cmd_decl_var SEMICOLON
+   10    | inOut SEMICOLON
+   11    | cmd_loop
+   12    | cmd_cond
+   13    | cmd_switch
+   14    | expr SEMICOLON
+   15    | RETURN expr SEMICOLON
+   16    | RETURN SEMICOLON
+   17    | BREAK SEMICOLON
+   18    | CONTINUE SEMICOLON
+   19    | EXIT WHEN expr SEMICOLON
+   20    | block
+
+   21 cmd_decl_var: all_decl_var assign_expr_maybe
+
+   22 assign_expr_maybe: %empty
+   23                  | assign_expr
+
+   24 all_decl_var: decl_var_prim
+   25             | const_decl_var
+
+   26 decl_var_prim: primitive hashtagzeromais cochetezeromais ID
+
+   27 const_decl_var: CONST decl_var_prim
+
+   28 hashtagzeromais: %empty
+   29                | POINTER_VAL hashtagzeromais
+
+   30 cochetezeromais: %empty
+   31                | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais
+
+   32 assign_expr: ASSIGN expr
+   33            | assign_extra expr
+   34            | inc
+
+   35 assign_extra: ASSIGN_PLUS
+   36             | ASSIGN_MINUS
+   37             | ASSIGN_MULT
+   38             | ASSIGN_DIV
+   39             | ASSIGN_MOD
+
+   40 inc: DECREMENT
+   41    | INCREMENT
+
+   42 inOut: in
+   43      | out
+
+   44 in: READ LEFT_PAREN ID RIGHT_PAREN
+
+   45 out: WRITE LEFT_PAREN ID RIGHT_PAREN
+
+   46 cmd_loop: for
+   47         | loop
+
+   48 cmd_cond: if
+
+   49 cmd_switch: switch
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd
+
+   51 para_for: cmd_decl_var
+   52         | expr
+   53         | expr INCREMENT
+   54         | expr DECREMENT
+
+   55 loop: LOOP cmd
+
+   56 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else
+
+   57 else: %empty
+   58     | ELSE cmd
+
+   59 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+
+   60 casezeromais: %empty
+   61             | case casezeromais
+
+   62 case: CASE literal COLON stmts
+
+   63 type: typename hashtagzeromais cochetezeromais
+
+   64 typename: primitive
+   65         | ID
+
+   66 primitive: INT
+   67          | REAL
+   68          | CHAR
+   69          | BOOL
+   70          | STR
+   71          | VOID
+
+   72 typedlpar: %empty
+   73          | parameter typedlparAfter
+
+   74 typedlparAfter: %empty
+   75               | COMMA parameter typedlparAfter
+
+   76 parameter: type parameterAfter
+
+   77 parameterAfter: ID
+   78               | REFERENCE ID
+
+   79 block: LEFT_BRACE stmts RIGHT_BRACE
+
+   80 expr: INCREMENT expr
+   81     | DECREMENT expr
+   82     | LEFT_PAREN expr RIGHT_PAREN
+   83     | MINUS identifier
+   84     | NOT expr
+   85     | expr AND expr
+   86     | expr OR expr
+   87     | expr PLUS expr
+   88     | expr TIMES expr
+   89     | expr DIV expr
+   90     | expr MINUS expr
+   91     | expr MOD expr
+   92     | expr EQUALS expr
+   93     | expr DIFF expr
+   94     | expr LT expr
+   95     | expr GT expr
+   96     | expr LEQ expr
+   97     | expr GEQ expr
+   98     | expr_tern
+   99     | literal
+  100     | identifier
+
+  101 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr TERNARY
+
+  102 identifier: ID
+  103           | ID arrayAccess
+  104           | ID LEFT_PAREN lpar RIGHT_PAREN
+  105           | ID pointerAccess
+
+  106 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET
+  107            | LEFT_BRACKET expr RIGHT_BRACKET arrayAccess
+
+  108 lpar: %empty
+  109     | expr lparAfter
+
+  110 lparAfter: %empty
+  111          | COMMA expr lparAfter
+
+  112 pointerAccess: ARROW ID
+  113              | ARROW ID pointerAccess
+
+  114 literal: NUMBER
+  115        | CHARACTER
+  116        | TRUE
+  117        | FALSE
+  118        | STRING
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '@' (64)
+    '[' (91)
+    error (256)
+    IF (258) 56
+    ENDIF (259) 56
+    ELSE (260) 58
+    SWITCH (261) 59
+    CASE (262) 62
+    FOR (263) 50
+    LOOP (264) 55
+    RETURN (265) 15 16
+    STRUCT (266)
+    CONST (267) 27
+    BREAK (268) 17
+    CONTINUE (269) 18
+    READ (270) 44
+    WRITE (271) 45
+    EXIT (272) 19
+    WHEN (273) 19
+    FUNCTION (274) 7
+    INT (275) 66
+    REAL (276) 67
+    CHAR (277) 68
+    STR (278) 70
+    BOOL (279) 69
+    VOID (280) 71
+    PLUS (281) 87
+    MINUS (282) 83 90
+    TIMES (283) 88
+    DIV (284) 89
+    MOD (285) 91
+    TRUE (286) 116
+    FALSE (287) 117
+    NUMBER (288) 114
+    CHARACTER (289) 115
+    STRING (290) 118
+    LEFT_BRACE (291) 59 79
+    RIGHT_BRACE (292) 59 79
+    LEFT_BRACKET (293) 31 106 107
+    RIGHT_BRACKET (294) 31 106 107
+    SEMICOLON (295) 8 9 10 14 15 16 17 18 19 50
+    QUESTION_MARK (296) 101
+    COLON (297) 62 101
+    DOT (298)
+    POINTER_VAL (299) 29
+    ARROW (300) 112 113
+    COMMA (301) 75 111
+    REFERENCE (302) 78
+    TERNARY (303) 101
+    ASSIGN_PLUS (304) 35
+    ASSIGN_MINUS (305) 36
+    ASSIGN_MULT (306) 37
+    ASSIGN_DIV (307) 38
+    ASSIGN_MOD (308) 39
+    ASSIGN (309) 32
+    ID <name> (310) 7 26 44 45 65 77 78 102 103 104 105 112 113
+    LEFT_PAREN (311) 7 44 45 50 56 59 82 104
+    RIGHT_PAREN (312) 7 44 45 50 56 59 82 104
+    INCREMENT (313) 41 53 80
+    DECREMENT (314) 40 54 81
+    NOT (315) 84
+    OR (316) 86
+    AND (317) 85
+    EQUALS (318) 92
+    DIFF (319) 93
+    LT (320) 94
+    GT (321) 95
+    LEQ (322) 96
+    GEQ (323) 97
+
+
+Nonterminals, with rules where they appear
+
+    $accept (71)
+        on left: 0
+    prog (72)
+        on left: 1
+        on right: 0
+    stmts (73)
+        on left: 2 3
+        on right: 1 3 62 79
+    stmt (74)
+        on left: 4 5
+        on right: 3
+    decl_fun <decl_funRet> (75)
+        on left: 7
+        on right: 4
+    $@1 (76)
+        on left: 6
+        on right: 7
+    cmd <cmdRet> (77)
+        on left: 8 9 10 11 12 13 14 15 16 17 18 19 20
+        on right: 5 50 55 56 58
+    cmd_decl_var <cmd_decl_varRet> (78)
+        on left: 21
+        on right: 9 51
+    assign_expr_maybe <assign_expr_maybeRet> (79)
+        on left: 22 23
+        on right: 21
+    all_decl_var <all_decl_varRet> (80)
+        on left: 24 25
+        on right: 21
+    decl_var_prim <decl_var_primRet> (81)
+        on left: 26
+        on right: 24 27
+    const_decl_var <const_decl_varRet> (82)
+        on left: 27
+        on right: 25
+    hashtagzeromais <hashtagzeromaisRet> (83)
+        on left: 28 29
+        on right: 26 29 63
+    cochetezeromais <cochetezeromaisRet> (84)
+        on left: 30 31
+        on right: 26 31 63
+    assign_expr <assign_exprRet> (85)
+        on left: 32 33 34
+        on right: 8 23
+    assign_extra (86)
+        on left: 35 36 37 38 39
+        on right: 33
+    inc (87)
+        on left: 40 41
+        on right: 34
+    inOut (88)
+        on left: 42 43
+        on right: 10
+    in (89)
+        on left: 44
+        on right: 42
+    out (90)
+        on left: 45
+        on right: 43
+    cmd_loop (91)
+        on left: 46 47
+        on right: 11
+    cmd_cond (92)
+        on left: 48
+        on right: 12
+    cmd_switch (93)
+        on left: 49
+        on right: 13
+    for (94)
+        on left: 50
+        on right: 46
+    para_for (95)
+        on left: 51 52 53 54
+        on right: 50
+    loop (96)
+        on left: 55
+        on right: 47
+    if (97)
+        on left: 56
+        on right: 48
+    else (98)
+        on left: 57 58
+        on right: 56
+    switch (99)
+        on left: 59
+        on right: 49
+    casezeromais (100)
+        on left: 60 61
+        on right: 59 61
+    case (101)
+        on left: 62
+        on right: 61
+    type <type_nameRet> (102)
+        on left: 63
+        on right: 7 76
+    typename <type_nameRet> (103)
+        on left: 64 65
+        on right: 63
+    primitive <primitiveRet> (104)
+        on left: 66 67 68 69 70 71
+        on right: 26 64
+    typedlpar <typedlparRet> (105)
+        on left: 72 73
+        on right: 7
+    typedlparAfter <typedlparRet> (106)
+        on left: 74 75
+        on right: 73 75
+    parameter <parameterRet> (107)
+        on left: 76
+        on right: 73 75
+    parameterAfter <name> (108)
+        on left: 77 78
+        on right: 76
+    block <blockRet> (109)
+        on left: 79
+        on right: 7 20
+    expr <exprRet> (110)
+        on left: 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+        on right: 14 15 19 31 32 33 52 53 54 56 59 80 81 82 84 85 86 87 88 89 90 91 92 93 94 95 96 97 101 106 107 109 111
+    expr_tern (111)
+        on left: 101
+        on right: 98
+    identifier <identifierRet> (112)
+        on left: 102 103 104 105
+        on right: 8 83 100
+    arrayAccess (113)
+        on left: 106 107
+        on right: 103 107
+    lpar (114)
+        on left: 108 109
+        on right: 104
+    lparAfter (115)
+        on left: 110 111
+        on right: 109 111
+    pointerAccess (116)
+        on left: 112 113
+        on right: 105 113
+    literal <literalRet> (117)
+        on left: 114 115 116 117 118
+        on right: 62 99
+
+
+State 0
+
+    0 $accept: . prog $end
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 2 (stmts)
+
+    prog            go to state 32
+    stmts           go to state 33
+    stmt            go to state 34
+    decl_fun        go to state 35
+    cmd             go to state 36
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 1
+
+   56 if: IF . LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else
+
+    LEFT_PAREN  shift, and go to state 57
+
+
+State 2
+
+   59 switch: SWITCH . LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+
+    LEFT_PAREN  shift, and go to state 58
+
+
+State 3
+
+   50 for: FOR . LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd
+
+    LEFT_PAREN  shift, and go to state 59
+
+
+State 4
+
+   55 loop: LOOP . cmd
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd             go to state 60
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 5
+
+   15 cmd: RETURN . expr SEMICOLON
+   16    | RETURN . SEMICOLON
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    SEMICOLON   shift, and go to state 61
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 62
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 6
+
+   27 const_decl_var: CONST . decl_var_prim
+
+    INT   shift, and go to state 13
+    REAL  shift, and go to state 14
+    CHAR  shift, and go to state 15
+    STR   shift, and go to state 16
+    BOOL  shift, and go to state 17
+    VOID  shift, and go to state 18
+
+    decl_var_prim  go to state 64
+    primitive      go to state 51
+
+
+State 7
+
+   17 cmd: BREAK . SEMICOLON
+
+    SEMICOLON  shift, and go to state 65
+
+
+State 8
+
+   18 cmd: CONTINUE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 66
+
+
+State 9
+
+   44 in: READ . LEFT_PAREN ID RIGHT_PAREN
+
+    LEFT_PAREN  shift, and go to state 67
+
+
+State 10
+
+   45 out: WRITE . LEFT_PAREN ID RIGHT_PAREN
+
+    LEFT_PAREN  shift, and go to state 68
+
+
+State 11
+
+   19 cmd: EXIT . WHEN expr SEMICOLON
+
+    WHEN  shift, and go to state 69
+
+
+State 12
+
+    7 decl_fun: FUNCTION . type ID LEFT_PAREN typedlpar RIGHT_PAREN $@1 block
+
+    INT   shift, and go to state 13
+    REAL  shift, and go to state 14
+    CHAR  shift, and go to state 15
+    STR   shift, and go to state 16
+    BOOL  shift, and go to state 17
+    VOID  shift, and go to state 18
+    ID    shift, and go to state 70
+
+    type       go to state 71
+    typename   go to state 72
+    primitive  go to state 73
+
+
+State 13
+
+   66 primitive: INT .
+
+    $default  reduce using rule 66 (primitive)
+
+
+State 14
+
+   67 primitive: REAL .
+
+    $default  reduce using rule 67 (primitive)
+
+
+State 15
+
+   68 primitive: CHAR .
+
+    $default  reduce using rule 68 (primitive)
+
+
+State 16
+
+   70 primitive: STR .
+
+    $default  reduce using rule 70 (primitive)
+
+
+State 17
+
+   69 primitive: BOOL .
+
+    $default  reduce using rule 69 (primitive)
+
+
+State 18
+
+   71 primitive: VOID .
+
+    $default  reduce using rule 71 (primitive)
+
+
+State 19
+
+   83 expr: MINUS . identifier
+
+    ID  shift, and go to state 27
+
+    identifier  go to state 74
+
+
+State 20
+
+  116 literal: TRUE .
+
+    $default  reduce using rule 116 (literal)
+
+
+State 21
+
+  117 literal: FALSE .
+
+    $default  reduce using rule 117 (literal)
+
+
+State 22
+
+  114 literal: NUMBER .
+
+    $default  reduce using rule 114 (literal)
+
+
+State 23
+
+  115 literal: CHARACTER .
+
+    $default  reduce using rule 115 (literal)
+
+
+State 24
+
+  118 literal: STRING .
+
+    $default  reduce using rule 118 (literal)
+
+
+State 25
+
+   79 block: LEFT_BRACE . stmts RIGHT_BRACE
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 2 (stmts)
+
+    stmts           go to state 75
+    stmt            go to state 34
+    decl_fun        go to state 35
+    cmd             go to state 36
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 26
+
+  101 expr_tern: TERNARY . expr QUESTION_MARK expr COLON expr TERNARY
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 76
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 27
+
+  102 identifier: ID .
+  103           | ID . arrayAccess
+  104           | ID . LEFT_PAREN lpar RIGHT_PAREN
+  105           | ID . pointerAccess
+
+    LEFT_BRACKET  shift, and go to state 77
+    ARROW         shift, and go to state 78
+    LEFT_PAREN    shift, and go to state 79
+
+    $default  reduce using rule 102 (identifier)
+
+    arrayAccess    go to state 80
+    pointerAccess  go to state 81
+
+
+State 28
+
+   82 expr: LEFT_PAREN . expr RIGHT_PAREN
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 82
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 29
+
+   80 expr: INCREMENT . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 83
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 30
+
+   81 expr: DECREMENT . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 84
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 31
+
+   84 expr: NOT . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 85
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 32
+
+    0 $accept: prog . $end
+
+    $end  shift, and go to state 86
+
+
+State 33
+
+    1 prog: stmts .
+
+    $default  reduce using rule 1 (prog)
+
+
+State 34
+
+    3 stmts: stmt . stmts
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 2 (stmts)
+
+    stmts           go to state 87
+    stmt            go to state 34
+    decl_fun        go to state 35
+    cmd             go to state 36
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 35
+
+    4 stmt: decl_fun .
+
+    $default  reduce using rule 4 (stmt)
+
+
+State 36
+
+    5 stmt: cmd .
+
+    $default  reduce using rule 5 (stmt)
+
+
+State 37
+
+    9 cmd: cmd_decl_var . SEMICOLON
+
+    SEMICOLON  shift, and go to state 88
+
+
+State 38
+
+   21 cmd_decl_var: all_decl_var . assign_expr_maybe
+
+    ASSIGN_PLUS   shift, and go to state 89
+    ASSIGN_MINUS  shift, and go to state 90
+    ASSIGN_MULT   shift, and go to state 91
+    ASSIGN_DIV    shift, and go to state 92
+    ASSIGN_MOD    shift, and go to state 93
+    ASSIGN        shift, and go to state 94
+    INCREMENT     shift, and go to state 95
+    DECREMENT     shift, and go to state 96
+
+    $default  reduce using rule 22 (assign_expr_maybe)
+
+    assign_expr_maybe  go to state 97
+    assign_expr        go to state 98
+    assign_extra       go to state 99
+    inc                go to state 100
+
+
+State 39
+
+   24 all_decl_var: decl_var_prim .
+
+    $default  reduce using rule 24 (all_decl_var)
+
+
+State 40
+
+   25 all_decl_var: const_decl_var .
+
+    $default  reduce using rule 25 (all_decl_var)
+
+
+State 41
+
+   10 cmd: inOut . SEMICOLON
+
+    SEMICOLON  shift, and go to state 101
+
+
+State 42
+
+   42 inOut: in .
+
+    $default  reduce using rule 42 (inOut)
+
+
+State 43
+
+   43 inOut: out .
+
+    $default  reduce using rule 43 (inOut)
+
+
+State 44
+
+   11 cmd: cmd_loop .
+
+    $default  reduce using rule 11 (cmd)
+
+
+State 45
+
+   12 cmd: cmd_cond .
+
+    $default  reduce using rule 12 (cmd)
+
+
+State 46
+
+   13 cmd: cmd_switch .
+
+    $default  reduce using rule 13 (cmd)
+
+
+State 47
+
+   46 cmd_loop: for .
+
+    $default  reduce using rule 46 (cmd_loop)
+
+
+State 48
+
+   47 cmd_loop: loop .
+
+    $default  reduce using rule 47 (cmd_loop)
+
+
+State 49
+
+   48 cmd_cond: if .
+
+    $default  reduce using rule 48 (cmd_cond)
+
+
+State 50
+
+   49 cmd_switch: switch .
+
+    $default  reduce using rule 49 (cmd_switch)
+
+
+State 51
+
+   26 decl_var_prim: primitive . hashtagzeromais cochetezeromais ID
+
+    POINTER_VAL  shift, and go to state 102
+
+    $default  reduce using rule 28 (hashtagzeromais)
+
+    hashtagzeromais  go to state 103
+
+
+State 52
+
+   20 cmd: block .
+
+    $default  reduce using rule 20 (cmd)
+
+
+State 53
+
+   14 cmd: expr . SEMICOLON
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS       shift, and go to state 104
+    MINUS      shift, and go to state 105
+    TIMES      shift, and go to state 106
+    DIV        shift, and go to state 107
+    MOD        shift, and go to state 108
+    SEMICOLON  shift, and go to state 109
+    OR         shift, and go to state 110
+    AND        shift, and go to state 111
+    EQUALS     shift, and go to state 112
+    DIFF       shift, and go to state 113
+    LT         shift, and go to state 114
+    GT         shift, and go to state 115
+    LEQ        shift, and go to state 116
+    GEQ        shift, and go to state 117
+
+
+State 54
+
+   98 expr: expr_tern .
+
+    $default  reduce using rule 98 (expr)
+
+
+State 55
+
+    8 cmd: identifier . assign_expr SEMICOLON
+  100 expr: identifier .
+
+    ASSIGN_PLUS   shift, and go to state 89
+    ASSIGN_MINUS  shift, and go to state 90
+    ASSIGN_MULT   shift, and go to state 91
+    ASSIGN_DIV    shift, and go to state 92
+    ASSIGN_MOD    shift, and go to state 93
+    ASSIGN        shift, and go to state 94
+    INCREMENT     shift, and go to state 95
+    DECREMENT     shift, and go to state 96
+
+    $default  reduce using rule 100 (expr)
+
+    assign_expr   go to state 118
+    assign_extra  go to state 99
+    inc           go to state 100
+
+
+State 56
+
+   99 expr: literal .
+
+    $default  reduce using rule 99 (expr)
+
+
+State 57
+
+   56 if: IF LEFT_PAREN . expr RIGHT_PAREN cmd ENDIF else
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 119
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 58
+
+   59 switch: SWITCH LEFT_PAREN . expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 120
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 59
+
+   50 for: FOR LEFT_PAREN . para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd
+
+    CONST       shift, and go to state 6
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd_decl_var    go to state 121
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    para_for        go to state 122
+    primitive       go to state 51
+    expr            go to state 123
+    expr_tern       go to state 54
+    identifier      go to state 63
+    literal         go to state 56
+
+
+State 60
+
+   55 loop: LOOP cmd .
+
+    $default  reduce using rule 55 (loop)
+
+
+State 61
+
+   16 cmd: RETURN SEMICOLON .
+
+    $default  reduce using rule 16 (cmd)
+
+
+State 62
+
+   15 cmd: RETURN expr . SEMICOLON
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS       shift, and go to state 104
+    MINUS      shift, and go to state 105
+    TIMES      shift, and go to state 106
+    DIV        shift, and go to state 107
+    MOD        shift, and go to state 108
+    SEMICOLON  shift, and go to state 124
+    OR         shift, and go to state 110
+    AND        shift, and go to state 111
+    EQUALS     shift, and go to state 112
+    DIFF       shift, and go to state 113
+    LT         shift, and go to state 114
+    GT         shift, and go to state 115
+    LEQ        shift, and go to state 116
+    GEQ        shift, and go to state 117
+
+
+State 63
+
+  100 expr: identifier .
+
+    $default  reduce using rule 100 (expr)
+
+
+State 64
+
+   27 const_decl_var: CONST decl_var_prim .
+
+    $default  reduce using rule 27 (const_decl_var)
+
+
+State 65
+
+   17 cmd: BREAK SEMICOLON .
+
+    $default  reduce using rule 17 (cmd)
+
+
+State 66
+
+   18 cmd: CONTINUE SEMICOLON .
+
+    $default  reduce using rule 18 (cmd)
+
+
+State 67
+
+   44 in: READ LEFT_PAREN . ID RIGHT_PAREN
+
+    ID  shift, and go to state 125
+
+
+State 68
+
+   45 out: WRITE LEFT_PAREN . ID RIGHT_PAREN
+
+    ID  shift, and go to state 126
+
+
+State 69
+
+   19 cmd: EXIT WHEN . expr SEMICOLON
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 127
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 70
+
+   65 typename: ID .
+
+    $default  reduce using rule 65 (typename)
+
+
+State 71
+
+    7 decl_fun: FUNCTION type . ID LEFT_PAREN typedlpar RIGHT_PAREN $@1 block
+
+    ID  shift, and go to state 128
+
+
+State 72
+
+   63 type: typename . hashtagzeromais cochetezeromais
+
+    POINTER_VAL  shift, and go to state 102
+
+    $default  reduce using rule 28 (hashtagzeromais)
+
+    hashtagzeromais  go to state 129
+
+
+State 73
+
+   64 typename: primitive .
+
+    $default  reduce using rule 64 (typename)
+
+
+State 74
+
+   83 expr: MINUS identifier .
+
+    $default  reduce using rule 83 (expr)
+
+
+State 75
+
+   79 block: LEFT_BRACE stmts . RIGHT_BRACE
+
+    RIGHT_BRACE  shift, and go to state 130
+
+
+State 76
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  101 expr_tern: TERNARY expr . QUESTION_MARK expr COLON expr TERNARY
+
+    PLUS           shift, and go to state 104
+    MINUS          shift, and go to state 105
+    TIMES          shift, and go to state 106
+    DIV            shift, and go to state 107
+    MOD            shift, and go to state 108
+    QUESTION_MARK  shift, and go to state 131
+    OR             shift, and go to state 110
+    AND            shift, and go to state 111
+    EQUALS         shift, and go to state 112
+    DIFF           shift, and go to state 113
+    LT             shift, and go to state 114
+    GT             shift, and go to state 115
+    LEQ            shift, and go to state 116
+    GEQ            shift, and go to state 117
+
+
+State 77
+
+  106 arrayAccess: LEFT_BRACKET . expr RIGHT_BRACKET
+  107            | LEFT_BRACKET . expr RIGHT_BRACKET arrayAccess
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 132
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 78
+
+  112 pointerAccess: ARROW . ID
+  113              | ARROW . ID pointerAccess
+
+    ID  shift, and go to state 133
+
+
+State 79
+
+  104 identifier: ID LEFT_PAREN . lpar RIGHT_PAREN
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 108 (lpar)
+
+    expr        go to state 134
+    expr_tern   go to state 54
+    identifier  go to state 63
+    lpar        go to state 135
+    literal     go to state 56
+
+
+State 80
+
+  103 identifier: ID arrayAccess .
+
+    $default  reduce using rule 103 (identifier)
+
+
+State 81
+
+  105 identifier: ID pointerAccess .
+
+    $default  reduce using rule 105 (identifier)
+
+
+State 82
+
+   82 expr: LEFT_PAREN expr . RIGHT_PAREN
+   85     | expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS         shift, and go to state 104
+    MINUS        shift, and go to state 105
+    TIMES        shift, and go to state 106
+    DIV          shift, and go to state 107
+    MOD          shift, and go to state 108
+    RIGHT_PAREN  shift, and go to state 136
+    OR           shift, and go to state 110
+    AND          shift, and go to state 111
+    EQUALS       shift, and go to state 112
+    DIFF         shift, and go to state 113
+    LT           shift, and go to state 114
+    GT           shift, and go to state 115
+    LEQ          shift, and go to state 116
+    GEQ          shift, and go to state 117
+
+
+State 83
+
+   80 expr: INCREMENT expr .
+   85     | expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 80 (expr)
+
+
+State 84
+
+   81 expr: DECREMENT expr .
+   85     | expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 81 (expr)
+
+
+State 85
+
+   84 expr: NOT expr .
+   85     | expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 84 (expr)
+
+
+State 86
+
+    0 $accept: prog $end .
+
+    $default  accept
+
+
+State 87
+
+    3 stmts: stmt stmts .
+
+    $default  reduce using rule 3 (stmts)
+
+
+State 88
+
+    9 cmd: cmd_decl_var SEMICOLON .
+
+    $default  reduce using rule 9 (cmd)
+
+
+State 89
+
+   35 assign_extra: ASSIGN_PLUS .
+
+    $default  reduce using rule 35 (assign_extra)
+
+
+State 90
+
+   36 assign_extra: ASSIGN_MINUS .
+
+    $default  reduce using rule 36 (assign_extra)
+
+
+State 91
+
+   37 assign_extra: ASSIGN_MULT .
+
+    $default  reduce using rule 37 (assign_extra)
+
+
+State 92
+
+   38 assign_extra: ASSIGN_DIV .
+
+    $default  reduce using rule 38 (assign_extra)
+
+
+State 93
+
+   39 assign_extra: ASSIGN_MOD .
+
+    $default  reduce using rule 39 (assign_extra)
+
+
+State 94
+
+   32 assign_expr: ASSIGN . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 137
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 95
+
+   41 inc: INCREMENT .
+
+    $default  reduce using rule 41 (inc)
+
+
+State 96
+
+   40 inc: DECREMENT .
+
+    $default  reduce using rule 40 (inc)
+
+
+State 97
+
+   21 cmd_decl_var: all_decl_var assign_expr_maybe .
+
+    $default  reduce using rule 21 (cmd_decl_var)
+
+
+State 98
+
+   23 assign_expr_maybe: assign_expr .
+
+    $default  reduce using rule 23 (assign_expr_maybe)
+
+
+State 99
+
+   33 assign_expr: assign_extra . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 138
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 100
+
+   34 assign_expr: inc .
+
+    $default  reduce using rule 34 (assign_expr)
+
+
+State 101
+
+   10 cmd: inOut SEMICOLON .
+
+    $default  reduce using rule 10 (cmd)
+
+
+State 102
+
+   29 hashtagzeromais: POINTER_VAL . hashtagzeromais
+
+    POINTER_VAL  shift, and go to state 102
+
+    $default  reduce using rule 28 (hashtagzeromais)
+
+    hashtagzeromais  go to state 139
+
+
+State 103
+
+   26 decl_var_prim: primitive hashtagzeromais . cochetezeromais ID
+
+    LEFT_BRACKET  shift, and go to state 140
+
+    $default  reduce using rule 30 (cochetezeromais)
+
+    cochetezeromais  go to state 141
+
+
+State 104
+
+   87 expr: expr PLUS . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 142
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 105
+
+   90 expr: expr MINUS . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 143
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 106
+
+   88 expr: expr TIMES . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 144
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 107
+
+   89 expr: expr DIV . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 145
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 108
+
+   91 expr: expr MOD . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 146
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 109
+
+   14 cmd: expr SEMICOLON .
+
+    $default  reduce using rule 14 (cmd)
+
+
+State 110
+
+   86 expr: expr OR . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 147
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 111
+
+   85 expr: expr AND . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 148
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 112
+
+   92 expr: expr EQUALS . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 149
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 113
+
+   93 expr: expr DIFF . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 150
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 114
+
+   94 expr: expr LT . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 151
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 115
+
+   95 expr: expr GT . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 152
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 116
+
+   96 expr: expr LEQ . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 153
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 117
+
+   97 expr: expr GEQ . expr
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 154
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 118
+
+    8 cmd: identifier assign_expr . SEMICOLON
+
+    SEMICOLON  shift, and go to state 155
+
+
+State 119
+
+   56 if: IF LEFT_PAREN expr . RIGHT_PAREN cmd ENDIF else
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS         shift, and go to state 104
+    MINUS        shift, and go to state 105
+    TIMES        shift, and go to state 106
+    DIV          shift, and go to state 107
+    MOD          shift, and go to state 108
+    RIGHT_PAREN  shift, and go to state 156
+    OR           shift, and go to state 110
+    AND          shift, and go to state 111
+    EQUALS       shift, and go to state 112
+    DIFF         shift, and go to state 113
+    LT           shift, and go to state 114
+    GT           shift, and go to state 115
+    LEQ          shift, and go to state 116
+    GEQ          shift, and go to state 117
+
+
+State 120
+
+   59 switch: SWITCH LEFT_PAREN expr . RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS         shift, and go to state 104
+    MINUS        shift, and go to state 105
+    TIMES        shift, and go to state 106
+    DIV          shift, and go to state 107
+    MOD          shift, and go to state 108
+    RIGHT_PAREN  shift, and go to state 157
+    OR           shift, and go to state 110
+    AND          shift, and go to state 111
+    EQUALS       shift, and go to state 112
+    DIFF         shift, and go to state 113
+    LT           shift, and go to state 114
+    GT           shift, and go to state 115
+    LEQ          shift, and go to state 116
+    GEQ          shift, and go to state 117
+
+
+State 121
+
+   51 para_for: cmd_decl_var .
+
+    $default  reduce using rule 51 (para_for)
+
+
+State 122
+
+   50 for: FOR LEFT_PAREN para_for . SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd
+
+    SEMICOLON  shift, and go to state 158
+
+
+State 123
+
+   52 para_for: expr .
+   53         | expr . INCREMENT
+   54         | expr . DECREMENT
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS       shift, and go to state 104
+    MINUS      shift, and go to state 105
+    TIMES      shift, and go to state 106
+    DIV        shift, and go to state 107
+    MOD        shift, and go to state 108
+    INCREMENT  shift, and go to state 159
+    DECREMENT  shift, and go to state 160
+    OR         shift, and go to state 110
+    AND        shift, and go to state 111
+    EQUALS     shift, and go to state 112
+    DIFF       shift, and go to state 113
+    LT         shift, and go to state 114
+    GT         shift, and go to state 115
+    LEQ        shift, and go to state 116
+    GEQ        shift, and go to state 117
+
+    $default  reduce using rule 52 (para_for)
+
+
+State 124
+
+   15 cmd: RETURN expr SEMICOLON .
+
+    $default  reduce using rule 15 (cmd)
+
+
+State 125
+
+   44 in: READ LEFT_PAREN ID . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 161
+
+
+State 126
+
+   45 out: WRITE LEFT_PAREN ID . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 162
+
+
+State 127
+
+   19 cmd: EXIT WHEN expr . SEMICOLON
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS       shift, and go to state 104
+    MINUS      shift, and go to state 105
+    TIMES      shift, and go to state 106
+    DIV        shift, and go to state 107
+    MOD        shift, and go to state 108
+    SEMICOLON  shift, and go to state 163
+    OR         shift, and go to state 110
+    AND        shift, and go to state 111
+    EQUALS     shift, and go to state 112
+    DIFF       shift, and go to state 113
+    LT         shift, and go to state 114
+    GT         shift, and go to state 115
+    LEQ        shift, and go to state 116
+    GEQ        shift, and go to state 117
+
+
+State 128
+
+    7 decl_fun: FUNCTION type ID . LEFT_PAREN typedlpar RIGHT_PAREN $@1 block
+
+    LEFT_PAREN  shift, and go to state 164
+
+
+State 129
+
+   63 type: typename hashtagzeromais . cochetezeromais
+
+    LEFT_BRACKET  shift, and go to state 140
+
+    $default  reduce using rule 30 (cochetezeromais)
+
+    cochetezeromais  go to state 165
+
+
+State 130
+
+   79 block: LEFT_BRACE stmts RIGHT_BRACE .
+
+    $default  reduce using rule 79 (block)
+
+
+State 131
+
+  101 expr_tern: TERNARY expr QUESTION_MARK . expr COLON expr TERNARY
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 166
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 132
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  106 arrayAccess: LEFT_BRACKET expr . RIGHT_BRACKET
+  107            | LEFT_BRACKET expr . RIGHT_BRACKET arrayAccess
+
+    PLUS           shift, and go to state 104
+    MINUS          shift, and go to state 105
+    TIMES          shift, and go to state 106
+    DIV            shift, and go to state 107
+    MOD            shift, and go to state 108
+    RIGHT_BRACKET  shift, and go to state 167
+    OR             shift, and go to state 110
+    AND            shift, and go to state 111
+    EQUALS         shift, and go to state 112
+    DIFF           shift, and go to state 113
+    LT             shift, and go to state 114
+    GT             shift, and go to state 115
+    LEQ            shift, and go to state 116
+    GEQ            shift, and go to state 117
+
+
+State 133
+
+  112 pointerAccess: ARROW ID .
+  113              | ARROW ID . pointerAccess
+
+    ARROW  shift, and go to state 78
+
+    $default  reduce using rule 112 (pointerAccess)
+
+    pointerAccess  go to state 168
+
+
+State 134
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  109 lpar: expr . lparAfter
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    COMMA   shift, and go to state 169
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 110 (lparAfter)
+
+    lparAfter  go to state 170
+
+
+State 135
+
+  104 identifier: ID LEFT_PAREN lpar . RIGHT_PAREN
+
+    RIGHT_PAREN  shift, and go to state 171
+
+
+State 136
+
+   82 expr: LEFT_PAREN expr RIGHT_PAREN .
+
+    $default  reduce using rule 82 (expr)
+
+
+State 137
+
+   32 assign_expr: ASSIGN expr .
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 32 (assign_expr)
+
+
+State 138
+
+   33 assign_expr: assign_extra expr .
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 33 (assign_expr)
+
+
+State 139
+
+   29 hashtagzeromais: POINTER_VAL hashtagzeromais .
+
+    $default  reduce using rule 29 (hashtagzeromais)
+
+
+State 140
+
+   31 cochetezeromais: LEFT_BRACKET . expr RIGHT_BRACKET cochetezeromais
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 172
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 141
+
+   26 decl_var_prim: primitive hashtagzeromais cochetezeromais . ID
+
+    ID  shift, and go to state 173
+
+
+State 142
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   87     | expr PLUS expr .
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 87 (expr)
+
+
+State 143
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   90     | expr MINUS expr .
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 90 (expr)
+
+
+State 144
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   88     | expr TIMES expr .
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 88 (expr)
+
+
+State 145
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   89     | expr DIV expr .
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 89 (expr)
+
+
+State 146
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   91     | expr MOD expr .
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 91 (expr)
+
+
+State 147
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   86     | expr OR expr .
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 86 (expr)
+
+
+State 148
+
+   85 expr: expr . AND expr
+   85     | expr AND expr .
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 85 (expr)
+
+
+State 149
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   92     | expr EQUALS expr .
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 92 (expr)
+
+
+State 150
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   93     | expr DIFF expr .
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 93 (expr)
+
+
+State 151
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   94     | expr LT expr .
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 94 (expr)
+
+
+State 152
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   95     | expr GT expr .
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 95 (expr)
+
+
+State 153
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   96     | expr LEQ expr .
+   97     | expr . GEQ expr
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 96 (expr)
+
+
+State 154
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+   97     | expr GEQ expr .
+
+    EQUALS  error (nonassociative)
+    DIFF    error (nonassociative)
+    LT      error (nonassociative)
+    GT      error (nonassociative)
+    LEQ     error (nonassociative)
+    GEQ     error (nonassociative)
+
+    $default  reduce using rule 97 (expr)
+
+
+State 155
+
+    8 cmd: identifier assign_expr SEMICOLON .
+
+    $default  reduce using rule 8 (cmd)
+
+
+State 156
+
+   56 if: IF LEFT_PAREN expr RIGHT_PAREN . cmd ENDIF else
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd             go to state 174
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 157
+
+   59 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN . LEFT_BRACE casezeromais RIGHT_BRACE
+
+    LEFT_BRACE  shift, and go to state 175
+
+
+State 158
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON . para_for SEMICOLON para_for RIGHT_PAREN cmd
+
+    CONST       shift, and go to state 6
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd_decl_var    go to state 121
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    para_for        go to state 176
+    primitive       go to state 51
+    expr            go to state 123
+    expr_tern       go to state 54
+    identifier      go to state 63
+    literal         go to state 56
+
+
+State 159
+
+   53 para_for: expr INCREMENT .
+
+    $default  reduce using rule 53 (para_for)
+
+
+State 160
+
+   54 para_for: expr DECREMENT .
+
+    $default  reduce using rule 54 (para_for)
+
+
+State 161
+
+   44 in: READ LEFT_PAREN ID RIGHT_PAREN .
+
+    $default  reduce using rule 44 (in)
+
+
+State 162
+
+   45 out: WRITE LEFT_PAREN ID RIGHT_PAREN .
+
+    $default  reduce using rule 45 (out)
+
+
+State 163
+
+   19 cmd: EXIT WHEN expr SEMICOLON .
+
+    $default  reduce using rule 19 (cmd)
+
+
+State 164
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN . typedlpar RIGHT_PAREN $@1 block
+
+    INT   shift, and go to state 13
+    REAL  shift, and go to state 14
+    CHAR  shift, and go to state 15
+    STR   shift, and go to state 16
+    BOOL  shift, and go to state 17
+    VOID  shift, and go to state 18
+    ID    shift, and go to state 70
+
+    $default  reduce using rule 72 (typedlpar)
+
+    type       go to state 177
+    typename   go to state 72
+    primitive  go to state 73
+    typedlpar  go to state 178
+    parameter  go to state 179
+
+
+State 165
+
+   63 type: typename hashtagzeromais cochetezeromais .
+
+    $default  reduce using rule 63 (type)
+
+
+State 166
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  101 expr_tern: TERNARY expr QUESTION_MARK expr . COLON expr TERNARY
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    COLON   shift, and go to state 180
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+
+State 167
+
+  106 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET .
+  107            | LEFT_BRACKET expr RIGHT_BRACKET . arrayAccess
+
+    LEFT_BRACKET  shift, and go to state 77
+
+    $default  reduce using rule 106 (arrayAccess)
+
+    arrayAccess  go to state 181
+
+
+State 168
+
+  113 pointerAccess: ARROW ID pointerAccess .
+
+    $default  reduce using rule 113 (pointerAccess)
+
+
+State 169
+
+  111 lparAfter: COMMA . expr lparAfter
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 182
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 170
+
+  109 lpar: expr lparAfter .
+
+    $default  reduce using rule 109 (lpar)
+
+
+State 171
+
+  104 identifier: ID LEFT_PAREN lpar RIGHT_PAREN .
+
+    $default  reduce using rule 104 (identifier)
+
+
+State 172
+
+   31 cochetezeromais: LEFT_BRACKET expr . RIGHT_BRACKET cochetezeromais
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+
+    PLUS           shift, and go to state 104
+    MINUS          shift, and go to state 105
+    TIMES          shift, and go to state 106
+    DIV            shift, and go to state 107
+    MOD            shift, and go to state 108
+    RIGHT_BRACKET  shift, and go to state 183
+    OR             shift, and go to state 110
+    AND            shift, and go to state 111
+    EQUALS         shift, and go to state 112
+    DIFF           shift, and go to state 113
+    LT             shift, and go to state 114
+    GT             shift, and go to state 115
+    LEQ            shift, and go to state 116
+    GEQ            shift, and go to state 117
+
+
+State 173
+
+   26 decl_var_prim: primitive hashtagzeromais cochetezeromais ID .
+
+    $default  reduce using rule 26 (decl_var_prim)
+
+
+State 174
+
+   56 if: IF LEFT_PAREN expr RIGHT_PAREN cmd . ENDIF else
+
+    ENDIF  shift, and go to state 184
+
+
+State 175
+
+   59 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE . casezeromais RIGHT_BRACE
+
+    CASE  shift, and go to state 185
+
+    $default  reduce using rule 60 (casezeromais)
+
+    casezeromais  go to state 186
+    case          go to state 187
+
+
+State 176
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for . SEMICOLON para_for RIGHT_PAREN cmd
+
+    SEMICOLON  shift, and go to state 188
+
+
+State 177
+
+   76 parameter: type . parameterAfter
+
+    REFERENCE  shift, and go to state 189
+    ID         shift, and go to state 190
+
+    parameterAfter  go to state 191
+
+
+State 178
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar . RIGHT_PAREN $@1 block
+
+    RIGHT_PAREN  shift, and go to state 192
+
+
+State 179
+
+   73 typedlpar: parameter . typedlparAfter
+
+    COMMA  shift, and go to state 193
+
+    $default  reduce using rule 74 (typedlparAfter)
+
+    typedlparAfter  go to state 194
+
+
+State 180
+
+  101 expr_tern: TERNARY expr QUESTION_MARK expr COLON . expr TERNARY
+
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    expr        go to state 195
+    expr_tern   go to state 54
+    identifier  go to state 63
+    literal     go to state 56
+
+
+State 181
+
+  107 arrayAccess: LEFT_BRACKET expr RIGHT_BRACKET arrayAccess .
+
+    $default  reduce using rule 107 (arrayAccess)
+
+
+State 182
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  111 lparAfter: COMMA expr . lparAfter
+
+    PLUS    shift, and go to state 104
+    MINUS   shift, and go to state 105
+    TIMES   shift, and go to state 106
+    DIV     shift, and go to state 107
+    MOD     shift, and go to state 108
+    COMMA   shift, and go to state 169
+    OR      shift, and go to state 110
+    AND     shift, and go to state 111
+    EQUALS  shift, and go to state 112
+    DIFF    shift, and go to state 113
+    LT      shift, and go to state 114
+    GT      shift, and go to state 115
+    LEQ     shift, and go to state 116
+    GEQ     shift, and go to state 117
+
+    $default  reduce using rule 110 (lparAfter)
+
+    lparAfter  go to state 196
+
+
+State 183
+
+   31 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET . cochetezeromais
+
+    LEFT_BRACKET  shift, and go to state 140
+
+    $default  reduce using rule 30 (cochetezeromais)
+
+    cochetezeromais  go to state 197
+
+
+State 184
+
+   56 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF . else
+
+    ELSE  shift, and go to state 198
+
+    $default  reduce using rule 57 (else)
+
+    else  go to state 199
+
+
+State 185
+
+   62 case: CASE . literal COLON stmts
+
+    TRUE       shift, and go to state 20
+    FALSE      shift, and go to state 21
+    NUMBER     shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    STRING     shift, and go to state 24
+
+    literal  go to state 200
+
+
+State 186
+
+   59 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais . RIGHT_BRACE
+
+    RIGHT_BRACE  shift, and go to state 201
+
+
+State 187
+
+   61 casezeromais: case . casezeromais
+
+    CASE  shift, and go to state 185
+
+    $default  reduce using rule 60 (casezeromais)
+
+    casezeromais  go to state 202
+    case          go to state 187
+
+
+State 188
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON . para_for RIGHT_PAREN cmd
+
+    CONST       shift, and go to state 6
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd_decl_var    go to state 121
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    para_for        go to state 203
+    primitive       go to state 51
+    expr            go to state 123
+    expr_tern       go to state 54
+    identifier      go to state 63
+    literal         go to state 56
+
+
+State 189
+
+   78 parameterAfter: REFERENCE . ID
+
+    ID  shift, and go to state 204
+
+
+State 190
+
+   77 parameterAfter: ID .
+
+    $default  reduce using rule 77 (parameterAfter)
+
+
+State 191
+
+   76 parameter: type parameterAfter .
+
+    $default  reduce using rule 76 (parameter)
+
+
+State 192
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN . $@1 block
+
+    $default  reduce using rule 6 ($@1)
+
+    $@1  go to state 205
+
+
+State 193
+
+   75 typedlparAfter: COMMA . parameter typedlparAfter
+
+    INT   shift, and go to state 13
+    REAL  shift, and go to state 14
+    CHAR  shift, and go to state 15
+    STR   shift, and go to state 16
+    BOOL  shift, and go to state 17
+    VOID  shift, and go to state 18
+    ID    shift, and go to state 70
+
+    type       go to state 177
+    typename   go to state 72
+    primitive  go to state 73
+    parameter  go to state 206
+
+
+State 194
+
+   73 typedlpar: parameter typedlparAfter .
+
+    $default  reduce using rule 73 (typedlpar)
+
+
+State 195
+
+   85 expr: expr . AND expr
+   86     | expr . OR expr
+   87     | expr . PLUS expr
+   88     | expr . TIMES expr
+   89     | expr . DIV expr
+   90     | expr . MINUS expr
+   91     | expr . MOD expr
+   92     | expr . EQUALS expr
+   93     | expr . DIFF expr
+   94     | expr . LT expr
+   95     | expr . GT expr
+   96     | expr . LEQ expr
+   97     | expr . GEQ expr
+  101 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr . TERNARY
+
+    PLUS     shift, and go to state 104
+    MINUS    shift, and go to state 105
+    TIMES    shift, and go to state 106
+    DIV      shift, and go to state 107
+    MOD      shift, and go to state 108
+    TERNARY  shift, and go to state 207
+    OR       shift, and go to state 110
+    AND      shift, and go to state 111
+    EQUALS   shift, and go to state 112
+    DIFF     shift, and go to state 113
+    LT       shift, and go to state 114
+    GT       shift, and go to state 115
+    LEQ      shift, and go to state 116
+    GEQ      shift, and go to state 117
+
+
+State 196
+
+  111 lparAfter: COMMA expr lparAfter .
+
+    $default  reduce using rule 111 (lparAfter)
+
+
+State 197
+
+   31 cochetezeromais: LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais .
+
+    $default  reduce using rule 31 (cochetezeromais)
+
+
+State 198
+
+   58 else: ELSE . cmd
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd             go to state 208
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 199
+
+   56 if: IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else .
+
+    $default  reduce using rule 56 (if)
+
+
+State 200
+
+   62 case: CASE literal . COLON stmts
+
+    COLON  shift, and go to state 209
+
+
+State 201
+
+   59 switch: SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE .
+
+    $default  reduce using rule 59 (switch)
+
+
+State 202
+
+   61 casezeromais: case casezeromais .
+
+    $default  reduce using rule 61 (casezeromais)
+
+
+State 203
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for . RIGHT_PAREN cmd
+
+    RIGHT_PAREN  shift, and go to state 210
+
+
+State 204
+
+   78 parameterAfter: REFERENCE ID .
+
+    $default  reduce using rule 78 (parameterAfter)
+
+
+State 205
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN $@1 . block
+
+    LEFT_BRACE  shift, and go to state 25
+
+    block  go to state 211
+
+
+State 206
+
+   75 typedlparAfter: COMMA parameter . typedlparAfter
+
+    COMMA  shift, and go to state 193
+
+    $default  reduce using rule 74 (typedlparAfter)
+
+    typedlparAfter  go to state 212
+
+
+State 207
+
+  101 expr_tern: TERNARY expr QUESTION_MARK expr COLON expr TERNARY .
+
+    $default  reduce using rule 101 (expr_tern)
+
+
+State 208
+
+   58 else: ELSE cmd .
+
+    $default  reduce using rule 58 (else)
+
+
+State 209
+
+   62 case: CASE literal COLON . stmts
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    FUNCTION    shift, and go to state 12
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    $default  reduce using rule 2 (stmts)
+
+    stmts           go to state 213
+    stmt            go to state 34
+    decl_fun        go to state 35
+    cmd             go to state 36
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 210
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN . cmd
+
+    IF          shift, and go to state 1
+    SWITCH      shift, and go to state 2
+    FOR         shift, and go to state 3
+    LOOP        shift, and go to state 4
+    RETURN      shift, and go to state 5
+    CONST       shift, and go to state 6
+    BREAK       shift, and go to state 7
+    CONTINUE    shift, and go to state 8
+    READ        shift, and go to state 9
+    WRITE       shift, and go to state 10
+    EXIT        shift, and go to state 11
+    INT         shift, and go to state 13
+    REAL        shift, and go to state 14
+    CHAR        shift, and go to state 15
+    STR         shift, and go to state 16
+    BOOL        shift, and go to state 17
+    VOID        shift, and go to state 18
+    MINUS       shift, and go to state 19
+    TRUE        shift, and go to state 20
+    FALSE       shift, and go to state 21
+    NUMBER      shift, and go to state 22
+    CHARACTER   shift, and go to state 23
+    STRING      shift, and go to state 24
+    LEFT_BRACE  shift, and go to state 25
+    TERNARY     shift, and go to state 26
+    ID          shift, and go to state 27
+    LEFT_PAREN  shift, and go to state 28
+    INCREMENT   shift, and go to state 29
+    DECREMENT   shift, and go to state 30
+    NOT         shift, and go to state 31
+
+    cmd             go to state 214
+    cmd_decl_var    go to state 37
+    all_decl_var    go to state 38
+    decl_var_prim   go to state 39
+    const_decl_var  go to state 40
+    inOut           go to state 41
+    in              go to state 42
+    out             go to state 43
+    cmd_loop        go to state 44
+    cmd_cond        go to state 45
+    cmd_switch      go to state 46
+    for             go to state 47
+    loop            go to state 48
+    if              go to state 49
+    switch          go to state 50
+    primitive       go to state 51
+    block           go to state 52
+    expr            go to state 53
+    expr_tern       go to state 54
+    identifier      go to state 55
+    literal         go to state 56
+
+
+State 211
+
+    7 decl_fun: FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN $@1 block .
+
+    $default  reduce using rule 7 (decl_fun)
+
+
+State 212
+
+   75 typedlparAfter: COMMA parameter typedlparAfter .
+
+    $default  reduce using rule 75 (typedlparAfter)
+
+
+State 213
+
+   62 case: CASE literal COLON stmts .
+
+    $default  reduce using rule 62 (case)
+
+
+State 214
+
+   50 for: FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd .
+
+    $default  reduce using rule 50 (for)

@@ -6,7 +6,7 @@ function int partition(int# arr, int start, int end) {
 	int pivot = arr[start];
 
 	int count = 0;
-	for (x i = start + 1; i <= end; i++) {
+	for (int i = start + 1; i <= end; i++) {
 		if (arr[i] <= pivot) {
 			count++;
 		}
@@ -35,7 +35,9 @@ function int partition(int# arr, int start, int end) {
 		}
 
 		if (i < pivotIndex && j > pivotIndex) {
-			swap(arr[i++], arr[j--]);
+			swap(arr[i], arr[j]);
+			i++;
+			j--;
 		}
 		endif
 	}

@@ -1,0 +1,46 @@
+int foo = 10;
+
+function void merge(int# arr, int start, int mid, int end)
+{
+    int start2 = mid + 1;
+
+    if (arr[mid] <= arr[start2]) {
+        return;
+    }
+    endif
+    loop{
+        exit when (start <= mid and start2 <= end);
+
+        if (arr[start] <= arr[start2]) {
+            start++;
+        }
+        endif
+        else {
+            int value = arr[start2];
+            int index = start2;
+
+            loop{
+                exit when (index != start);
+                arr[index] = arr[index - 1];
+                index--;
+            }
+            arr[start] = value;
+
+            start++;
+            mid++;
+            start2++;
+        }
+    }
+}
+
+function void mergesort(int# v,int l,int r){
+    int tam = r-l;
+    if(tam <= 1){
+        return ;
+    }
+    endif
+    int mid = tam/2;
+    mergesort(v,l,mid);
+    mergesort(v,mid,r);
+    merge(v,l,mid,r);
+}

@@ -54,7 +54,7 @@ public:
 
 class primitive : public Node {
 public:
-  string type = "";
+  string type = "UNDEFINED";
 
   primitive(string type) : type(type) {}
 };
@@ -72,7 +72,7 @@ public:
 class decl_var_prim : public Node {
 public:
   string name = "";
-  string type = "";
+  string type = "UNDEFINED";
 
   decl_var_prim(primitive *t, string var_name) {
     type = t->type;
@@ -83,7 +83,7 @@ public:
 class const_decl_var : public Node {
 public:
   string name = "";
-  string type = "";
+  string type = "UNDEFINED";
   bool is_const = true;
 
   const_decl_var(decl_var_prim *var) {
@@ -182,7 +182,7 @@ public:
 class expr : public Node {
 public:
   vector<string> symbol_names;
-  string type = "";
+  string type = "UNDEFINED";
 
   expr(list<symtable> &tables, expr *left, expr *right) {
     if (left->symbol_names.size() < (1 << 30))
