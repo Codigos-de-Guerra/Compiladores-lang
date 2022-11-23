@@ -196,7 +196,7 @@ stmt : decl_fun {}
      | cmd {};
 
 decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {
-    $$ = new decl_fun(tables, $2, *$3, $5);
+    $$ = new decl_fun(tables, $2, *$3);
 };
 
 cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
@@ -289,12 +289,12 @@ primitive : INT {$$ = new primitive("INT");}
           | VOID {$$ = new primitive("VOID");};
 
 typedlpar : /*epsilon*/ {}
-          | parameter typedlparAfter {$$ = new typedlpar($1, $2);}
+          | parameter typedlparAfter {$$ = new typedlpar(tables, $1, $2);}
 
 typedlparAfter : /*epsilon*/ {}
                | COMMA parameter typedlparAfter {
-                     $$ = new typedlpar($2, $3);
-                 };
+    $$ = new typedlpar(tables, $2, $3);
+};
 
 parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 

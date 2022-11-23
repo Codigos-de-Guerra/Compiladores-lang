@@ -151,12 +151,14 @@ class typedlpar {
 public:
   vector<parameter> params;
 
-  typedlpar(parameter *param, typedlpar *lpar) {
+  typedlpar(list<symtable> &tables, parameter *param, typedlpar *lpar) {
     params.push_back(*param);
+    add_sym(tables, param->id, {param->type, false});
 
     if (lpar->params.size() < (1 << 30))
       for (parameter param : lpar->params) {
         params.push_back(param);
+        add_sym(tables, param.id, {param.type, false});
       }
   }
 };
@@ -165,16 +167,10 @@ class decl_fun : public Node {
 public:
   string type;
   string name;
-  vector<parameter> params;
 
-  decl_fun(list<symtable> tables, type_name *type_name, string id,
-           typedlpar *lpar) {
+  decl_fun(list<symtable> &tables, type_name *type_name, string id) {
     type = type_name->name;
     add_sym(tables, id, {type, false});
-
-    for (parameter param : lpar->params) {
-      add_sym(tables, param.id, {param.type, false});
-    }
   };
 };
 
