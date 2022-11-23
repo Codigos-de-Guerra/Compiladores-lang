@@ -100,18 +100,20 @@ public:
     optional<symbol> sym = lookup(tables, var->name);
 
     if (sym.has_value())
-      cout << var->name << " já foi declarado como " << sym.value().type << endl;
+      cout << var->name << " já foi declarado como " << sym.value().first
+           << endl;
     else
-      add_sym(tables, var->name, symbol(var->type));
+      add_sym(tables, var->name, {var->type, false});
   }
 
-  all_decl_var(const_decl_var *a, list<symtable> &tables) {
-    optional<symbol> sym = lookup(tables, a->name);
+  all_decl_var(const_decl_var *var, list<symtable> &tables) {
+    optional<symbol> sym = lookup(tables, var->name);
 
     if (sym.has_value())
-      cout << a->name << " já foi declarado como " << sym.value().type << endl;
+      cout << var->name << " já foi declarado como " << sym.value().first
+           << endl;
     else
-      add_sym(tables, a->name, symbol(a->type));
+      add_sym(tables, var->name, {var->type, true});
   }
 };
 
@@ -168,16 +170,11 @@ public:
       for (string sym_name : symbol_names) {
         optional<symbol> sym = lookup(tables, sym_name);
 
-        if (sym.has_value()) {
-          type = sym.value().type;
-          cout << sym.value() << endl;
-        }
+        if (sym.has_value())
+          type = sym.value().first;
         else
           cout << sym_name << " não foi declarado" << endl;
       }
-
-    print_current_symtable(tables);
-    // type = lookup(tables, id->name).value().type;
   }
 
   expr(literal *lit, list<symtable> &tables) { type = lit->type; }

@@ -94,7 +94,7 @@ node *acha(symbol simbolo)
 }
 */
 
-list<symtable> tables {{}};
+list<symtable> tables = list<symtable>({{}});
 %}
 
 %type <literalRet> literal
@@ -179,8 +179,7 @@ list<symtable> tables {{}};
 
 %% /* Inicio da segunda seção, onde colocamos as regras BNF */
 
-prog : stmts {
-};
+prog : stmts {};
 
 stmts : /* epsilon */ {}
       | stmt stmts {};
