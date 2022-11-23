@@ -1,7 +1,7 @@
-#ifndef TIPOS
-#define TIPOS
+#ifndef VALUE
+#define VALUE
 
-#include "classes.hpp"
+#include "rules.hpp"
 
 typedef union {
   literal *literalRet;
@@ -16,6 +16,11 @@ typedef union {
   cochetezeromais *cochetezeromaisRet;
   hashtagzeromais *hashtagzeromaisRet;
   const_decl_var *const_decl_varRet;
+  type_name *type_nameRet;
+  parameter *parameterRet;
+  typedlpar *typedlparRet;
+  decl_fun *decl_funRet;
+  block *blockRet;
   expr *exprRet;
   string *name;
 } YYSTYPE;

@@ -1,7 +1,7 @@
 %option noyywrap
 
 %{
-#include "tipos.hpp"
+#include "value.hpp"
 
 #include "y.tab.hpp"
 
@@ -272,7 +272,7 @@ void { lval val = {yylineno, column, yytext, VOID};
        char_count += yyleng;
        column += yyleng;
        return val.token; }
-#    { lval val = {yylineno, column, yytext, POINTER_VAL};
+\#   { lval val = {yylineno, column, yytext, POINTER_VAL};
        char_count += yyleng;
        column += yyleng;
        return val.token; }

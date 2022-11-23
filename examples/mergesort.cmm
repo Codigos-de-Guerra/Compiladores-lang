@@ -1,3 +1,5 @@
+int foo = 10;
+
 function void merge(int# arr, int start, int mid, int end)
 {
     int start2 = mid + 1;

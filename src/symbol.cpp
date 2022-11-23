@@ -40,7 +40,7 @@ optional<symbol> lookup(list<symtable> &tables, string sym_name) {
   symtable current = current_table(tables);
 
   if (current.find(sym_name) == current.end())
-    return nullopt;
+    return {};
 
   return current[sym_name];
 }

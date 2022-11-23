@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include "tipos.hpp"
+#include "value.hpp"
 #include "symbol.cpp"
 
 int yylex(void);
@@ -107,8 +107,16 @@ list<symtable> tables = list<symtable>({{}});
 %type <decl_var_primRet> decl_var_prim
 %type <primitiveRet> primitive
 %type <cochetezeromaisRet> cochetezeromais
-%type <hashtagzeromaisRet>hashtagzeromais
+%type <hashtagzeromaisRet> hashtagzeromais
 %type <const_decl_varRet> const_decl_var
+%type <type_nameRet> typename
+%type <type_nameRet> type
+%type <typedlparRet> typedlpar
+%type <typedlparRet> typedlparAfter
+%type <parameterRet> parameter
+%type <name> parameterAfter
+%type <decl_funRet> decl_fun
+%type <blockRet> block
 %type <exprRet> expr
 
 %token '['
@@ -187,7 +195,9 @@ stmts : /* epsilon */ {}
 stmt : decl_fun {}
      | cmd {};
 
-decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {};
+decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN block {
+    $$ = new decl_fun(tables, $2, *$3, $5);
+};
 
 cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
@@ -197,6 +207,7 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_switch {}
     | expr SEMICOLON {}
     | RETURN expr SEMICOLON {}
+    | RETURN SEMICOLON {}
     | BREAK SEMICOLON {}
     | CONTINUE SEMICOLON {}
     | EXIT WHEN expr SEMICOLON {}
@@ -227,17 +238,19 @@ assign_expr : ASSIGN expr {$$ = new assign_expr();}
             | inc {$$ = new assign_expr();};
 
 assign_extra : ASSIGN_PLUS {}
-      | ASSIGN_MINUS {}
-      | ASSIGN_MULT {}
-      | ASSIGN_DIV {}
-      | ASSIGN_MOD {};
+             | ASSIGN_MINUS {}
+             | ASSIGN_MULT {}
+             | ASSIGN_DIV {}
+             | ASSIGN_MOD {};
 
 inc : DECREMENT {}
       | INCREMENT {};
 
 inOut : in {}
       | out {};
+
 in : READ LEFT_PAREN ID RIGHT_PAREN {};
+
 out : WRITE LEFT_PAREN ID RIGHT_PAREN {};
 
 cmd_loop : for {}
@@ -263,10 +276,10 @@ casezeromais : /*epsilon*/ {}
 
 case : CASE literal COLON stmts {};
 
-type : typename {};
+type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
-typename : primitive {}
-         | ID {};
+typename : primitive {$$ = new type_name($1);}
+         | ID {$$ = new type_name(*$1);};
 
 primitive : INT {$$ = new primitive("INT");}
           | REAL {$$ = new primitive("REAL");}
@@ -276,39 +289,45 @@ primitive : INT {$$ = new primitive("INT");}
           | VOID {$$ = new primitive("VOID");};
 
 typedlpar : /*epsilon*/ {}
-          | parameter typedlparAfter {}
+          | parameter typedlparAfter {$$ = new typedlpar($1, $2);}
 
 typedlparAfter : /*epsilon*/ {}
-               | COMMA parameter typedlparAfter {};
+               | COMMA parameter typedlparAfter {
+                     $$ = new typedlpar($2, $3);
+                 };
 
-parameter : type parameterAfter {};
+parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 
-parameterAfter : ID {}
-               | REFERENCE ID {};
+parameterAfter : ID {$$ = $1;}
+               | REFERENCE ID {$$ = $2;};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {};
+block : LEFT_BRACE stmts RIGHT_BRACE {
+    push_scope(tables, {});
+    $$ = new block();
+    pop_scope(tables);
+};
 
-expr : INCREMENT expr {$$ = new expr($2,tables);}
-     | DECREMENT expr {$$ = new expr($2,tables);}
-     | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr($2,tables);}
-     | MINUS identifier {$$ = new expr($2,tables);}
-     | NOT expr {$$ = new expr($2,tables);}
-     | expr AND expr {$$ = new expr($1,$3,tables);}
-     | expr OR expr {$$ = new expr($1,$3,tables);}
-     | expr PLUS expr {$$ = new expr($1,$3,tables);}
-     | expr TIMES expr {$$ = new expr($1,$3,tables);}
-     | expr DIV expr {$$ = new expr($1,$3,tables);}
-     | expr MINUS expr {$$ = new expr($1,$3,tables);}
-     | expr MOD expr {$$ = new expr($1,$3,tables);}
-     | expr EQUALS expr {$$ = new expr($1,$3,tables);}
-     | expr DIFF expr {$$ = new expr($1,$3,tables);}
-     | expr LT expr {$$ = new expr($1,$3,tables);}
-     | expr GT expr {$$ = new expr($1,$3,tables);}
-     | expr LEQ expr {$$ = new expr($1,$3,tables);}
-     | expr GEQ expr {$$ = new expr($1,$3,tables);}
+expr : INCREMENT expr {$$ = new expr(tables, $2);}
+     | DECREMENT expr {$$ = new expr(tables, $2);}
+     | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(tables, $2);}
+     | MINUS identifier {$$ = new expr(tables, $2);}
+     | NOT expr {$$ = new expr(tables, $2);}
+     | expr AND expr {$$ = new expr(tables, $1, $3);}
+     | expr OR expr {$$ = new expr(tables, $1, $3);}
+     | expr PLUS expr {$$ = new expr(tables, $1, $3);}
+     | expr TIMES expr {$$ = new expr(tables, $1, $3);}
+     | expr DIV expr {$$ = new expr(tables, $1, $3);}
+     | expr MINUS expr {$$ = new expr(tables, $1, $3);}
+     | expr MOD expr {$$ = new expr(tables, $1, $3);}
+     | expr EQUALS expr {$$ = new expr(tables, $1, $3);}
+     | expr DIFF expr {$$ = new expr(tables, $1, $3);}
+     | expr LT expr {$$ = new expr(tables, $1, $3);}
+     | expr GT expr {$$ = new expr(tables, $1, $3);}
+     | expr LEQ expr {$$ = new expr(tables, $1, $3);}
+     | expr GEQ expr {$$ = new expr(tables, $1, $3);}
      | expr_tern {}
-     | literal {$$ = new expr($1,tables);}
-     | identifier {$$ = new expr($1,tables);};
+     | literal {$$ = new expr(tables, $1);}
+     | identifier {$$ = new expr(tables, $1);};
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 

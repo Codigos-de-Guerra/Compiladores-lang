@@ -1,11 +1,12 @@
-#ifndef CLASSES
-#define CLASSES
+#ifndef RULES
+#define RULES
 
 #include "symbol.hpp"
 #include <algorithm>
 #include <functional>
 #include <iostream>
 #include <map>
+#include <new>
 #include <string>
 #include <vector>
 
@@ -31,10 +32,8 @@ class literal : public Node {
 public:
   string type;
   string value;
-  literal(string t, string val) {
-    type = t;
-    value = val;
-  }
+
+  literal(string type, string value) : type(type), value(value) {}
 };
 
 class identifier : public Node {
@@ -56,7 +55,8 @@ public:
 class primitive : public Node {
 public:
   string type = "";
-  primitive(string x) { type = x; }
+
+  primitive(string type) : type(type) {}
 };
 
 class cochetezeromais : public Node {
@@ -126,7 +126,56 @@ public:
 class cmd : public Node {
 public:
   cmd(identifier *a, assign_expr *b) {}
+
   cmd(cmd_decl_var *a) {}
+};
+
+class type_name : public Node {
+public:
+  string name;
+
+  type_name(primitive *prim_type) : name(prim_type->type){};
+
+  type_name(string id_type) : name(id_type){};
+};
+
+class parameter : public Node {
+public:
+  string type;
+  string id;
+
+  parameter(type_name *t, string id) : type(t->name), id(id) {}
+};
+
+class typedlpar {
+public:
+  vector<parameter> params;
+
+  typedlpar(parameter *param, typedlpar *lpar) {
+    params.push_back(*param);
+
+    if (lpar->params.size() < (1 << 30))
+      for (parameter param : lpar->params) {
+        params.push_back(param);
+      }
+  }
+};
+
+class decl_fun : public Node {
+public:
+  string type;
+  string name;
+  vector<parameter> params;
+
+  decl_fun(list<symtable> tables, type_name *type_name, string id,
+           typedlpar *lpar) {
+    type = type_name->name;
+    add_sym(tables, id, {type, false});
+
+    for (parameter param : lpar->params) {
+      add_sym(tables, param.id, {param.type, false});
+    }
+  };
 };
 
 class block : public Node {
@@ -139,7 +188,7 @@ public:
   vector<string> symbol_names;
   string type = "";
 
-  expr(expr *left, expr *right, list<symtable> &tables) {
+  expr(list<symtable> &tables, expr *left, expr *right) {
     if (left->symbol_names.size() < (1 << 30))
       for (string sym_name : left->symbol_names)
         symbol_names.push_back(sym_name);
@@ -155,7 +204,7 @@ public:
     type = left->type;
   }
 
-  expr(expr *exp, list<symtable> &tables) {
+  expr(list<symtable> &tables, expr *exp) {
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
@@ -163,7 +212,7 @@ public:
     type = exp->type;
   }
 
-  expr(identifier *id, list<symtable> &tables) {
+  expr(list<symtable> &tables, identifier *id) {
     symbol_names.push_back(id->name);
 
     if (symbol_names.size() < (1 << 30))
@@ -177,7 +226,7 @@ public:
       }
   }
 
-  expr(literal *lit, list<symtable> &tables) { type = lit->type; }
+  expr(list<symtable> &tables, literal *lit) { type = lit->type; }
 };
 
 #endif
