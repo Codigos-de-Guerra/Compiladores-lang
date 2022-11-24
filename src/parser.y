@@ -308,12 +308,6 @@ parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 parameterAfter : ID {$$ = $1;}
                | REFERENCE ID {$$ = $2;};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {
-    push_scope(tables, {});
-    $$ = new block();
-    pop_scope(tables);
-};
-
 expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | DECREMENT expr {$$ = new expr(tables, $2);}
      | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(tables, $2);}
@@ -335,6 +329,13 @@ expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | expr_tern {}
      | literal {$$ = new expr(tables, $1);}
      | identifier {$$ = new expr(tables, $1);};
+     
+block : LEFT_BRACE stmts RIGHT_BRACE {
+    push_scope(tables, {});
+    $$ = new block();
+    pop_scope(tables);
+};
+
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
