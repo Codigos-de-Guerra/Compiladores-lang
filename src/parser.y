@@ -213,11 +213,11 @@ cmd : identifier assign_expr SEMICOLON {}
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var($1,$2);};
 
-assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
-                  | assign_expr {$$ = new assign_expr_maybe();};
-
 all_decl_var : decl_var_prim {$$ = new all_decl_var($1,tables);}
              | const_decl_var {$$ = new all_decl_var($1,tables);};
+
+assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
+                  | assign_expr {$$ = new assign_expr_maybe();};
 
 decl_var_prim : primitive hashtagzeromais cochetezeromais ID {
     $$ = new decl_var_prim($1,*$4);
@@ -279,8 +279,6 @@ casezeromais : /*epsilon*/ {}
 
 case : CASE literal COLON stmts {};
 
-type : typename hashtagzeromais cochetezeromais {$$ = $1;};
-
 typename : primitive {$$ = new type_name($1);}
          | ID {$$ = new type_name(*$1);};
 
@@ -290,6 +288,8 @@ primitive : INT {$$ = new primitive("INT");}
           | BOOL {$$ = new primitive("BOOL");}
           | STR {$$ = new primitive("STRING");}
           | VOID {$$ = new primitive("VOID");};
+
+type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
 typedlpar : /*epsilon*/ {}
           | parameter typedlparAfter {$$ = new typedlpar(tables, $1, $2);}
@@ -327,6 +327,13 @@ expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | expr_tern {}
      | literal {$$ = new expr(tables, $1);}
      | identifier {$$ = new expr(tables, $1);};
+
+block : LEFT_BRACE stmts RIGHT_BRACE {
+    push_scope(tables, {});
+    $$ = new block();
+    pop_scope(tables);
+};
+
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
