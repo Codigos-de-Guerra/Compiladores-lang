@@ -98,7 +98,6 @@ list<symtable> tables = list<symtable>({{}});
 %}
 
 %type <literalRet> literal
-%type <cmdRet> cmd
 %type <identifierRet> identifier
 %type <assign_exprRet> assign_expr
 %type <all_decl_varRet> all_decl_var
@@ -115,8 +114,6 @@ list<symtable> tables = list<symtable>({{}});
 %type <typedlparRet> typedlparAfter
 %type <parameterRet> parameter
 %type <name> parameterAfter
-%type <decl_funRet> decl_fun
-%type <blockRet> block
 %type <exprRet> expr
 
 %token '['
@@ -195,14 +192,13 @@ stmts : /* epsilon */ {}
 stmt : decl_fun {}
      | cmd {};
 
-decl_fun : FUNCTION type ID LEFT_PAREN typedlpar RIGHT_PAREN {
-    new decl_fun(tables, $2, *$3);
-} block {
-    $$ = new decl_fun(tables, $2, *$3);
-};
+decl_fun : FUNCTION type ID {
+    add_sym(tables, *$3, {$2->name, false});
+    push_scope(tables);
+} LEFT_PAREN typedlpar RIGHT_PAREN block;
 
-cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
-    | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
+cmd : identifier assign_expr SEMICOLON {}
+    | cmd_decl_var SEMICOLON {}
     | inOut SEMICOLON {}
     | cmd_loop {}
     | cmd_cond {}
@@ -213,7 +209,7 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | BREAK SEMICOLON {}
     | CONTINUE SEMICOLON {}
     | EXIT WHEN expr SEMICOLON {}
-    | block {};
+    | {push_scope(tables);} block;
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var($1,$2);};
 
@@ -308,11 +304,7 @@ parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 parameterAfter : ID {$$ = $1;}
                | REFERENCE ID {$$ = $2;};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {
-    push_scope(tables, {});
-    $$ = new block();
-    pop_scope(tables);
-};
+block : LEFT_BRACE stmts RIGHT_BRACE {pop_scope(tables);};
 
 expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | DECREMENT expr {$$ = new expr(tables, $2);}

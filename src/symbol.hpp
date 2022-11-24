@@ -42,7 +42,7 @@ optional<symbol> lookup(list<symtable> &tables, string sym_name);
 
 void add_sym(list<symtable> &tables, string sym_name, symbol sym);
 
-void push_scope(list<symtable> &tables, symtable new_table);
+void push_scope(list<symtable> &tables);
 
 void pop_scope(list<symtable> &tables);
 

@@ -5,7 +5,6 @@
 
 typedef union {
   literal *literalRet;
-  cmd *cmdRet;
   identifier *identifierRet;
   assign_expr *assign_exprRet;
   all_decl_var *all_decl_varRet;
@@ -19,8 +18,6 @@ typedef union {
   type_name *type_nameRet;
   parameter *parameterRet;
   typedlpar *typedlparRet;
-  decl_fun *decl_funRet;
-  block *blockRet;
   expr *exprRet;
   string *name;
 } YYSTYPE;

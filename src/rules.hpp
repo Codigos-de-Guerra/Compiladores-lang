@@ -97,23 +97,27 @@ public:
   all_decl_var() {}
 
   all_decl_var(decl_var_prim *var, list<symtable> &tables) {
-    optional<symbol> sym = lookup(tables, var->name);
+    symtable local_table = tables.back();
+    auto sym = local_table.find(var->name);
 
-    if (sym.has_value())
-      cout << var->name << " já foi declarado como " << sym.value().first
-           << endl;
+    if (sym != local_table.end())
+      cout << var->name << " já foi declarado como " << sym->first << endl;
     else
       add_sym(tables, var->name, {var->type, false});
+
+    // print_current_symtable(tables);
   }
 
   all_decl_var(const_decl_var *var, list<symtable> &tables) {
-    optional<symbol> sym = lookup(tables, var->name);
+    symtable local_table = tables.back();
+    auto sym = local_table.find(var->name);
 
-    if (sym.has_value())
-      cout << var->name << " já foi declarado como " << sym.value().first
-           << endl;
+    if (sym != local_table.end())
+      cout << var->name << " já foi declarado como " << sym->first << endl;
     else
       add_sym(tables, var->name, {var->type, true});
+
+    // print_current_symtable(tables);
   }
 };
 
@@ -121,13 +125,6 @@ class cmd_decl_var : public Node {
 public:
   cmd_decl_var() {}
   cmd_decl_var(all_decl_var *a, assign_expr_maybe *b) {}
-};
-
-class cmd : public Node {
-public:
-  cmd(identifier *a, assign_expr *b) {}
-
-  cmd(cmd_decl_var *a) {}
 };
 
 class type_name : public Node {
@@ -161,22 +158,6 @@ public:
         add_sym(tables, param.id, {param.type, false});
       }
   }
-};
-
-class decl_fun : public Node {
-public:
-  string type;
-  string name;
-
-  decl_fun(list<symtable> &tables, type_name *type_name, string id) {
-    type = type_name->name;
-    add_sym(tables, id, {type, false});
-  };
-};
-
-class block : public Node {
-public:
-  block() {}
 };
 
 class expr : public Node {

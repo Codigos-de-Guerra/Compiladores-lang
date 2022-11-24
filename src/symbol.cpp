@@ -5,10 +5,10 @@
 using namespace std;
 
 symtable current_table(list<symtable> &tables) {
-  symtable final = symtable(tables.back());
+  symtable final = {};
 
-  for (reverse_iterator it = tables.rbegin(); it != tables.rend(); it++)
-    final.merge(*it);
+  for (symtable table : tables)
+    final.merge(table);
 
   return final;
 }
@@ -49,8 +49,6 @@ void add_sym(list<symtable> &tables, string sym_name, symbol sym) {
   tables.back().insert({sym_name, sym});
 }
 
-void push_scope(list<symtable> &tables, symtable new_table) {
-  tables.push_back(new_table);
-}
+void push_scope(list<symtable> &tables) { tables.push_back({}); }
 
 void pop_scope(list<symtable> &tables) { tables.pop_back(); }

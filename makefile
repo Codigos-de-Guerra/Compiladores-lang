@@ -29,7 +29,7 @@ yacc: lex
 compile: yacc
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) -o $(CMM)
 
-test: 
+test: compile
 	$(CMM) < $(EXAM)/merge_sort.cmm
 
 clean:
