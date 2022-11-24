@@ -101,11 +101,10 @@ public:
     auto sym = local_table.find(var->name);
 
     if (sym != local_table.end())
-      cout << var->name << " já foi declarado como " << sym->first << endl;
+      cout << var->name << " já foi declarado como " << sym->second.first
+           << endl;
     else
       add_sym(tables, var->name, {var->type, false});
-
-    // print_current_symtable(tables);
   }
 
   all_decl_var(const_decl_var *var, list<symtable> &tables) {
@@ -113,11 +112,10 @@ public:
     auto sym = local_table.find(var->name);
 
     if (sym != local_table.end())
-      cout << var->name << " já foi declarado como " << sym->first << endl;
+      cout << var->name << " já foi declarado como " << sym->second.first
+           << endl;
     else
       add_sym(tables, var->name, {var->type, true});
-
-    // print_current_symtable(tables);
   }
 };
 
