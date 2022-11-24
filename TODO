@@ -1,0 +1,3 @@
+- hierarquia de tipos; todo int e real devem ser numbers
+- verificar se em condicionais a expressao tem tipo number
+-
