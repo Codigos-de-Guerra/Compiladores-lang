@@ -1,9 +1,6 @@
-int foo = 10;
-
 function void merge(int# arr, int start, int mid, int end)
 {
     int start2 = mid + 1;
-    char start2 = 'f';
 
     if (arr[mid] <= arr[start2]) {
         return;
@@ -11,7 +8,6 @@ function void merge(int# arr, int start, int mid, int end)
     endif
     loop{
         exit when (start <= mid and start2 <= end);
-        str start2 = "foo";
 
         if (arr[start] <= arr[start2]) {
             start++;
