@@ -283,8 +283,6 @@ casezeromais : /*epsilon*/ {}
 
 case : CASE literal COLON stmts {};
 
-type : typename hashtagzeromais cochetezeromais {$$ = $1;};
-
 typename : primitive {$$ = new type_name($1);}
          | ID {$$ = new type_name(*$1);};
 
@@ -294,6 +292,8 @@ primitive : INT {$$ = new primitive("INT");}
           | BOOL {$$ = new primitive("BOOL");}
           | STR {$$ = new primitive("STRING");}
           | VOID {$$ = new primitive("VOID");};
+	  
+type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
 typedlpar : /*epsilon*/ {}
           | parameter typedlparAfter {$$ = new typedlpar(tables, $1, $2);}
