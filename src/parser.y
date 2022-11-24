@@ -328,13 +328,6 @@ expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | literal {$$ = new expr(tables, $1);}
      | identifier {$$ = new expr(tables, $1);};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {
-    push_scope(tables, {});
-    $$ = new block();
-    pop_scope(tables);
-};
-
-
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
 identifier : ID {$$ = new identifier(*$1);} %prec '@'
