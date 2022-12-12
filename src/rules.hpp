@@ -93,23 +93,29 @@ set<pair<string,string>> compatibilidade = {
     return stoi(valor);
   }
   expr(state & estado, expr *left,string operacao, expr *right) {
+   // cout<<operacao<<endl;
     qualId = estado.nxtId;
     intermid = "t"+to_string(estado.nxtId);
     if(left->eInteiro()){
-      if(operacao=="&"){
+      if(operacao=="&" || operacao == "*"){
         if(left->getVal()==0){
           ret = left->ret;
           estado.nxtId = left->qualId;
+          qualId = estado.nxtId;
+          cout<<"left "<<estado.nxtId<<endl;
           intermid = "t"+to_string(estado.nxtId);
+        
+          type = left->type;
           return;
         }
       }
       if(operacao=="|"){
         if(left->getVal()!=0){
           ret = left->ret;
-          estado.nxtId = left->qualId;
-          
+          estado.nxtId = left->qualId ;
+          qualId = estado.nxtId;
           intermid = "t"+to_string(estado.nxtId);
+          type = left->type;
           return;
         }
       }
@@ -181,7 +187,10 @@ set<pair<string,string>> compatibilidade = {
   }
 
   expr(state &estado, expr *exp) {
-    qualId = estado.nxtId;
+    qualId = estado.nxtId - 1;
+    valor = exp->valor;
+    ret = exp->ret;
+    intermid = "t"+to_string(qualId-1);
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
@@ -209,6 +218,7 @@ set<pair<string,string>> compatibilidade = {
   }
 
   expr(state& estado, literal *lit) { 
+    
     qualId = estado.nxtId;
     estado.nxtId++;
     intermid = lit->intermid;
