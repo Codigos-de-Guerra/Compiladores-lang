@@ -79,9 +79,10 @@ set<pair<string,string>> compatibilidade = {
   expr(state & estado, expr *left,string operacao, expr *right) {
     intermid = "t"+to_string(estado.nxtId);
     estado.nxtId++;
-    ret+=left->ret;
-    ret+=right->ret;
-    ret+=intermid+" = "+left->intermid+" "+operacao+" "+right->intermid+";\n";
+    ret += left->ret;
+    ret += right->ret;
+    ret += intermid+" = "+left->intermid+" "+operacao+" "+right->intermid+";\n";
+
     if (left->symbol_names.size() < (1 << 30))
       for (string sym_name : left->symbol_names)
         symbol_names.push_back(sym_name);
@@ -249,8 +250,8 @@ public:
     if(b==NULL)return;
     if(!b->intermid.empty()){
       ret = b->ret;
-      ret+=a->intermid+" = "+b->intermid+'\n';
-      estado.arquivoEscrita += ret;
+      ret += a->intermid + " = " + b->intermid + '\n';
+      // estado.arquivoEscrita += ret;
     }
   }
 };
@@ -301,7 +302,7 @@ public:
   cazezeromais(){
 
   }
-  cazezeromais(caze* a , cazezeromais*b){
+  cazezeromais(state &estado, caze* a , cazezeromais*b){
     if(b->valorEsperado!="")
       valorEsperado = b->valorEsperado;
     else valorEsperado = a->tipo;
@@ -311,19 +312,27 @@ public:
     if(a->tipo != valorEsperado){
       if(compatibilidade.find(make_pair(a->tipo, valorEsperado))==compatibilidade.end()){
         cout<<a->tipo<<" "<<valorEsperado<<endl;
-      cout<<"Tipo incompativel no switch"<<endl;
-      }
-    }
-    else if(javi.find(a->valor)!=javi.end())cout<<"Case já inserido"<<endl;
-    else javi.insert(a->valor);
 
-    
+      cout << "Tipo incompativel no switch" << endl;
+      estado.deuErro = true;
+      }
+    } else if (javi.find(a->valor)!=javi.end()) { 
+        cout<<"Case já inserido"<<endl;
+        estado.deuErro = true;
+    } else javi.insert(a->valor);
   }
 };
 
 class cmd : public Node {
 public:
-    
+    string ret = "";
+
+    cmd(cmd_decl_var *decl_var) {
+        if (decl_var != NULL) {
+            ret = decl_var->ret; 
+            cout << "ret: " << ret << endl;
+        }
+    }
 };
 
 class elsea : public Node {
@@ -336,24 +345,21 @@ public:
     string intermid;
 
     ifa (state &estado, expr *exp, cmd *cmd, elsea *el) {
+        estado.arquivoEscrita += exp->ret;
         string labelTrue = "l" + to_string(estado.labelId++); 
         string labelFalse = "l" + to_string(estado.labelId++); 
         intermid = "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
         intermid += "goto " + labelFalse + ";\n";
         intermid += labelTrue + ":\n";
-        intermid += "    aqui vai o cmd\n";
-        // intermid += cmd->intermid;
+        if (cmd != NULL) intermid += cmd->ret;
         if (el != NULL) {
             intermid += labelFalse + ":\n";
             intermid += "    aqui vai o else\n";
             // intermid += el->intermid;
         } 
-        cout << intermid << endl;
+        estado.arquivoEscrita += intermid;
     }
 };
-
-
-
 
 class typedlpar {
 public:
@@ -371,8 +377,6 @@ public:
   }
 };
 
-
-
 class switcha : public Node {
 public:
 set<pair<string,string>> compatibilidade = {
@@ -387,12 +391,13 @@ set<pair<string,string>> compatibilidade = {
     make_pair("REAL","NUMBER"),
     make_pair("NUMBER","REAL")
   };
-  switcha(expr* a,cazezeromais* b){
+  switcha(state &estado, expr* a, cazezeromais* b){
     if(b->valorEsperado=="")return;
     if(a->type!=b->valorEsperado){
       if(compatibilidade.find(make_pair(a->type,b->valorEsperado))==compatibilidade.end()){
-        cout<<a->type<<" "<<b->valorEsperado<<endl;
-        cout<<"Tipo incompativel no switch"<<endl;
+        cout << a->type<<" "<<b->valorEsperado<<endl;
+        cout << "Tipo incompativel no switch" << endl;
+        estado.deuErro = true;
       }
     }    
   }

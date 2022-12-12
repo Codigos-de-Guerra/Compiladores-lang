@@ -205,7 +205,7 @@ decl_fun : FUNCTION type ID {
 } LEFT_PAREN typedlpar RIGHT_PAREN block;
 
 cmd : identifier assign_expr SEMICOLON {}
-    | cmd_decl_var SEMICOLON {}
+    | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
     | inOut SEMICOLON {}
     | cmd_loop {}
     | cmd_cond {}
@@ -279,16 +279,16 @@ if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {
     $$ = new ifa(estado, $3, $5, $7);
 };
 
-else :  /*epsilon*/ {}
+else :  /*epsilon*/ {$$ = NULL;}
       | ELSE cmd {};
 
 switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(estado.tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
     pop_scope(estado.tables);
-    $$ = new switcha($3,$7);
+    $$ = new switcha(estado,$3,$7);
     };
 
 casezeromais : /*epsilon*/ {$$ = new cazezeromais();}
-      | case casezeromais {$$ = new cazezeromais($1,$2);};
+      | case casezeromais {$$ = new cazezeromais(estado,$1,$2);};
 
 case : {push_scope(estado.tables);} CASE literal COLON stmts {
     pop_scope(estado.tables);
@@ -380,10 +380,10 @@ int main (void) {
       /* root = initialize(); */
 
     yyparse();
-    if(estado.deuErro){
-        cout<<"ERRO DE COMPILACAO\n";
+    if (estado.deuErro) {
+        cout << "ERRO DE COMPILACAO\n";
     }
-    else cout<<estado.arquivoEscrita;
+    else cout << estado.arquivoEscrita;
     return 0;
 }
 
