@@ -7,17 +7,18 @@ decl_fun::decl_fun() {
 
 statement::statement(decl_fun *decl_f) {}
 statement::statement(cmd *c) {
-    intermid = c->ret;
+  if(c != NULL) intermid = c->ret;
 }
 
 statements::statements(statement *st, statements *stmts) {
-    intermid = st->intermid + stmts->intermid;
+  if(st != NULL) intermid = st->intermid;
+  if(stmts != NULL) intermid += stmts->intermid;
 }
 
 
 programa::programa(state &estado, statements *stmts) {
-    intermid = stmts->intermid;
-    estado.arquivoEscrita += intermid;
+  if(stmts != NULL) intermid += stmts->intermid;
+  estado.arquivoEscrita += intermid;
 }
 
 
@@ -197,15 +198,15 @@ cazezeromais::cazezeromais(state &estado, caze* a , cazezeromais*b) {
 }
 
 block::block(statements *stmts) {
-    intermid = stmts->intermid;
+  if(stmts != NULL) intermid = stmts->intermid;
 }
 
 cmd::cmd(cmd_decl_var *decl_var) {
-    if (decl_var != NULL) ret = decl_var->ret; 
+  if (decl_var != NULL) ret = decl_var->ret; 
 }
 
 cmd::cmd(block *bl) {
-    ret = "PLACEHOLDER\n";
+  if(bl != NULL) ret = bl->intermid;
 }
 
 elsea::elsea () {}

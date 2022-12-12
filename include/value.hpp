@@ -1,7 +1,7 @@
 #ifndef VALUE
 #define VALUE
 
-#include "rules.hpp"
+#include "new_rules.hpp"
 
 typedef union {
   programa *programaRet;
