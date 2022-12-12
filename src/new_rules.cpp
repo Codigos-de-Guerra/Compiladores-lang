@@ -11,13 +11,19 @@ statement::statement(cmd *c) {
 }
 
 statements::statements(statement *st, statements *stmts) {
-  if(st != NULL) intermid = st->intermid;
+  if(st != NULL) intermid += st->intermid;
+  //cout << "oia\n" << intermid << endl;
   if(stmts != NULL) intermid += stmts->intermid;
+  cout << "oia\n" << intermid << endl;
 }
 
 
 programa::programa(state &estado, statements *stmts) {
-  if(stmts != NULL) intermid += stmts->intermid;
+  if(stmts != NULL) {
+    cout << "stmts vazio??" << endl;
+    cout << "stmts->intermid:" << stmts->intermid;
+    intermid += stmts->intermid;
+  }
   estado.arquivoEscrita += intermid;
 }
 
@@ -252,7 +258,7 @@ cmd_decl_var::cmd_decl_var(state& estado,all_decl_var *a, assign_expr_maybe *b) 
     if(!b->intermid.empty()){
       ret = b->ret;
       ret += a->intermid + " = " + b->intermid + '\n';
-      // estado.arquivoEscrita += ret;
+      //estado.arquivoEscrita += ret;
     }
 }
 

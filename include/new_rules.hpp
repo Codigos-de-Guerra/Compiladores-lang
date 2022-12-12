@@ -42,7 +42,7 @@ public:
 
 class statement : public Node {
 public:
-  string intermid;
+  string intermid = "";
 
   statement(decl_fun *decl_f);
   statement(cmd *c);
@@ -50,7 +50,7 @@ public:
 
 class statements : public Node {
 public:
-  string intermid;
+  string intermid = "";
 
   statements(statement *st, statements *stmts);
 };
