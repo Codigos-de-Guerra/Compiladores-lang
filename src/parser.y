@@ -98,6 +98,10 @@ node *acha(symbol simbolo)
 state estado;
 %}
 
+%type <programaRet> prog
+%type <statementsRet> stmts
+%type <statementRet> stmt
+%type <decl_funRet> decl_fun
 %type <literalRet> literal
 %type <identifierRet> identifier
 %type <assign_exprRet> assign_expr
@@ -192,18 +196,18 @@ state estado;
 
 %% /* Inicio da segunda seção, onde colocamos as regras BNF */
 
-prog : stmts {};
+prog : stmts {$$ = new programa(estado, $1);};
 
-stmts : /* epsilon */ {}
-      | stmt stmts {};
+stmts : /* epsilon */ {$$ = NULL;}
+      | stmt stmts {$$ = new statements($1,$2);};
 
-stmt : decl_fun {}
-     | cmd {};
+stmt : decl_fun {$$ = new statement($1);}
+     | cmd {$$ = new statement($1);};
 
 decl_fun : FUNCTION type ID {
     add_sym(estado.tables, *$3, {$2->name, false});
     push_scope(estado.tables);
-} LEFT_PAREN typedlpar RIGHT_PAREN block;
+} LEFT_PAREN typedlpar RIGHT_PAREN block {$$ = new decl_fun(/*$2,$6,$8*/);};
 
 cmd : identifier assign_expr SEMICOLON {}
     | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
@@ -323,7 +327,7 @@ parameterAfter : ID {$$ = $1;}
 
 block : LEFT_BRACE stmts RIGHT_BRACE {
     pop_scope(estado.tables);
-    $$ = new block();
+    $$ = new block($2);
 };
 
 expr : INCREMENT expr {$$ = new expr(estado, $2);}

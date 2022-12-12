@@ -9,10 +9,12 @@
 #include <new>
 #include <string>
 #include <vector>
-#include<set>
+#include <set>
 
 using namespace std;
 
+class type_name;
+class cmd;
 
 class Node {
 public:
@@ -27,6 +29,46 @@ public:
       if (node)
         node->exec();
     }
+  }
+};
+
+class decl_fun : public Node {
+public:
+  string intermid;
+
+  //decl_fun(type_name *t, typedlpar *tlpar, block *b) {}
+  decl_fun() {
+    intermid = "";
+  }
+};
+
+class statement : public Node {
+public:
+  string intermid;
+
+  statement(decl_fun *decl_f) {}
+  statement(cmd *c) {
+    if(c != NULL) intermid = "AAAAAAAAAAAA";//c->ret;
+  }
+};
+
+class statements : public Node {
+public:
+  string intermid = "";
+
+  statements(statement *st, statements *stmts) {
+    if(st != NULL) intermid = st->intermid;
+    if(stmts != NULL) intermid += stmts->intermid;
+  }
+};
+
+class programa : public Node {
+public:
+  string intermid = "#include <oi>\n";
+
+  programa(state &estado, statements *stmts) {
+    if(stmts != NULL) intermid += stmts->intermid;
+    estado.arquivoEscrita += intermid;
   }
 };
 
@@ -184,18 +226,7 @@ public:
     name = var_name;
   }
 };
-/*
-class cmd_loop : public Node {
 
-}
-class cmd : public Node {
-public:
-  string intermid;
-
-  cmd(cmd_loop *a) {
-
-  }
-}*/
 class const_decl_var : public Node {
 public:
   string name = "";
@@ -325,7 +356,11 @@ public:
 
 class block : public Node {
 public:
-    block() {}
+  string intermid;
+
+  block(statements *stmts) {
+    intermid = stmts->intermid;
+  }
 };
 
 class cmd : public Node {

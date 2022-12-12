@@ -4,6 +4,10 @@
 #include "rules.hpp"
 
 typedef union {
+  programa *programaRet;
+  statements *statementsRet;
+  statement *statementRet;
+  decl_fun *decl_funRet;
   literal *literalRet;
   identifier *identifierRet;
   assign_expr *assign_exprRet;
