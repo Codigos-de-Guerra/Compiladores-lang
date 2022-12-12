@@ -16,6 +16,7 @@ TOKENIZER = tokenizer.l
 PARSER = parser.y
 LEX_OUT = $(OUT)/lex.yy.cpp
 YACC_OUT = $(OUT)/y.tab.cpp
+OBJS = $(OUT)/symbol.o 
 CMM = $(OUT)/c--
 
 .PHONY: all
@@ -26,10 +27,16 @@ lex:
 	lex -o $(LEX_OUT) $(TOKENIZER)
 
 yacc: lex
-	yacc -d -v $(PARSER) -o $(YACC_OUT)
+	bison -d -v $(PARSER) -o $(YACC_OUT)
 
-compile: yacc
+compile: yacc #$(OUT)/symbol.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) -o $(CMM)
+
+#$(OUT)/new_rules.o: $(INC)/new_rules.hpp $(SRC)/new_rules.cpp | $(OUT)
+#	$(CXX) -c -o $(OUT)/new_rules.o $(SRC)/new_rules.cpp $(INCLUDES) $(CXXFLAGS)
+
+#$(OUT)/symbol.o: $(INC)/symbol.hpp $(SRC)/symbol.cpp | $(OUT)
+#	$(CXX) -c -o $(OUT)/symbol.o $(SRC)/symbol.cpp $(INCLUDES) $(CXXFLAGS)
 
 test:
 	$(CMM) < $(EXAM)/t1.cmm

@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_YY_OUT_Y_TAB_HPP_INCLUDED
 # define YY_YY_OUT_Y_TAB_HPP_INCLUDED
@@ -44,152 +45,92 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    IF = 258,
-    ENDIF = 259,
-    ELSE = 260,
-    SWITCH = 261,
-    CASE = 262,
-    FOR = 263,
-    LOOP = 264,
-    RETURN = 265,
-    STRUCT = 266,
-    CONST = 267,
-    BREAK = 268,
-    CONTINUE = 269,
-    READ = 270,
-    WRITE = 271,
-    EXIT = 272,
-    WHEN = 273,
-    FUNCTION = 274,
-    INT = 275,
-    REAL = 276,
-    CHAR = 277,
-    STR = 278,
-    BOOL = 279,
-    VOID = 280,
-    PLUS = 281,
-    MINUS = 282,
-    TIMES = 283,
-    DIV = 284,
-    MOD = 285,
-    TRUE = 286,
-    FALSE = 287,
-    NUMBER = 288,
-    CHARACTER = 289,
-    STRING = 290,
-    LEFT_BRACE = 291,
-    RIGHT_BRACE = 292,
-    LEFT_BRACKET = 293,
-    RIGHT_BRACKET = 294,
-    SEMICOLON = 295,
-    QUESTION_MARK = 296,
-    COLON = 297,
-    DOT = 298,
-    POINTER_VAL = 299,
-    ARROW = 300,
-    COMMA = 301,
-    REFERENCE = 302,
-    TERNARY = 303,
-    ASSIGN_PLUS = 304,
-    ASSIGN_MINUS = 305,
-    ASSIGN_MULT = 306,
-    ASSIGN_DIV = 307,
-    ASSIGN_MOD = 308,
-    ASSIGN = 309,
-    ID = 310,
-    LEFT_PAREN = 311,
-    RIGHT_PAREN = 312,
-    INCREMENT = 313,
-    DECREMENT = 314,
-    NOT = 315,
-    OR = 316,
-    AND = 317,
-    EQUALS = 318,
-    DIFF = 319,
-    LT = 320,
-    GT = 321,
-    LEQ = 322,
-    GEQ = 323
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    IF = 258,                      /* IF  */
+    ENDIF = 259,                   /* ENDIF  */
+    ELSE = 260,                    /* ELSE  */
+    SWITCH = 261,                  /* SWITCH  */
+    CASE = 262,                    /* CASE  */
+    FOR = 263,                     /* FOR  */
+    LOOP = 264,                    /* LOOP  */
+    RETURN = 265,                  /* RETURN  */
+    STRUCT = 266,                  /* STRUCT  */
+    CONST = 267,                   /* CONST  */
+    BREAK = 268,                   /* BREAK  */
+    CONTINUE = 269,                /* CONTINUE  */
+    READ = 270,                    /* READ  */
+    WRITE = 271,                   /* WRITE  */
+    EXIT = 272,                    /* EXIT  */
+    WHEN = 273,                    /* WHEN  */
+    FUNCTION = 274,                /* FUNCTION  */
+    INT = 275,                     /* INT  */
+    REAL = 276,                    /* REAL  */
+    CHAR = 277,                    /* CHAR  */
+    STR = 278,                     /* STR  */
+    BOOL = 279,                    /* BOOL  */
+    VOID = 280,                    /* VOID  */
+    PLUS = 281,                    /* PLUS  */
+    MINUS = 282,                   /* MINUS  */
+    TIMES = 283,                   /* TIMES  */
+    DIV = 284,                     /* DIV  */
+    MOD = 285,                     /* MOD  */
+    TRUE = 286,                    /* TRUE  */
+    FALSE = 287,                   /* FALSE  */
+    NUMBER = 288,                  /* NUMBER  */
+    CHARACTER = 289,               /* CHARACTER  */
+    STRING = 290,                  /* STRING  */
+    LEFT_BRACE = 291,              /* LEFT_BRACE  */
+    RIGHT_BRACE = 292,             /* RIGHT_BRACE  */
+    LEFT_BRACKET = 293,            /* LEFT_BRACKET  */
+    RIGHT_BRACKET = 294,           /* RIGHT_BRACKET  */
+    SEMICOLON = 295,               /* SEMICOLON  */
+    QUESTION_MARK = 296,           /* QUESTION_MARK  */
+    COLON = 297,                   /* COLON  */
+    DOT = 298,                     /* DOT  */
+    POINTER_VAL = 299,             /* POINTER_VAL  */
+    ARROW = 300,                   /* ARROW  */
+    COMMA = 301,                   /* COMMA  */
+    REFERENCE = 302,               /* REFERENCE  */
+    TERNARY = 303,                 /* TERNARY  */
+    ASSIGN_PLUS = 304,             /* ASSIGN_PLUS  */
+    ASSIGN_MINUS = 305,            /* ASSIGN_MINUS  */
+    ASSIGN_MULT = 306,             /* ASSIGN_MULT  */
+    ASSIGN_DIV = 307,              /* ASSIGN_DIV  */
+    ASSIGN_MOD = 308,              /* ASSIGN_MOD  */
+    ASSIGN = 309,                  /* ASSIGN  */
+    ID = 310,                      /* ID  */
+    LEFT_PAREN = 311,              /* LEFT_PAREN  */
+    RIGHT_PAREN = 312,             /* RIGHT_PAREN  */
+    INCREMENT = 313,               /* INCREMENT  */
+    DECREMENT = 314,               /* DECREMENT  */
+    NOT = 315,                     /* NOT  */
+    OR = 316,                      /* OR  */
+    AND = 317,                     /* AND  */
+    EQUALS = 318,                  /* EQUALS  */
+    DIFF = 319,                    /* DIFF  */
+    LT = 320,                      /* LT  */
+    GT = 321,                      /* GT  */
+    LEQ = 322,                     /* LEQ  */
+    GEQ = 323                      /* GEQ  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Tokens.  */
-#define IF 258
-#define ENDIF 259
-#define ELSE 260
-#define SWITCH 261
-#define CASE 262
-#define FOR 263
-#define LOOP 264
-#define RETURN 265
-#define STRUCT 266
-#define CONST 267
-#define BREAK 268
-#define CONTINUE 269
-#define READ 270
-#define WRITE 271
-#define EXIT 272
-#define WHEN 273
-#define FUNCTION 274
-#define INT 275
-#define REAL 276
-#define CHAR 277
-#define STR 278
-#define BOOL 279
-#define VOID 280
-#define PLUS 281
-#define MINUS 282
-#define TIMES 283
-#define DIV 284
-#define MOD 285
-#define TRUE 286
-#define FALSE 287
-#define NUMBER 288
-#define CHARACTER 289
-#define STRING 290
-#define LEFT_BRACE 291
-#define RIGHT_BRACE 292
-#define LEFT_BRACKET 293
-#define RIGHT_BRACKET 294
-#define SEMICOLON 295
-#define QUESTION_MARK 296
-#define COLON 297
-#define DOT 298
-#define POINTER_VAL 299
-#define ARROW 300
-#define COMMA 301
-#define REFERENCE 302
-#define TERNARY 303
-#define ASSIGN_PLUS 304
-#define ASSIGN_MINUS 305
-#define ASSIGN_MULT 306
-#define ASSIGN_DIV 307
-#define ASSIGN_MOD 308
-#define ASSIGN 309
-#define ID 310
-#define LEFT_PAREN 311
-#define RIGHT_PAREN 312
-#define INCREMENT 313
-#define DECREMENT 314
-#define NOT 315
-#define OR 316
-#define AND 317
-#define EQUALS 318
-#define DIFF 319
-#define LT 320
-#define GT 321
-#define LEQ 322
-#define GEQ 323
 
 /* Value type.  */
 
 
 extern YYSTYPE yylval;
 
+
 int yyparse (void);
+
 
 #endif /* !YY_YY_OUT_Y_TAB_HPP_INCLUDED  */

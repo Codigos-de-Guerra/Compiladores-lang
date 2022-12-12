@@ -13,6 +13,9 @@
 
 using namespace std;
 
+class cmd;
+class programa;
+
 class Node {
 public:
   vector<Node *> children;
