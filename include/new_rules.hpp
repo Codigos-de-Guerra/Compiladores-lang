@@ -86,6 +86,8 @@ public:
   string intermid = "_";
   string ret = "";
   bool erro = false;
+  string valor = "";
+  int qualId = 0;
 
   set<pair<string,string>> compatibilidade = {
     make_pair("INT","NUMBER"),
@@ -99,6 +101,10 @@ public:
     make_pair("REAL","NUMBER"),
     make_pair("NUMBER","REAL")
   };
+
+  bool eInteiro();
+
+  int getVal();
 
   expr(state & estado, expr *left,string operacao, expr *right);
 
