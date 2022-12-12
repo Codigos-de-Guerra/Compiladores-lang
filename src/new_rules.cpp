@@ -2,10 +2,13 @@
 
 //decl_fun::decl_fun(type_name *t, typedlpar *tlpar, block *b) {}
 decl_fun::decl_fun() {
-    intermid = "";
+    intermid = "dd";
 }
 
-statement::statement(decl_fun *decl_f) {}
+statement::statement(decl_fun *decl_f) {
+  if(decl_f != NULL) intermid = decl_f->intermid;
+}
+
 statement::statement(cmd *c) {
   if(c != NULL) intermid = c->ret;
 }
@@ -14,7 +17,7 @@ statements::statements(statement *st, statements *stmts) {
   if(st != NULL) intermid += st->intermid;
   //cout << "oia\n" << intermid << endl;
   if(stmts != NULL) intermid += stmts->intermid;
-  cout << "oia\n" << intermid << endl;
+  cout << "oia\n" << this->intermid << endl;
 }
 
 
@@ -323,6 +326,12 @@ ifa::ifa (state &estado, expr *exp, cmd *c, elsea *el) {
             // intermid += el->intermid;
         } 
         estado.arquivoEscrita += intermid;
+}
+
+loop::loop(state &estado, cmd *c) {
+  if(c != NULL) intermid = c->ret;
+  //intermid += "Apenas testando bro\n";
+  //estado.arquivoEscrita += intermid;
 }
 
 typedlpar::typedlpar(state & estado, parameter *param, typedlpar *lpar) {

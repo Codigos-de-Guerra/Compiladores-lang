@@ -126,6 +126,7 @@ state estado;
 %type <cmdRet> cmd
 %type <elseRet> else
 %type <ifRet> if
+%type <loopRet> loop
 %type <blockRet> block
 
 %token '['
@@ -277,7 +278,7 @@ para_for: cmd_decl_var {}
         | expr INCREMENT {}
         | expr DECREMENT {};
 
-loop : LOOP cmd {};
+loop : LOOP cmd {$$ = new loop(estado, $2);};
 
 // ifrule
 if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {

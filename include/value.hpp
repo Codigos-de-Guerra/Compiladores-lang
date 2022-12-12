@@ -29,6 +29,7 @@ typedef union {
   cmd* cmdRet;
   elsea* elseRet;
   ifa* ifRet;
+  loop* loopRet;
   block* blockRet;
 
   string *name;

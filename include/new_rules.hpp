@@ -258,6 +258,13 @@ public:
     ifa (state &estado, expr *exp, cmd *c, elsea *el);
 };
 
+class loop : public Node {
+public:
+    string intermid;
+
+    loop(state &estado, cmd *c);
+};
+
 class typedlpar {
 public:
   vector<parameter> params;
