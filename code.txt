@@ -1,0 +1,11 @@
+t0 = 20;
+t1 = 30;
+t3 = 10;
+f não foi declarado
+NUMBER e UNDEFINED são incompativeis
+t6 = 30;
+t7 = 50;
+t9 = 60;
+t12 = 90;
+t13 = 10;
+x = t15

@@ -32,6 +32,14 @@ typedef pair<string, bool> symbol;
 
 typedef map<string, pair<string, bool>> symtable;
 
+typedef struct state_s{
+    list<symtable> tables = list<symtable>({{}});
+    int nxtId = 0;
+    int labelId = 0;
+    string arquivoEscrita;
+    bool deuErro;
+} state;
+
 void print_symtable(symtable &table);
 
 void print_current_symtable(list<symtable> &tables);

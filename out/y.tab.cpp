@@ -163,11 +163,10 @@ node *acha(symbol simbolo)
 }
 */
 
-list<symtable> tables = list<symtable>({{}});
-int nxtId = 0;
-int labelId = 0;
 
-#line 171 "./out/y.tab.cpp"
+state estado;
+
+#line 170 "./out/y.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -727,19 +726,19 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   195,   195,   197,   198,   200,   201,   203,   203,   208,
-     209,   210,   211,   212,   213,   214,   215,   216,   217,   218,
-     219,   220,   220,   222,   224,   225,   227,   228,   230,   234,
-     236,   237,   239,   240,   242,   243,   244,   246,   247,   248,
-     249,   250,   252,   253,   255,   256,   258,   260,   262,   263,
-     265,   267,   269,   271,   272,   273,   274,   276,   279,   283,
-     284,   286,   286,   291,   292,   294,   294,   299,   300,   302,
-     303,   304,   305,   306,   307,   309,   311,   312,   314,   315,
-     319,   321,   322,   324,   326,   327,   328,   329,   330,   331,
-     332,   333,   336,   339,   340,   342,   343,   344,   345,   346,
-     347,   348,   349,   350,   351,   353,   355,   356,   357,   358,
-     360,   361,   363,   364,   366,   367,   369,   370,   372,   373,
-     374,   375,   376
+       0,   194,   194,   196,   197,   199,   200,   202,   202,   207,
+     208,   209,   210,   211,   212,   213,   214,   215,   216,   217,
+     218,   219,   219,   221,   223,   224,   226,   227,   229,   233,
+     235,   236,   238,   239,   241,   242,   243,   245,   246,   247,
+     248,   249,   251,   252,   254,   255,   257,   259,   261,   262,
+     264,   266,   268,   270,   271,   272,   273,   275,   278,   282,
+     283,   285,   285,   290,   291,   293,   293,   298,   299,   301,
+     302,   303,   304,   305,   306,   308,   310,   311,   313,   314,
+     318,   320,   321,   323,   325,   326,   327,   328,   329,   330,
+     331,   332,   335,   338,   339,   341,   342,   343,   344,   345,
+     346,   347,   348,   349,   350,   352,   354,   355,   356,   357,
+     359,   360,   362,   363,   365,   366,   368,   369,   371,   372,
+     373,   374,   375
 };
 #endif
 
@@ -1767,747 +1766,747 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 195 "./src/parser.y"
+#line 194 "./src/parser.y"
              {}
-#line 1773 "./out/y.tab.cpp"
+#line 1772 "./out/y.tab.cpp"
     break;
 
   case 3:
-#line 197 "./src/parser.y"
+#line 196 "./src/parser.y"
                       {}
-#line 1779 "./out/y.tab.cpp"
+#line 1778 "./out/y.tab.cpp"
     break;
 
   case 4:
-#line 198 "./src/parser.y"
+#line 197 "./src/parser.y"
                    {}
-#line 1785 "./out/y.tab.cpp"
+#line 1784 "./out/y.tab.cpp"
     break;
 
   case 5:
-#line 200 "./src/parser.y"
+#line 199 "./src/parser.y"
                 {}
-#line 1791 "./out/y.tab.cpp"
+#line 1790 "./out/y.tab.cpp"
     break;
 
   case 6:
-#line 201 "./src/parser.y"
+#line 200 "./src/parser.y"
            {}
-#line 1797 "./out/y.tab.cpp"
+#line 1796 "./out/y.tab.cpp"
     break;
 
   case 7:
-#line 203 "./src/parser.y"
+#line 202 "./src/parser.y"
                             {
-    add_sym(tables, *(yyvsp[0].name), {(yyvsp[-1].type_nameRet)->name, false});
-    push_scope(tables);
+    add_sym(estado.tables, *(yyvsp[0].name), {(yyvsp[-1].type_nameRet)->name, false});
+    push_scope(estado.tables);
 }
-#line 1806 "./out/y.tab.cpp"
+#line 1805 "./out/y.tab.cpp"
     break;
 
   case 9:
-#line 208 "./src/parser.y"
+#line 207 "./src/parser.y"
                                        {}
-#line 1812 "./out/y.tab.cpp"
+#line 1811 "./out/y.tab.cpp"
     break;
 
   case 10:
-#line 209 "./src/parser.y"
+#line 208 "./src/parser.y"
                              {}
-#line 1818 "./out/y.tab.cpp"
+#line 1817 "./out/y.tab.cpp"
     break;
 
   case 11:
-#line 210 "./src/parser.y"
+#line 209 "./src/parser.y"
                       {}
-#line 1824 "./out/y.tab.cpp"
+#line 1823 "./out/y.tab.cpp"
     break;
 
   case 12:
-#line 211 "./src/parser.y"
+#line 210 "./src/parser.y"
                {}
-#line 1830 "./out/y.tab.cpp"
+#line 1829 "./out/y.tab.cpp"
     break;
 
   case 13:
-#line 212 "./src/parser.y"
+#line 211 "./src/parser.y"
                {}
-#line 1836 "./out/y.tab.cpp"
+#line 1835 "./out/y.tab.cpp"
     break;
 
   case 14:
-#line 213 "./src/parser.y"
+#line 212 "./src/parser.y"
                  {}
-#line 1842 "./out/y.tab.cpp"
+#line 1841 "./out/y.tab.cpp"
     break;
 
   case 15:
-#line 214 "./src/parser.y"
+#line 213 "./src/parser.y"
                      {}
-#line 1848 "./out/y.tab.cpp"
+#line 1847 "./out/y.tab.cpp"
     break;
 
   case 16:
-#line 215 "./src/parser.y"
+#line 214 "./src/parser.y"
                             {}
-#line 1854 "./out/y.tab.cpp"
+#line 1853 "./out/y.tab.cpp"
     break;
 
   case 17:
-#line 216 "./src/parser.y"
+#line 215 "./src/parser.y"
                        {}
-#line 1860 "./out/y.tab.cpp"
+#line 1859 "./out/y.tab.cpp"
     break;
 
   case 18:
-#line 217 "./src/parser.y"
+#line 216 "./src/parser.y"
                       {}
-#line 1866 "./out/y.tab.cpp"
+#line 1865 "./out/y.tab.cpp"
     break;
 
   case 19:
-#line 218 "./src/parser.y"
+#line 217 "./src/parser.y"
                          {}
-#line 1872 "./out/y.tab.cpp"
+#line 1871 "./out/y.tab.cpp"
     break;
 
   case 20:
-#line 219 "./src/parser.y"
+#line 218 "./src/parser.y"
                                {}
-#line 1878 "./out/y.tab.cpp"
+#line 1877 "./out/y.tab.cpp"
     break;
 
   case 21:
-#line 220 "./src/parser.y"
-      {push_scope(tables);}
-#line 1884 "./out/y.tab.cpp"
+#line 219 "./src/parser.y"
+      {push_scope(estado.tables);}
+#line 1883 "./out/y.tab.cpp"
     break;
 
   case 22:
-#line 220 "./src/parser.y"
-                                  {(yyval.cmdRet) = NULL;}
-#line 1890 "./out/y.tab.cpp"
+#line 219 "./src/parser.y"
+                                         {(yyval.cmdRet) = NULL;}
+#line 1889 "./out/y.tab.cpp"
     break;
 
   case 23:
-#line 222 "./src/parser.y"
-                                              {(yyval.cmd_decl_varRet) = new cmd_decl_var((yyvsp[-1].all_decl_varRet),(yyvsp[0].assign_expr_maybeRet));}
-#line 1896 "./out/y.tab.cpp"
+#line 221 "./src/parser.y"
+                                              {(yyval.cmd_decl_varRet) = new cmd_decl_var(estado,(yyvsp[-1].all_decl_varRet),(yyvsp[0].assign_expr_maybeRet));}
+#line 1895 "./out/y.tab.cpp"
     break;
 
   case 24:
-#line 224 "./src/parser.y"
-                             {(yyval.all_decl_varRet) = new all_decl_var((yyvsp[0].decl_var_primRet),tables);}
-#line 1902 "./out/y.tab.cpp"
+#line 223 "./src/parser.y"
+                             {(yyval.all_decl_varRet) = new all_decl_var(estado,(yyvsp[0].decl_var_primRet));}
+#line 1901 "./out/y.tab.cpp"
     break;
 
   case 25:
-#line 225 "./src/parser.y"
-                              {(yyval.all_decl_varRet) = new all_decl_var((yyvsp[0].const_decl_varRet),tables);}
-#line 1908 "./out/y.tab.cpp"
+#line 224 "./src/parser.y"
+                              {(yyval.all_decl_varRet) = new all_decl_var(estado,(yyvsp[0].const_decl_varRet));}
+#line 1907 "./out/y.tab.cpp"
     break;
 
   case 26:
-#line 227 "./src/parser.y"
+#line 226 "./src/parser.y"
                                 {(yyval.assign_expr_maybeRet) = NULL;}
-#line 1914 "./out/y.tab.cpp"
+#line 1913 "./out/y.tab.cpp"
     break;
 
   case 27:
-#line 228 "./src/parser.y"
+#line 227 "./src/parser.y"
                                 {(yyval.assign_expr_maybeRet) = new assign_expr_maybe((yyvsp[0].assign_exprRet));}
-#line 1920 "./out/y.tab.cpp"
+#line 1919 "./out/y.tab.cpp"
     break;
 
   case 28:
-#line 230 "./src/parser.y"
+#line 229 "./src/parser.y"
                                                              {
     (yyval.decl_var_primRet) = new decl_var_prim((yyvsp[-3].primitiveRet),*(yyvsp[0].name));
 }
-#line 1928 "./out/y.tab.cpp"
+#line 1927 "./out/y.tab.cpp"
     break;
 
   case 29:
-#line 234 "./src/parser.y"
+#line 233 "./src/parser.y"
                                      {(yyval.const_decl_varRet) = new const_decl_var((yyvsp[0].decl_var_primRet));}
-#line 1934 "./out/y.tab.cpp"
+#line 1933 "./out/y.tab.cpp"
     break;
 
   case 30:
-#line 236 "./src/parser.y"
+#line 235 "./src/parser.y"
                               {(yyval.hashtagzeromaisRet) = NULL;}
-#line 1940 "./out/y.tab.cpp"
+#line 1939 "./out/y.tab.cpp"
     break;
 
   case 31:
-#line 237 "./src/parser.y"
+#line 236 "./src/parser.y"
                                               {(yyval.hashtagzeromaisRet) = new hashtagzeromais((yyvsp[0].hashtagzeromaisRet));}
-#line 1946 "./out/y.tab.cpp"
+#line 1945 "./out/y.tab.cpp"
     break;
 
   case 32:
-#line 239 "./src/parser.y"
+#line 238 "./src/parser.y"
                               {(yyval.cochetezeromaisRet) = NULL;}
-#line 1952 "./out/y.tab.cpp"
+#line 1951 "./out/y.tab.cpp"
     break;
 
   case 33:
-#line 240 "./src/parser.y"
+#line 239 "./src/parser.y"
                                                                   {(yyval.cochetezeromaisRet) = new cochetezeromais((yyvsp[0].cochetezeromaisRet));}
-#line 1958 "./out/y.tab.cpp"
+#line 1957 "./out/y.tab.cpp"
     break;
 
   case 34:
-#line 242 "./src/parser.y"
+#line 241 "./src/parser.y"
                           {(yyval.assign_exprRet) = new assign_expr((yyvsp[0].exprRet));}
-#line 1964 "./out/y.tab.cpp"
+#line 1963 "./out/y.tab.cpp"
     break;
 
   case 35:
-#line 243 "./src/parser.y"
+#line 242 "./src/parser.y"
                                 {(yyval.assign_exprRet) = new assign_expr();}
-#line 1970 "./out/y.tab.cpp"
+#line 1969 "./out/y.tab.cpp"
     break;
 
   case 36:
-#line 244 "./src/parser.y"
+#line 243 "./src/parser.y"
                   {(yyval.assign_exprRet) = new assign_expr();}
-#line 1976 "./out/y.tab.cpp"
+#line 1975 "./out/y.tab.cpp"
     break;
 
   case 37:
-#line 246 "./src/parser.y"
+#line 245 "./src/parser.y"
                            {}
-#line 1982 "./out/y.tab.cpp"
+#line 1981 "./out/y.tab.cpp"
     break;
 
   case 38:
-#line 247 "./src/parser.y"
+#line 246 "./src/parser.y"
                             {}
-#line 1988 "./out/y.tab.cpp"
+#line 1987 "./out/y.tab.cpp"
     break;
 
   case 39:
-#line 248 "./src/parser.y"
+#line 247 "./src/parser.y"
                            {}
-#line 1994 "./out/y.tab.cpp"
+#line 1993 "./out/y.tab.cpp"
     break;
 
   case 40:
-#line 249 "./src/parser.y"
+#line 248 "./src/parser.y"
                           {}
-#line 2000 "./out/y.tab.cpp"
+#line 1999 "./out/y.tab.cpp"
     break;
 
   case 41:
-#line 250 "./src/parser.y"
+#line 249 "./src/parser.y"
                           {}
-#line 2006 "./out/y.tab.cpp"
+#line 2005 "./out/y.tab.cpp"
     break;
 
   case 42:
-#line 252 "./src/parser.y"
+#line 251 "./src/parser.y"
                 {}
-#line 2012 "./out/y.tab.cpp"
+#line 2011 "./out/y.tab.cpp"
     break;
 
   case 43:
-#line 253 "./src/parser.y"
+#line 252 "./src/parser.y"
                   {}
-#line 2018 "./out/y.tab.cpp"
+#line 2017 "./out/y.tab.cpp"
     break;
 
   case 44:
-#line 255 "./src/parser.y"
+#line 254 "./src/parser.y"
            {}
-#line 2024 "./out/y.tab.cpp"
+#line 2023 "./out/y.tab.cpp"
     break;
 
   case 45:
-#line 256 "./src/parser.y"
+#line 255 "./src/parser.y"
             {}
-#line 2030 "./out/y.tab.cpp"
+#line 2029 "./out/y.tab.cpp"
     break;
 
   case 46:
-#line 258 "./src/parser.y"
+#line 257 "./src/parser.y"
                                     {}
-#line 2036 "./out/y.tab.cpp"
+#line 2035 "./out/y.tab.cpp"
     break;
 
   case 47:
-#line 260 "./src/parser.y"
+#line 259 "./src/parser.y"
                                       {}
-#line 2042 "./out/y.tab.cpp"
+#line 2041 "./out/y.tab.cpp"
     break;
 
   case 48:
-#line 262 "./src/parser.y"
+#line 261 "./src/parser.y"
                {}
-#line 2048 "./out/y.tab.cpp"
+#line 2047 "./out/y.tab.cpp"
     break;
 
   case 49:
-#line 263 "./src/parser.y"
+#line 262 "./src/parser.y"
              {}
-#line 2054 "./out/y.tab.cpp"
+#line 2053 "./out/y.tab.cpp"
     break;
 
   case 50:
-#line 265 "./src/parser.y"
+#line 264 "./src/parser.y"
               {}
-#line 2060 "./out/y.tab.cpp"
+#line 2059 "./out/y.tab.cpp"
     break;
 
   case 51:
-#line 267 "./src/parser.y"
+#line 266 "./src/parser.y"
                     {}
-#line 2066 "./out/y.tab.cpp"
+#line 2065 "./out/y.tab.cpp"
     break;
 
   case 52:
-#line 269 "./src/parser.y"
+#line 268 "./src/parser.y"
                                                                                     {}
-#line 2072 "./out/y.tab.cpp"
+#line 2071 "./out/y.tab.cpp"
     break;
 
   case 53:
-#line 271 "./src/parser.y"
+#line 270 "./src/parser.y"
                        {}
-#line 2078 "./out/y.tab.cpp"
+#line 2077 "./out/y.tab.cpp"
     break;
 
   case 54:
-#line 272 "./src/parser.y"
+#line 271 "./src/parser.y"
                {}
-#line 2084 "./out/y.tab.cpp"
+#line 2083 "./out/y.tab.cpp"
     break;
 
   case 55:
-#line 273 "./src/parser.y"
+#line 272 "./src/parser.y"
                          {}
-#line 2090 "./out/y.tab.cpp"
+#line 2089 "./out/y.tab.cpp"
     break;
 
   case 56:
-#line 274 "./src/parser.y"
+#line 273 "./src/parser.y"
                          {}
-#line 2096 "./out/y.tab.cpp"
+#line 2095 "./out/y.tab.cpp"
     break;
 
   case 57:
-#line 276 "./src/parser.y"
+#line 275 "./src/parser.y"
                 {}
-#line 2102 "./out/y.tab.cpp"
+#line 2101 "./out/y.tab.cpp"
     break;
 
   case 58:
-#line 279 "./src/parser.y"
+#line 278 "./src/parser.y"
                                                    {
-    (yyval.ifRet) = new ifa((yyvsp[-4].exprRet), (yyvsp[-2].cmdRet), (yyvsp[0].elseRet), labelId);
+    (yyval.ifRet) = new ifa(estado, (yyvsp[-4].exprRet), (yyvsp[-2].cmdRet), (yyvsp[0].elseRet));
 }
-#line 2110 "./out/y.tab.cpp"
+#line 2109 "./out/y.tab.cpp"
     break;
 
   case 59:
-#line 283 "./src/parser.y"
+#line 282 "./src/parser.y"
                     {}
-#line 2116 "./out/y.tab.cpp"
+#line 2115 "./out/y.tab.cpp"
     break;
 
   case 60:
-#line 284 "./src/parser.y"
+#line 283 "./src/parser.y"
                  {}
-#line 2122 "./out/y.tab.cpp"
+#line 2121 "./out/y.tab.cpp"
     break;
 
   case 61:
-#line 286 "./src/parser.y"
-                                            {push_scope(tables);}
-#line 2128 "./out/y.tab.cpp"
+#line 285 "./src/parser.y"
+                                            {push_scope(estado.tables);}
+#line 2127 "./out/y.tab.cpp"
     break;
 
   case 62:
-#line 286 "./src/parser.y"
-                                                                                                      {
-    pop_scope(tables);
+#line 285 "./src/parser.y"
+                                                                                                             {
+    pop_scope(estado.tables);
     (yyval.switchaRet) = new switcha((yyvsp[-5].exprRet),(yyvsp[-1].cazeZeroRet));
     }
-#line 2137 "./out/y.tab.cpp"
+#line 2136 "./out/y.tab.cpp"
     break;
 
   case 63:
-#line 291 "./src/parser.y"
+#line 290 "./src/parser.y"
                            {(yyval.cazeZeroRet) = new cazezeromais();}
-#line 2143 "./out/y.tab.cpp"
+#line 2142 "./out/y.tab.cpp"
     break;
 
   case 64:
-#line 292 "./src/parser.y"
+#line 291 "./src/parser.y"
                           {(yyval.cazeZeroRet) = new cazezeromais((yyvsp[-1].cazeRet),(yyvsp[0].cazeZeroRet));}
-#line 2149 "./out/y.tab.cpp"
+#line 2148 "./out/y.tab.cpp"
     break;
 
   case 65:
-#line 294 "./src/parser.y"
-       {push_scope(tables);}
-#line 2155 "./out/y.tab.cpp"
+#line 293 "./src/parser.y"
+       {push_scope(estado.tables);}
+#line 2154 "./out/y.tab.cpp"
     break;
 
   case 66:
-#line 294 "./src/parser.y"
-                                                      {
-    pop_scope(tables);
+#line 293 "./src/parser.y"
+                                                             {
+    pop_scope(estado.tables);
     (yyval.cazeRet) = new caze((yyvsp[-2].literalRet));
     }
-#line 2164 "./out/y.tab.cpp"
+#line 2163 "./out/y.tab.cpp"
     break;
 
   case 67:
-#line 299 "./src/parser.y"
+#line 298 "./src/parser.y"
                      {(yyval.type_nameRet) = new type_name((yyvsp[0].primitiveRet));}
-#line 2170 "./out/y.tab.cpp"
+#line 2169 "./out/y.tab.cpp"
     break;
 
   case 68:
-#line 300 "./src/parser.y"
+#line 299 "./src/parser.y"
               {(yyval.type_nameRet) = new type_name(*(yyvsp[0].name));}
-#line 2176 "./out/y.tab.cpp"
+#line 2175 "./out/y.tab.cpp"
     break;
 
   case 69:
-#line 302 "./src/parser.y"
+#line 301 "./src/parser.y"
                 {(yyval.primitiveRet) = new primitive("INT");}
-#line 2182 "./out/y.tab.cpp"
+#line 2181 "./out/y.tab.cpp"
     break;
 
   case 70:
-#line 303 "./src/parser.y"
+#line 302 "./src/parser.y"
                  {(yyval.primitiveRet) = new primitive("REAL");}
-#line 2188 "./out/y.tab.cpp"
+#line 2187 "./out/y.tab.cpp"
     break;
 
   case 71:
-#line 304 "./src/parser.y"
+#line 303 "./src/parser.y"
                  {(yyval.primitiveRet) = new primitive("CHAR");}
-#line 2194 "./out/y.tab.cpp"
+#line 2193 "./out/y.tab.cpp"
     break;
 
   case 72:
-#line 305 "./src/parser.y"
+#line 304 "./src/parser.y"
                  {(yyval.primitiveRet) = new primitive("BOOL");}
-#line 2200 "./out/y.tab.cpp"
+#line 2199 "./out/y.tab.cpp"
     break;
 
   case 73:
-#line 306 "./src/parser.y"
+#line 305 "./src/parser.y"
                 {(yyval.primitiveRet) = new primitive("STRING");}
-#line 2206 "./out/y.tab.cpp"
+#line 2205 "./out/y.tab.cpp"
     break;
 
   case 74:
-#line 307 "./src/parser.y"
+#line 306 "./src/parser.y"
                  {(yyval.primitiveRet) = new primitive("VOID");}
-#line 2212 "./out/y.tab.cpp"
+#line 2211 "./out/y.tab.cpp"
     break;
 
   case 75:
-#line 309 "./src/parser.y"
+#line 308 "./src/parser.y"
                                                 {(yyval.type_nameRet) = (yyvsp[-2].type_nameRet);}
-#line 2218 "./out/y.tab.cpp"
+#line 2217 "./out/y.tab.cpp"
     break;
 
   case 76:
-#line 311 "./src/parser.y"
+#line 310 "./src/parser.y"
                         {}
-#line 2224 "./out/y.tab.cpp"
+#line 2223 "./out/y.tab.cpp"
     break;
 
   case 77:
-#line 312 "./src/parser.y"
-                                     {(yyval.typedlparRet) = new typedlpar(tables, (yyvsp[-1].parameterRet), (yyvsp[0].typedlparRet));}
-#line 2230 "./out/y.tab.cpp"
+#line 311 "./src/parser.y"
+                                     {(yyval.typedlparRet) = new typedlpar(estado, (yyvsp[-1].parameterRet), (yyvsp[0].typedlparRet));}
+#line 2229 "./out/y.tab.cpp"
     break;
 
   case 78:
-#line 314 "./src/parser.y"
+#line 313 "./src/parser.y"
                              {}
-#line 2236 "./out/y.tab.cpp"
+#line 2235 "./out/y.tab.cpp"
     break;
 
   case 79:
-#line 315 "./src/parser.y"
+#line 314 "./src/parser.y"
                                                 {
-    (yyval.typedlparRet) = new typedlpar(tables, (yyvsp[-1].parameterRet), (yyvsp[0].typedlparRet));
+    (yyval.typedlparRet) = new typedlpar(estado, (yyvsp[-1].parameterRet), (yyvsp[0].typedlparRet));
 }
-#line 2244 "./out/y.tab.cpp"
+#line 2243 "./out/y.tab.cpp"
     break;
 
   case 80:
-#line 319 "./src/parser.y"
+#line 318 "./src/parser.y"
                                 {(yyval.parameterRet) = new parameter((yyvsp[-1].type_nameRet), *(yyvsp[0].name));}
-#line 2250 "./out/y.tab.cpp"
+#line 2249 "./out/y.tab.cpp"
     break;
 
   case 81:
-#line 321 "./src/parser.y"
+#line 320 "./src/parser.y"
                     {(yyval.name) = (yyvsp[0].name);}
-#line 2256 "./out/y.tab.cpp"
+#line 2255 "./out/y.tab.cpp"
     break;
 
   case 82:
-#line 322 "./src/parser.y"
+#line 321 "./src/parser.y"
                               {(yyval.name) = (yyvsp[0].name);}
-#line 2262 "./out/y.tab.cpp"
+#line 2261 "./out/y.tab.cpp"
     break;
 
   case 83:
-#line 324 "./src/parser.y"
-                                     {pop_scope(tables);}
-#line 2268 "./out/y.tab.cpp"
+#line 323 "./src/parser.y"
+                                     {pop_scope(estado.tables);}
+#line 2267 "./out/y.tab.cpp"
     break;
 
   case 84:
-#line 326 "./src/parser.y"
-                      {(yyval.exprRet) = new expr(tables, (yyvsp[0].exprRet));}
-#line 2274 "./out/y.tab.cpp"
+#line 325 "./src/parser.y"
+                      {(yyval.exprRet) = new expr(estado, (yyvsp[0].exprRet));}
+#line 2273 "./out/y.tab.cpp"
     break;
 
   case 85:
-#line 327 "./src/parser.y"
-                      {(yyval.exprRet) = new expr(tables, (yyvsp[0].exprRet));}
-#line 2280 "./out/y.tab.cpp"
+#line 326 "./src/parser.y"
+                      {(yyval.exprRet) = new expr(estado, (yyvsp[0].exprRet));}
+#line 2279 "./out/y.tab.cpp"
     break;
 
   case 86:
-#line 328 "./src/parser.y"
-                                   {(yyval.exprRet) = new expr(tables, (yyvsp[-1].exprRet));}
-#line 2286 "./out/y.tab.cpp"
+#line 327 "./src/parser.y"
+                                   {(yyval.exprRet) = new expr(estado, (yyvsp[-1].exprRet));}
+#line 2285 "./out/y.tab.cpp"
     break;
 
   case 87:
-#line 329 "./src/parser.y"
-                        {(yyval.exprRet) = new expr(tables, (yyvsp[0].identifierRet));}
-#line 2292 "./out/y.tab.cpp"
+#line 328 "./src/parser.y"
+                        {(yyval.exprRet) = new expr(estado, (yyvsp[0].identifierRet));}
+#line 2291 "./out/y.tab.cpp"
     break;
 
   case 88:
-#line 330 "./src/parser.y"
-                {(yyval.exprRet) = new expr(tables, (yyvsp[0].exprRet));}
-#line 2298 "./out/y.tab.cpp"
+#line 329 "./src/parser.y"
+                {(yyval.exprRet) = new expr(estado, (yyvsp[0].exprRet));}
+#line 2297 "./out/y.tab.cpp"
     break;
 
   case 89:
-#line 331 "./src/parser.y"
-                     {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"&", (yyvsp[0].exprRet),nxtId);}
-#line 2304 "./out/y.tab.cpp"
+#line 330 "./src/parser.y"
+                     {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"&", (yyvsp[0].exprRet));}
+#line 2303 "./out/y.tab.cpp"
     break;
 
   case 90:
-#line 332 "./src/parser.y"
-                    {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"|", (yyvsp[0].exprRet),nxtId);}
-#line 2310 "./out/y.tab.cpp"
+#line 331 "./src/parser.y"
+                    {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"|", (yyvsp[0].exprRet));}
+#line 2309 "./out/y.tab.cpp"
     break;
 
   case 91:
-#line 333 "./src/parser.y"
+#line 332 "./src/parser.y"
                       {
         
-        (yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"+", (yyvsp[0].exprRet),nxtId);}
-#line 2318 "./out/y.tab.cpp"
+        (yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"+", (yyvsp[0].exprRet));}
+#line 2317 "./out/y.tab.cpp"
     break;
 
   case 92:
-#line 336 "./src/parser.y"
+#line 335 "./src/parser.y"
                        {
         
-        (yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"*", (yyvsp[0].exprRet),nxtId);}
-#line 2326 "./out/y.tab.cpp"
+        (yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"*", (yyvsp[0].exprRet));}
+#line 2325 "./out/y.tab.cpp"
     break;
 
   case 93:
-#line 339 "./src/parser.y"
-                     {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"/", (yyvsp[0].exprRet),nxtId);}
-#line 2332 "./out/y.tab.cpp"
+#line 338 "./src/parser.y"
+                     {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"/", (yyvsp[0].exprRet));}
+#line 2331 "./out/y.tab.cpp"
     break;
 
   case 94:
-#line 340 "./src/parser.y"
+#line 339 "./src/parser.y"
                        {
-        (yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"-", (yyvsp[0].exprRet),nxtId);}
-#line 2339 "./out/y.tab.cpp"
+        (yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"-", (yyvsp[0].exprRet));}
+#line 2338 "./out/y.tab.cpp"
     break;
 
   case 95:
-#line 342 "./src/parser.y"
-                     {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"%", (yyvsp[0].exprRet),nxtId);}
-#line 2345 "./out/y.tab.cpp"
+#line 341 "./src/parser.y"
+                     {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"%", (yyvsp[0].exprRet));}
+#line 2344 "./out/y.tab.cpp"
     break;
 
   case 96:
-#line 343 "./src/parser.y"
-                        {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"=", (yyvsp[0].exprRet),nxtId);}
-#line 2351 "./out/y.tab.cpp"
+#line 342 "./src/parser.y"
+                        {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"=", (yyvsp[0].exprRet));}
+#line 2350 "./out/y.tab.cpp"
     break;
 
   case 97:
-#line 344 "./src/parser.y"
-                      {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"!=", (yyvsp[0].exprRet),nxtId);}
-#line 2357 "./out/y.tab.cpp"
+#line 343 "./src/parser.y"
+                      {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"!=", (yyvsp[0].exprRet));}
+#line 2356 "./out/y.tab.cpp"
     break;
 
   case 98:
-#line 345 "./src/parser.y"
-                    {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"<", (yyvsp[0].exprRet),nxtId);}
-#line 2363 "./out/y.tab.cpp"
+#line 344 "./src/parser.y"
+                    {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"<", (yyvsp[0].exprRet));}
+#line 2362 "./out/y.tab.cpp"
     break;
 
   case 99:
-#line 346 "./src/parser.y"
-                    {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),">", (yyvsp[0].exprRet),nxtId);}
-#line 2369 "./out/y.tab.cpp"
+#line 345 "./src/parser.y"
+                    {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),">", (yyvsp[0].exprRet));}
+#line 2368 "./out/y.tab.cpp"
     break;
 
   case 100:
-#line 347 "./src/parser.y"
-                     {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),"<=", (yyvsp[0].exprRet),nxtId);}
-#line 2375 "./out/y.tab.cpp"
+#line 346 "./src/parser.y"
+                     {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),"<=", (yyvsp[0].exprRet));}
+#line 2374 "./out/y.tab.cpp"
     break;
 
   case 101:
-#line 348 "./src/parser.y"
-                     {(yyval.exprRet) = new expr(tables, (yyvsp[-2].exprRet),">=", (yyvsp[0].exprRet),nxtId);}
-#line 2381 "./out/y.tab.cpp"
+#line 347 "./src/parser.y"
+                     {(yyval.exprRet) = new expr(estado, (yyvsp[-2].exprRet),">=", (yyvsp[0].exprRet));}
+#line 2380 "./out/y.tab.cpp"
     break;
 
   case 102:
-#line 349 "./src/parser.y"
+#line 348 "./src/parser.y"
                  {}
-#line 2387 "./out/y.tab.cpp"
+#line 2386 "./out/y.tab.cpp"
     break;
 
   case 103:
-#line 350 "./src/parser.y"
-               {(yyval.exprRet) = new expr(tables, (yyvsp[0].literalRet));}
-#line 2393 "./out/y.tab.cpp"
+#line 349 "./src/parser.y"
+               {(yyval.exprRet) = new expr(estado, (yyvsp[0].literalRet));}
+#line 2392 "./out/y.tab.cpp"
     break;
 
   case 104:
-#line 351 "./src/parser.y"
-                  {(yyval.exprRet) = new expr(tables, (yyvsp[0].identifierRet));}
-#line 2399 "./out/y.tab.cpp"
+#line 350 "./src/parser.y"
+                  {(yyval.exprRet) = new expr(estado, (yyvsp[0].identifierRet));}
+#line 2398 "./out/y.tab.cpp"
     break;
 
   case 105:
-#line 353 "./src/parser.y"
+#line 352 "./src/parser.y"
                                                                {}
-#line 2405 "./out/y.tab.cpp"
+#line 2404 "./out/y.tab.cpp"
     break;
 
   case 106:
-#line 355 "./src/parser.y"
+#line 354 "./src/parser.y"
                 {(yyval.identifierRet) = new identifier(*(yyvsp[0].name));}
-#line 2411 "./out/y.tab.cpp"
+#line 2410 "./out/y.tab.cpp"
     break;
 
   case 107:
-#line 356 "./src/parser.y"
+#line 355 "./src/parser.y"
                             {(yyval.identifierRet) = new identifier(*(yyvsp[-1].name));}
-#line 2417 "./out/y.tab.cpp"
+#line 2416 "./out/y.tab.cpp"
     break;
 
   case 108:
-#line 357 "./src/parser.y"
+#line 356 "./src/parser.y"
                                             {(yyval.identifierRet) = new identifier(*(yyvsp[-3].name));}
-#line 2423 "./out/y.tab.cpp"
+#line 2422 "./out/y.tab.cpp"
     break;
 
   case 109:
-#line 358 "./src/parser.y"
+#line 357 "./src/parser.y"
                               {(yyval.identifierRet) = new identifier(*(yyvsp[-1].name));}
-#line 2429 "./out/y.tab.cpp"
+#line 2428 "./out/y.tab.cpp"
     break;
 
   case 110:
-#line 360 "./src/parser.y"
+#line 359 "./src/parser.y"
                                               {}
-#line 2435 "./out/y.tab.cpp"
+#line 2434 "./out/y.tab.cpp"
     break;
 
   case 111:
-#line 361 "./src/parser.y"
+#line 360 "./src/parser.y"
                                                             {}
-#line 2441 "./out/y.tab.cpp"
+#line 2440 "./out/y.tab.cpp"
     break;
 
   case 112:
-#line 363 "./src/parser.y"
+#line 362 "./src/parser.y"
                    {}
-#line 2447 "./out/y.tab.cpp"
+#line 2446 "./out/y.tab.cpp"
     break;
 
   case 113:
-#line 364 "./src/parser.y"
+#line 363 "./src/parser.y"
                       {}
-#line 2453 "./out/y.tab.cpp"
+#line 2452 "./out/y.tab.cpp"
     break;
 
   case 114:
-#line 366 "./src/parser.y"
+#line 365 "./src/parser.y"
                         {}
-#line 2459 "./out/y.tab.cpp"
+#line 2458 "./out/y.tab.cpp"
     break;
 
   case 115:
-#line 367 "./src/parser.y"
+#line 366 "./src/parser.y"
                                  {}
-#line 2465 "./out/y.tab.cpp"
+#line 2464 "./out/y.tab.cpp"
     break;
 
   case 116:
-#line 369 "./src/parser.y"
+#line 368 "./src/parser.y"
                          {}
-#line 2471 "./out/y.tab.cpp"
+#line 2470 "./out/y.tab.cpp"
     break;
 
   case 117:
-#line 370 "./src/parser.y"
+#line 369 "./src/parser.y"
                                        {}
-#line 2477 "./out/y.tab.cpp"
+#line 2476 "./out/y.tab.cpp"
     break;
 
   case 118:
-#line 372 "./src/parser.y"
-                 {(yyval.literalRet) = new literal("NUMBER",yytext,nxtId);}
-#line 2483 "./out/y.tab.cpp"
+#line 371 "./src/parser.y"
+                 {(yyval.literalRet) = new literal("NUMBER",yytext,estado);}
+#line 2482 "./out/y.tab.cpp"
     break;
 
   case 119:
-#line 373 "./src/parser.y"
-                    {(yyval.literalRet) = new literal("CHAR",yytext,nxtId);}
-#line 2489 "./out/y.tab.cpp"
+#line 372 "./src/parser.y"
+                    {(yyval.literalRet) = new literal("CHAR",yytext,estado);}
+#line 2488 "./out/y.tab.cpp"
     break;
 
   case 120:
-#line 374 "./src/parser.y"
-               {(yyval.literalRet) = new literal("BOOL",yytext,nxtId);}
-#line 2495 "./out/y.tab.cpp"
+#line 373 "./src/parser.y"
+               {(yyval.literalRet) = new literal("BOOL",yytext,estado);}
+#line 2494 "./out/y.tab.cpp"
     break;
 
   case 121:
-#line 375 "./src/parser.y"
-                {(yyval.literalRet) = new literal("BOOL",yytext,nxtId);}
-#line 2501 "./out/y.tab.cpp"
+#line 374 "./src/parser.y"
+                {(yyval.literalRet) = new literal("BOOL",yytext,estado);}
+#line 2500 "./out/y.tab.cpp"
     break;
 
   case 122:
-#line 376 "./src/parser.y"
-                 {(yyval.literalRet) = new literal("STRING",yytext,nxtId);}
-#line 2507 "./out/y.tab.cpp"
+#line 375 "./src/parser.y"
+                 {(yyval.literalRet) = new literal("STRING",yytext,estado);}
+#line 2506 "./out/y.tab.cpp"
     break;
 
 
-#line 2511 "./out/y.tab.cpp"
+#line 2510 "./out/y.tab.cpp"
 
       default: break;
     }
@@ -2739,16 +2738,22 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 378 "./src/parser.y"
+#line 377 "./src/parser.y"
  /* Fim da segunda seção */
 
 int main (void) {
       /* root = initialize(); */
 
-      return yyparse();
+    yyparse();
+    if(estado.deuErro){
+        cout<<"ERRO DE COMPILACAO\n";
+    }
+    else cout<<estado.arquivoEscrita;
+    return 0;
 }
 
 int yyerror (char *msg) {
 	fprintf (stderr, "%d: %s at '%s'\n", yylineno, msg, yytext);
+    
 	return 0;
 }
