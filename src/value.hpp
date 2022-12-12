@@ -25,6 +25,7 @@ typedef union {
   cmd* cmdRet;
   elsea* elseRet;
   ifa* ifRet;
+  block* blockRet;
 
   string *name;
 } YYSTYPE;

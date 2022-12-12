@@ -122,6 +122,7 @@ state estado;
 %type <cmdRet> cmd
 %type <elseRet> else
 %type <ifRet> if
+%type <blockRet> block
 
 %token '['
 %token IF
@@ -216,7 +217,7 @@ cmd : identifier assign_expr SEMICOLON {}
     | BREAK SEMICOLON {}
     | CONTINUE SEMICOLON {}
     | EXIT WHEN expr SEMICOLON {}
-    | {push_scope(estado.tables);} block {$$ = NULL;};
+    | {push_scope(estado.tables);} block {$$ = new cmd($2);};
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var(estado,$1,$2);};
 
@@ -320,7 +321,10 @@ parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 parameterAfter : ID {$$ = $1;}
                | REFERENCE ID {$$ = $2;};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {pop_scope(estado.tables);};
+block : LEFT_BRACE stmts RIGHT_BRACE {
+    pop_scope(estado.tables);
+    $$ = new block();
+};
 
 expr : INCREMENT expr {$$ = new expr(estado, $2);}
      | DECREMENT expr {$$ = new expr(estado, $2);}

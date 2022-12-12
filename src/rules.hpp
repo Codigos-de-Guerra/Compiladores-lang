@@ -323,15 +323,21 @@ public:
   }
 };
 
+class block : public Node {
+public:
+    block() {}
+};
+
 class cmd : public Node {
 public:
     string ret = "";
 
     cmd(cmd_decl_var *decl_var) {
-        if (decl_var != NULL) {
-            ret = decl_var->ret; 
-            cout << "ret: " << ret << endl;
-        }
+        if (decl_var != NULL) ret = decl_var->ret; 
+    }
+
+    cmd(block *bl) {
+        ret = "PLACEHOLDER\n";
     }
 };
 
@@ -344,14 +350,14 @@ class ifa : public Node {
 public:
     string intermid;
 
-    ifa (state &estado, expr *exp, cmd *cmd, elsea *el) {
+    ifa (state &estado, expr *exp, cmd *c, elsea *el) {
         estado.arquivoEscrita += exp->ret;
         string labelTrue = "l" + to_string(estado.labelId++); 
         string labelFalse = "l" + to_string(estado.labelId++); 
         intermid = "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
         intermid += "goto " + labelFalse + ";\n";
         intermid += labelTrue + ":\n";
-        if (cmd != NULL) intermid += cmd->ret;
+        if (c != NULL) intermid += c->ret;
         if (el != NULL) {
             intermid += labelFalse + ":\n";
             intermid += "    aqui vai o else\n";
