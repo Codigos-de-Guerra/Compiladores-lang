@@ -1,23 +1,11 @@
-
-function int funDeclarada() {
-    int ans = 20;
-
-    funDeclarada();
-    ans++;
-    
-    return ans;
-}
-
 function int main() {
-    int x = 10;
+    if (20 * 30 + 10 * d + 30 * 50 * 60 - 90 / 10) {
+        int x = 0;
+    } endif
 
-    //int y = 'a' + x;
-
-    //char y = 'b';
-
-    //x = y + naoDeclarei;
-
-    //int a = b + 10; 
-
-    //funNaoDeclarada();
+    if (1) {
+        int x = 1;
+    } endif else {
+        int x = 2;
+    }
 }

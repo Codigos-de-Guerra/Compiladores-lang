@@ -19,6 +19,13 @@ typedef union {
   parameter *parameterRet;
   typedlpar *typedlparRet;
   expr *exprRet;
+  caze * cazeRet;
+  cazezeromais* cazeZeroRet;
+  switcha* switchaRet; 
+  cmd* cmdRet;
+  elsea* elseRet;
+  ifa* ifRet;
+
   string *name;
 } YYSTYPE;
 
