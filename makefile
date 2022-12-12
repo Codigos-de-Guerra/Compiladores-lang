@@ -30,7 +30,7 @@ compile: yacc
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) -o $(CMM)
 
 test:
-	$(CMM) < $(EXAM)/merge_sort.cmm
+	$(CMM) < $(EXAM)/t1.cmm
 
 clean:
 	rm -rf $(OUT)

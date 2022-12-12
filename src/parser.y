@@ -95,6 +95,7 @@ node *acha(symbol simbolo)
 */
 
 list<symtable> tables = list<symtable>({{}});
+int nxtId = 0;
 %}
 
 %type <literalRet> literal
@@ -115,6 +116,9 @@ list<symtable> tables = list<symtable>({{}});
 %type <parameterRet> parameter
 %type <name> parameterAfter
 %type <exprRet> expr
+%type <cazeRet> case
+%type <cazeZeroRet> casezeromais
+%type<switchaRet> switch
 
 %token '['
 %token IF
@@ -217,7 +221,7 @@ all_decl_var : decl_var_prim {$$ = new all_decl_var($1,tables);}
              | const_decl_var {$$ = new all_decl_var($1,tables);};
 
 assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
-                  | assign_expr {$$ = new assign_expr_maybe();};
+                  | assign_expr {$$ = new assign_expr_maybe($1);};
 
 decl_var_prim : primitive hashtagzeromais cochetezeromais ID {
     $$ = new decl_var_prim($1,*$4);
@@ -231,7 +235,7 @@ hashtagzeromais : /*epsilon*/ {$$ = NULL;}
 cochetezeromais : /*epsilon*/ {$$ = NULL;}
                 | LEFT_BRACKET expr RIGHT_BRACKET cochetezeromais {$$ = new cochetezeromais($4);};
 
-assign_expr : ASSIGN expr {$$ = new assign_expr();}
+assign_expr : ASSIGN expr {$$ = new assign_expr($2);}
             | assign_extra expr {$$ = new assign_expr();}
             | inc {$$ = new assign_expr();};
 
@@ -272,12 +276,18 @@ if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {};
 else :  /*epsilon*/ {}
       | ELSE cmd {};
 
-switch : SWITCH LEFT_PAREN expr RIGHT_PAREN LEFT_BRACE casezeromais RIGHT_BRACE {};
+switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
+    pop_scope(tables);
+    $$ = new switcha($3,$7);
+    };
 
-casezeromais : /*epsilon*/ {}
-      | case casezeromais {};
+casezeromais : /*epsilon*/ {$$ = new cazezeromais();}
+      | case casezeromais {$$ = new cazezeromais($1,$2);};
 
-case : CASE literal COLON stmts {};
+case : {push_scope(tables);} CASE literal COLON stmts {
+    pop_scope(tables);
+    $$ = new caze($3);
+    };
 
 typename : primitive {$$ = new type_name($1);}
          | ID {$$ = new type_name(*$1);};
@@ -311,19 +321,24 @@ expr : INCREMENT expr {$$ = new expr(tables, $2);}
      | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(tables, $2);}
      | MINUS identifier {$$ = new expr(tables, $2);}
      | NOT expr {$$ = new expr(tables, $2);}
-     | expr AND expr {$$ = new expr(tables, $1, $3);}
-     | expr OR expr {$$ = new expr(tables, $1, $3);}
-     | expr PLUS expr {$$ = new expr(tables, $1, $3);}
-     | expr TIMES expr {$$ = new expr(tables, $1, $3);}
-     | expr DIV expr {$$ = new expr(tables, $1, $3);}
-     | expr MINUS expr {$$ = new expr(tables, $1, $3);}
-     | expr MOD expr {$$ = new expr(tables, $1, $3);}
-     | expr EQUALS expr {$$ = new expr(tables, $1, $3);}
-     | expr DIFF expr {$$ = new expr(tables, $1, $3);}
-     | expr LT expr {$$ = new expr(tables, $1, $3);}
-     | expr GT expr {$$ = new expr(tables, $1, $3);}
-     | expr LEQ expr {$$ = new expr(tables, $1, $3);}
-     | expr GEQ expr {$$ = new expr(tables, $1, $3);}
+     | expr AND expr {$$ = new expr(tables, $1,"&", $3,nxtId);}
+     | expr OR expr {$$ = new expr(tables, $1,"|", $3,nxtId);}
+     | expr PLUS expr {
+        
+        $$ = new expr(tables, $1,"+", $3,nxtId);}
+     | expr TIMES expr {
+        
+        $$ = new expr(tables, $1,"*", $3,nxtId);}
+     | expr DIV expr {$$ = new expr(tables, $1,"/", $3,nxtId);}
+     | expr MINUS expr {
+        $$ = new expr(tables, $1,"-", $3,nxtId);}
+     | expr MOD expr {$$ = new expr(tables, $1,"%", $3,nxtId);}
+     | expr EQUALS expr {$$ = new expr(tables, $1,"=", $3,nxtId);}
+     | expr DIFF expr {$$ = new expr(tables, $1,"!=", $3,nxtId);}
+     | expr LT expr {$$ = new expr(tables, $1,"<", $3,nxtId);}
+     | expr GT expr {$$ = new expr(tables, $1,">", $3,nxtId);}
+     | expr LEQ expr {$$ = new expr(tables, $1,"<=", $3,nxtId);}
+     | expr GEQ expr {$$ = new expr(tables, $1,">=", $3,nxtId);}
      | expr_tern {}
      | literal {$$ = new expr(tables, $1);}
      | identifier {$$ = new expr(tables, $1);};
@@ -347,11 +362,11 @@ lparAfter : /*epsilon*/ {}
 pointerAccess : ARROW ID {}
               | ARROW ID pointerAccess {};
 
-literal : NUMBER {$$ = new literal("NUMBER",yytext);}
-        | CHARACTER {$$ = new literal("CHAR",yytext);}
-        | TRUE {$$ = new literal("BOOL",yytext);}
-        | FALSE {$$ = new literal("BOOL",yytext);}
-        | STRING {$$ = new literal("STRING",yytext);};
+literal : NUMBER {$$ = new literal("NUMBER",yytext,nxtId);}
+        | CHARACTER {$$ = new literal("CHAR",yytext,nxtId);}
+        | TRUE {$$ = new literal("BOOL",yytext,nxtId);}
+        | FALSE {$$ = new literal("BOOL",yytext,nxtId);}
+        | STRING {$$ = new literal("STRING",yytext,nxtId);};
 
 %% /* Fim da segunda seção */
 

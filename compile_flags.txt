@@ -1,0 +1,4 @@
+-Isrc
+-Iout
+-std=c++17
+-Wno-write-strings
