@@ -379,7 +379,7 @@ Nonterminals, with rules where they appear
     parameterAfter <name> (111)
         on left: 80 81
         on right: 79
-    block (112)
+    block <blockRet> (112)
         on left: 82
         on right: 7 21
     expr <exprRet> (113)

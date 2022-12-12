@@ -42,7 +42,7 @@ public:
     
     intermid = "t"+to_string(estado.nxtId);
     ret = intermid+" = "+valor+";\n";
-    estado.nxtId++;
+
   }
 };
 
@@ -63,6 +63,8 @@ public:
   string intermid = "_";
   string ret = "";
   bool erro = false;
+  string valor = "";
+  int qualId = 0;
 set<pair<string,string>> compatibilidade = {
     make_pair("INT","NUMBER"),
     make_pair("NUMBER","INT"),
@@ -76,8 +78,85 @@ set<pair<string,string>> compatibilidade = {
     make_pair("NUMBER","REAL")
   };
 
+  bool eInteiro(){
+    for(auto x:valor){
+      if(x<'0' || x>'9'){
+        if(x!='-')
+        return false;
+      }
+    }
+    return true;
+  }
+
+  int getVal(){
+    if(valor.empty())return 0;
+    return stoi(valor);
+  }
   expr(state & estado, expr *left,string operacao, expr *right) {
+    qualId = estado.nxtId;
     intermid = "t"+to_string(estado.nxtId);
+    if(left->eInteiro()){
+      if(operacao=="&"){
+        if(left->getVal()==0){
+          ret = left->ret;
+          estado.nxtId = left->qualId;
+          intermid = "t"+to_string(estado.nxtId);
+          return;
+        }
+      }
+      if(operacao=="|"){
+        if(left->getVal()!=0){
+          ret = left->ret;
+          estado.nxtId = left->qualId;
+          
+          intermid = "t"+to_string(estado.nxtId);
+          return;
+        }
+      }
+
+      if(operacao == "&"){
+        valor = to_string(left->getVal()&right->getVal());
+      }
+      else if(operacao == "|"){
+        valor = to_string(left->getVal()|right->getVal());
+      }
+      else if(operacao == "+"){
+        valor = to_string(left->getVal()+right->getVal());
+      }
+      else if(operacao == "*"){
+        valor = to_string(left->getVal()*right->getVal());
+      }
+      else if(operacao == "/"){
+        valor = to_string(left->getVal()/right->getVal());
+      }
+      else if(operacao == "-"){
+        valor = to_string(left->getVal()-right->getVal());
+      }
+      else if(operacao == "%"){
+        valor = to_string(left->getVal()%right->getVal());
+      }
+      else if(operacao == "=="){
+        valor = to_string(left->getVal()==right->getVal());
+      }
+      else if(operacao == "!="){
+        valor = to_string(left->getVal()!=right->getVal());
+      }
+      else if(operacao == "<"){
+        valor = to_string(left->getVal()<right->getVal());
+      }
+      else if(operacao == ">"){
+        valor = to_string(left->getVal()>right->getVal());
+      }
+      else if(operacao == "<="){
+        valor = to_string(left->getVal()<=right->getVal());
+      }
+      else if(operacao == ">="){
+        valor = to_string(left->getVal()>=right->getVal());
+      }
+    }
+    
+    
+
     estado.nxtId++;
     ret += left->ret;
     ret += right->ret;
@@ -102,6 +181,7 @@ set<pair<string,string>> compatibilidade = {
   }
 
   expr(state &estado, expr *exp) {
+    qualId = estado.nxtId;
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
@@ -110,7 +190,9 @@ set<pair<string,string>> compatibilidade = {
   }
 
   expr(state& estado, identifier *id) {
+    qualId = estado.nxtId;
     symbol_names.push_back(id->name);
+    valor = -1;
     intermid = id->name;
     if (symbol_names.size() < (1 << 30))
       for (string sym_name : symbol_names) {
@@ -127,9 +209,12 @@ set<pair<string,string>> compatibilidade = {
   }
 
   expr(state& estado, literal *lit) { 
+    qualId = estado.nxtId;
+    estado.nxtId++;
     intermid = lit->intermid;
     ret = lit->ret;
     type = lit->type; 
+    valor = lit->value;
   }
 };
 
@@ -251,7 +336,7 @@ public:
     if(!b->intermid.empty()){
       ret = b->ret;
       ret += a->intermid + " = " + b->intermid + '\n';
-      // estado.arquivoEscrita += ret;
+       estado.arquivoEscrita += ret;
     }
   }
 };

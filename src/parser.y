@@ -343,7 +343,7 @@ expr : INCREMENT expr {$$ = new expr(estado, $2);}
      | expr MINUS expr {
         $$ = new expr(estado, $1,"-", $3);}
      | expr MOD expr {$$ = new expr(estado, $1,"%", $3);}
-     | expr EQUALS expr {$$ = new expr(estado, $1,"=", $3);}
+     | expr EQUALS expr {$$ = new expr(estado, $1,"==", $3);}
      | expr DIFF expr {$$ = new expr(estado, $1,"!=", $3);}
      | expr LT expr {$$ = new expr(estado, $1,"<", $3);}
      | expr GT expr {$$ = new expr(estado, $1,">", $3);}

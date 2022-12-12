@@ -1,11 +1,6 @@
 function int main() {
-    if (20 * 30 + 10 * 10 + 30 * 50 * 60 - 90 / 10) {
-        int x = 0;
-    } endif
+    if(20 && 30){
 
-    // if (1) {
-    //     int x = 1;
-    // } endif else {
-    //     int x = 2;
-    // }
+    }
+    endif
 }
