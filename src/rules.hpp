@@ -35,13 +35,14 @@ public:
   string type;
   string value;
   string intermid;
-  literal(string tipo, string valor,int& id){
+  string ret;
+  literal(string tipo, string valor,state& estado){
     type=tipo;
     value=valor;
     
-    intermid = "t"+to_string(id);
-    cout<<intermid<<" = "<<valor<<";\n";
-    id++;
+    intermid = "t"+to_string(estado.nxtId);
+    ret = intermid+" = "+valor+";\n";
+    estado.nxtId++;
   }
 };
 
@@ -60,6 +61,8 @@ public:
   vector<string> symbol_names;
   string type = "UNDEFINED";
   string intermid = "_";
+  string ret = "";
+  bool erro = false;
 set<pair<string,string>> compatibilidade = {
     make_pair("INT","NUMBER"),
     make_pair("NUMBER","INT"),
@@ -72,10 +75,12 @@ set<pair<string,string>> compatibilidade = {
     make_pair("REAL","NUMBER"),
     make_pair("NUMBER","REAL")
   };
-  expr(list<symtable> &tables, expr *left,string operacao, expr *right,int& id) {
-    intermid = "t"+to_string(id);
-    id++;
-    cout<<intermid<<" = "<<left->intermid<<" "<<operacao<<" "<<right->intermid<<";"<<endl;
+  expr(state & estado, expr *left,string operacao, expr *right) {
+    intermid = "t"+to_string(estado.nxtId);
+    estado.nxtId++;
+    ret+=left->ret;
+    ret+=right->ret;
+    ret+=intermid+" = "+left->intermid+" "+operacao+" "+right->intermid+";\n";
     if (left->symbol_names.size() < (1 << 30))
       for (string sym_name : left->symbol_names)
         symbol_names.push_back(sym_name);
@@ -85,14 +90,16 @@ set<pair<string,string>> compatibilidade = {
         symbol_names.push_back(sym_name);
 
     if (left->type != right->type){
-      if(compatibilidade.find(make_pair(left->type,right->type))==compatibilidade.end())
+      if(compatibilidade.find(make_pair(left->type,right->type))==compatibilidade.end()){
             cout << left->type << " e " << right->type << " são incompativeis" << endl;
+            estado.deuErro = true;
+      }
     }
 
     type = left->type;
   }
 
-  expr(list<symtable> &tables, expr *exp) {
+  expr(state &estado, expr *exp) {
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
@@ -100,22 +107,26 @@ set<pair<string,string>> compatibilidade = {
     type = exp->type;
   }
 
-  expr(list<symtable> &tables, identifier *id) {
+  expr(state& estado, identifier *id) {
     symbol_names.push_back(id->name);
     intermid = id->name;
     if (symbol_names.size() < (1 << 30))
       for (string sym_name : symbol_names) {
-        optional<symbol> sym = lookup(tables, sym_name);
+        optional<symbol> sym = lookup(estado.tables, sym_name);
 
         if (sym.has_value())
           type = sym.value().first;
-        else
+        else{
           cout << sym_name << " não foi declarado" << endl;
+          estado.deuErro = true;
+        }
+
       }
   }
 
-  expr(list<symtable> &tables, literal *lit) { 
+  expr(state& estado, literal *lit) { 
     intermid = lit->intermid;
+    ret = lit->ret;
     type = lit->type; 
   }
 };
@@ -123,20 +134,24 @@ set<pair<string,string>> compatibilidade = {
 class assign_expr : public Node {
 public:
   string intermid;
+  string ret;
   assign_expr(){
 
   }
   assign_expr(expr* a){
     intermid = a->intermid;
+    ret = a->ret;
   }
 };
 
 class assign_expr_maybe : public Node {
 public:
 string intermid = "";
+string ret = "";
   assign_expr_maybe() {}
   assign_expr_maybe(assign_expr * a) {
     intermid = a->intermid;
+    ret = a->ret;
   }
 };
 
@@ -167,7 +182,18 @@ public:
     name = var_name;
   }
 };
+/*
+class cmd_loop : public Node {
 
+}
+class cmd : public Node {
+public:
+  string intermid;
+
+  cmd(cmd_loop *a) {
+
+  }
+}*/
 class const_decl_var : public Node {
 public:
   string name = "";
@@ -185,38 +211,45 @@ public:
   string intermid;
   all_decl_var() {}
 
-  all_decl_var(decl_var_prim *var, list<symtable> &tables) {
+  all_decl_var(state& estado,decl_var_prim *var) {
     intermid = var->name;
-    symtable local_table = tables.back();
+    symtable local_table = estado.tables.back();
     auto sym = local_table.find(var->name);
 
-    if (sym != local_table.end())
+    if (sym != local_table.end()){
       cout << var->name << " já foi declarado como " << sym->second.first
            << endl;
+      estado.deuErro = true;
+    }
     else
-      add_sym(tables, var->name, {var->type, false});
+      add_sym(estado.tables, var->name, {var->type, false});
   }
 
-  all_decl_var(const_decl_var *var, list<symtable> &tables) {
+  all_decl_var(state & estado,const_decl_var *var) {
     intermid = var->name;
-    symtable local_table = tables.back();
+    symtable local_table = estado.tables.back();
     auto sym = local_table.find(var->name);
 
-    if (sym != local_table.end())
+    if (sym != local_table.end()){
       cout << var->name << " já foi declarado como " << sym->second.first
            << endl;
+      estado.deuErro = true;
+    }
     else
-      add_sym(tables, var->name, {var->type, true});
+      add_sym(estado.tables, var->name, {var->type, true});
   }
 };
 
 class cmd_decl_var : public Node {
 public:
+  string ret;
   cmd_decl_var() {}
-  cmd_decl_var(all_decl_var *a, assign_expr_maybe *b) {
+  cmd_decl_var(state& estado,all_decl_var *a, assign_expr_maybe *b) {
     if(b==NULL)return;
     if(!b->intermid.empty()){
-      cout<<a->intermid<<" = "<<b->intermid<<'\n';
+      ret = b->ret;
+      ret+=a->intermid+" = "+b->intermid+'\n';
+      estado.arquivoEscrita += ret;
     }
   }
 };
@@ -295,14 +328,14 @@ class typedlpar {
 public:
   vector<parameter> params;
 
-  typedlpar(list<symtable> &tables, parameter *param, typedlpar *lpar) {
+  typedlpar(state & estado, parameter *param, typedlpar *lpar) {
     params.push_back(*param);
-    add_sym(tables, param->id, {param->type, false});
+    add_sym(estado.tables, param->id, {param->type, false});
 
     if (lpar->params.size() < (1 << 30))
       for (parameter param : lpar->params) {
         params.push_back(param);
-        add_sym(tables, param.id, {param.type, false});
+        add_sym(estado.tables, param.id, {param.type, false});
       }
   }
 };

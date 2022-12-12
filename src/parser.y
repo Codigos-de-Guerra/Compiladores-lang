@@ -94,8 +94,9 @@ node *acha(symbol simbolo)
 }
 */
 
-list<symtable> tables = list<symtable>({{}});
-int nxtId = 0;
+
+
+state estado;
 %}
 
 %type <literalRet> literal
@@ -197,8 +198,8 @@ stmt : decl_fun {}
      | cmd {};
 
 decl_fun : FUNCTION type ID {
-    add_sym(tables, *$3, {$2->name, false});
-    push_scope(tables);
+    add_sym(estado.tables, *$3, {$2->name, false});
+    push_scope(estado.tables);
 } LEFT_PAREN typedlpar RIGHT_PAREN block;
 
 cmd : identifier assign_expr SEMICOLON {}
@@ -213,12 +214,12 @@ cmd : identifier assign_expr SEMICOLON {}
     | BREAK SEMICOLON {}
     | CONTINUE SEMICOLON {}
     | EXIT WHEN expr SEMICOLON {}
-    | {push_scope(tables);} block;
+    | {push_scope(estado.tables);} block;
 
-cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var($1,$2);};
+cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var(estado,$1,$2);};
 
-all_decl_var : decl_var_prim {$$ = new all_decl_var($1,tables);}
-             | const_decl_var {$$ = new all_decl_var($1,tables);};
+all_decl_var : decl_var_prim {$$ = new all_decl_var(estado,$1);}
+             | const_decl_var {$$ = new all_decl_var(estado,$1);};
 
 assign_expr_maybe : /*epsilon*/ {$$ = NULL;}
                   | assign_expr {$$ = new assign_expr_maybe($1);};
@@ -276,16 +277,16 @@ if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {};
 else :  /*epsilon*/ {}
       | ELSE cmd {};
 
-switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
-    pop_scope(tables);
+switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(estado.tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
+    pop_scope(estado.tables);
     $$ = new switcha($3,$7);
     };
 
 casezeromais : /*epsilon*/ {$$ = new cazezeromais();}
       | case casezeromais {$$ = new cazezeromais($1,$2);};
 
-case : {push_scope(tables);} CASE literal COLON stmts {
-    pop_scope(tables);
+case : {push_scope(estado.tables);} CASE literal COLON stmts {
+    pop_scope(estado.tables);
     $$ = new caze($3);
     };
 
@@ -302,11 +303,11 @@ primitive : INT {$$ = new primitive("INT");}
 type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
 typedlpar : /*epsilon*/ {}
-          | parameter typedlparAfter {$$ = new typedlpar(tables, $1, $2);}
+          | parameter typedlparAfter {$$ = new typedlpar(estado, $1, $2);}
 
 typedlparAfter : /*epsilon*/ {}
                | COMMA parameter typedlparAfter {
-    $$ = new typedlpar(tables, $2, $3);
+    $$ = new typedlpar(estado, $2, $3);
 };
 
 parameter : type parameterAfter {$$ = new parameter($1, *$2);};
@@ -314,34 +315,34 @@ parameter : type parameterAfter {$$ = new parameter($1, *$2);};
 parameterAfter : ID {$$ = $1;}
                | REFERENCE ID {$$ = $2;};
 
-block : LEFT_BRACE stmts RIGHT_BRACE {pop_scope(tables);};
+block : LEFT_BRACE stmts RIGHT_BRACE {pop_scope(estado.tables);};
 
-expr : INCREMENT expr {$$ = new expr(tables, $2);}
-     | DECREMENT expr {$$ = new expr(tables, $2);}
-     | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(tables, $2);}
-     | MINUS identifier {$$ = new expr(tables, $2);}
-     | NOT expr {$$ = new expr(tables, $2);}
-     | expr AND expr {$$ = new expr(tables, $1,"&", $3,nxtId);}
-     | expr OR expr {$$ = new expr(tables, $1,"|", $3,nxtId);}
+expr : INCREMENT expr {$$ = new expr(estado, $2);}
+     | DECREMENT expr {$$ = new expr(estado, $2);}
+     | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(estado, $2);}
+     | MINUS identifier {$$ = new expr(estado, $2);}
+     | NOT expr {$$ = new expr(estado, $2);}
+     | expr AND expr {$$ = new expr(estado, $1,"&", $3);}
+     | expr OR expr {$$ = new expr(estado, $1,"|", $3);}
      | expr PLUS expr {
         
-        $$ = new expr(tables, $1,"+", $3,nxtId);}
+        $$ = new expr(estado, $1,"+", $3);}
      | expr TIMES expr {
         
-        $$ = new expr(tables, $1,"*", $3,nxtId);}
-     | expr DIV expr {$$ = new expr(tables, $1,"/", $3,nxtId);}
+        $$ = new expr(estado, $1,"*", $3);}
+     | expr DIV expr {$$ = new expr(estado, $1,"/", $3);}
      | expr MINUS expr {
-        $$ = new expr(tables, $1,"-", $3,nxtId);}
-     | expr MOD expr {$$ = new expr(tables, $1,"%", $3,nxtId);}
-     | expr EQUALS expr {$$ = new expr(tables, $1,"=", $3,nxtId);}
-     | expr DIFF expr {$$ = new expr(tables, $1,"!=", $3,nxtId);}
-     | expr LT expr {$$ = new expr(tables, $1,"<", $3,nxtId);}
-     | expr GT expr {$$ = new expr(tables, $1,">", $3,nxtId);}
-     | expr LEQ expr {$$ = new expr(tables, $1,"<=", $3,nxtId);}
-     | expr GEQ expr {$$ = new expr(tables, $1,">=", $3,nxtId);}
+        $$ = new expr(estado, $1,"-", $3);}
+     | expr MOD expr {$$ = new expr(estado, $1,"%", $3);}
+     | expr EQUALS expr {$$ = new expr(estado, $1,"=", $3);}
+     | expr DIFF expr {$$ = new expr(estado, $1,"!=", $3);}
+     | expr LT expr {$$ = new expr(estado, $1,"<", $3);}
+     | expr GT expr {$$ = new expr(estado, $1,">", $3);}
+     | expr LEQ expr {$$ = new expr(estado, $1,"<=", $3);}
+     | expr GEQ expr {$$ = new expr(estado, $1,">=", $3);}
      | expr_tern {}
-     | literal {$$ = new expr(tables, $1);}
-     | identifier {$$ = new expr(tables, $1);};
+     | literal {$$ = new expr(estado, $1);}
+     | identifier {$$ = new expr(estado, $1);};
 
 expr_tern : TERNARY expr QUESTION_MARK expr COLON expr TERNARY {};
 
@@ -362,21 +363,27 @@ lparAfter : /*epsilon*/ {}
 pointerAccess : ARROW ID {}
               | ARROW ID pointerAccess {};
 
-literal : NUMBER {$$ = new literal("NUMBER",yytext,nxtId);}
-        | CHARACTER {$$ = new literal("CHAR",yytext,nxtId);}
-        | TRUE {$$ = new literal("BOOL",yytext,nxtId);}
-        | FALSE {$$ = new literal("BOOL",yytext,nxtId);}
-        | STRING {$$ = new literal("STRING",yytext,nxtId);};
+literal : NUMBER {$$ = new literal("NUMBER",yytext,estado);}
+        | CHARACTER {$$ = new literal("CHAR",yytext,estado);}
+        | TRUE {$$ = new literal("BOOL",yytext,estado);}
+        | FALSE {$$ = new literal("BOOL",yytext,estado);}
+        | STRING {$$ = new literal("STRING",yytext,estado);};
 
 %% /* Fim da segunda seção */
 
 int main (void) {
       /* root = initialize(); */
 
-      return yyparse();
+    yyparse();
+    if(estado.deuErro){
+        cout<<"ERRO DE COMPILACAO\n";
+    }
+    else cout<<estado.arquivoEscrita;
+    return 0;
 }
 
 int yyerror (char *msg) {
 	fprintf (stderr, "%d: %s at '%s'\n", yylineno, msg, yytext);
+    
 	return 0;
 }

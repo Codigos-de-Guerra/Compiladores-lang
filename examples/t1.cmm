@@ -1,7 +1,10 @@
+function int oi(){
+
+}
 function int main() {
     int a;
     int b;
     int c;
     int d;
-    int x = 20 * 30 + 10 * d + 30 * 50 * 60 - 90 / 10;
+    int x = 20 * 30 + 10 * 40 + 30 * 50 * 60 - 90 / 10;
 }
