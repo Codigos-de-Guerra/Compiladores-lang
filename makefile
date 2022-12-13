@@ -3,17 +3,20 @@ OUT = ./out
 GRAMMAR = ./grammar
 EXAM = ./examples
 SRC = ./src
+INC = ./include
 
 # Defines
 #CXXFLAGS = -fsanitize=address,undefined -fno-omit-frame-pointer -g -Wall -Wshadow -Wno-unused-result -Wno-sign-compare -Wno-char-subscripts
 CXXFLAGS = -std=c++17 -Wno-write-strings
-INCLUDES = -I$(SRC) -I$(OUT)
+INCLUDES = -I$(SRC) -I$(OUT) -I$(INC)
 CXX = g++
 
 # Vars
-TOKENIZER = $(SRC)/tokenizer.l
+TOKENIZER = tokenizer.l
+PARSER = parser.y
 LEX_OUT = $(OUT)/lex.yy.cpp
 YACC_OUT = $(OUT)/y.tab.cpp
+OBJS = $(OUT)/new_rules.o 
 CMM = $(OUT)/c--
 
 .PHONY: all
@@ -24,13 +27,16 @@ lex:
 	lex -o $(LEX_OUT) $(TOKENIZER)
 
 yacc: lex
-	yacc -d -v $(SRC)/parser.y -o $(YACC_OUT)
+	yacc -d -v $(PARSER) -o $(YACC_OUT)
 
-compile: yacc
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) -o $(CMM)
+compile: yacc $(OUT)/new_rules.o
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) $(OBJS) -o $(CMM)
+
+$(OUT)/new_rules.o: $(INC)/new_rules.hpp $(SRC)/new_rules.cpp | $(OUT)
+	$(CXX) -c -o $(OUT)/new_rules.o $(SRC)/new_rules.cpp $(INCLUDES) $(CXXFLAGS)
 
 test:
-	$(CMM) < $(EXAM)/t1.cmm 
+	$(CMM) < $(EXAM)/t1.cmm
 
 clean:
 	rm -rf $(OUT)

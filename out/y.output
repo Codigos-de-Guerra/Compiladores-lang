@@ -259,22 +259,22 @@ Nonterminals, with rules where they appear
 
     $accept (71)
         on left: 0
-    prog (72)
+    prog <programaRet> (72)
         on left: 1
         on right: 0
-    stmts (73)
+    stmts <statementsRet> (73)
         on left: 2 3
         on right: 1 3 65 82
-    stmt (74)
+    stmt <statementRet> (74)
         on left: 4 5
         on right: 3
-    decl_fun (75)
+    decl_fun <decl_funRet> (75)
         on left: 7
         on right: 4
     $@1 (76)
         on left: 6
         on right: 7
-    cmd (77)
+    cmd <cmdRet> (77)
         on left: 8 9 10 11 12 13 14 15 16 17 18 19 21
         on right: 5 51 56 57 59
     $@2 (78)
@@ -319,28 +319,28 @@ Nonterminals, with rules where they appear
     out (91)
         on left: 46
         on right: 44
-    cmd_loop (92)
+    cmd_loop <cmd_loopRet> (92)
         on left: 47 48
         on right: 11
-    cmd_cond (93)
+    cmd_cond <cmd_condRet> (93)
         on left: 49
         on right: 12
     cmd_switch (94)
         on left: 50
         on right: 13
-    for (95)
+    for <forRet> (95)
         on left: 51
         on right: 47
-    para_for (96)
+    para_for <para_forRet> (96)
         on left: 52 53 54 55
         on right: 51
-    loop (97)
+    loop <loopRet> (97)
         on left: 56
         on right: 48
-    if (98)
+    if <ifRet> (98)
         on left: 57
         on right: 49
-    else (99)
+    else <elseRet> (99)
         on left: 58 59
         on right: 57
     switch <switchaRet> (100)
@@ -379,7 +379,7 @@ Nonterminals, with rules where they appear
     parameterAfter <name> (111)
         on left: 80 81
         on right: 79
-    block (112)
+    block <blockRet> (112)
         on left: 82
         on right: 7 21
     expr <exprRet> (113)

@@ -1,3 +1,9 @@
-- hierarquia de tipos; todo int e real devem ser numbers
-- verificar se em condicionais a expressao tem tipo number
--
+- [x] hierarquia de tipos; todo int e real devem ser numbers
+- [] verificar se em condicionais a expressao tem tipo number
+- [] expressão ternária
+- [] incremento e decremento de expressão
+- [x] geração de código if
+- [] geração de código else
+- [] geração de código loop
+- [] geração de código for
+- [] geração de código switch
