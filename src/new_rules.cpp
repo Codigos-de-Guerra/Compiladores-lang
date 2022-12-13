@@ -158,7 +158,38 @@ expr::expr(state &estado, expr *exp) {
     type = exp->type;
 }
 
+expr::expr(state &estado, string operacao, expr *exp) {
+  qualId = estado.nxtId;
+  valor = exp->valor;
+  ret = exp->ret;
+
+  intermid = "t"+to_string(qualId);
+
+  estado.nxtId++;
+  if(operacao == "++" or operacao == "--") {
+    if(exp->isId) {
+      this->isId = true;
+      this->rootId = exp->rootId;
+      //TODO
+      // Tentativa de ter algo como ++(++a) recursivo que de fato incremente "a" multiplas vezes
+    }
+    ret += intermid + " = " + exp->intermid + " " + operacao[0] + " 1;\n";
+    ret += exp->intermid + " = " + intermid + ";\n";  
+  } else if(operacao == "!") {
+    ret += intermid + " = " + "not " + exp->intermid + ";\n";
+  } else if(operacao == "-") {
+    ret += intermid + " = " + "0 - " + exp->intermid + ";\n";
+  }
+  if (exp->symbol_names.size() < (1 << 30))
+      for (string sym_name : exp->symbol_names)
+        symbol_names.push_back(sym_name);
+
+    type = exp->type;
+}
+
 expr::expr(state& estado, identifier *id) {
+    isId = true;
+    rootId = id->name;
     qualId = estado.nxtId;
     symbol_names.push_back(id->name);
     valor = -1;
@@ -251,7 +282,7 @@ all_decl_var::all_decl_var(state & estado,const_decl_var *var) {
 cmd_decl_var::cmd_decl_var() {}
 cmd_decl_var::cmd_decl_var(state& estado,all_decl_var *a, assign_expr_maybe *b) {
     if(b==NULL)return;
-    if(!b->intermid.empty()){
+    if(!b->intermid.empty()) {
       ret = b->ret;
       ret += a->intermid + " = " + b->intermid + '\n';
     }
@@ -304,6 +335,12 @@ cmd::cmd(block *bl) {
 
 cmd::cmd(cmd_cond *c_c) {
   if (c_c != NULL) ret = c_c->intermid;
+}
+
+cmd::cmd(state &estado, expr *exp) {
+  //cout << "ret = " << exp->ret << endl;
+  //cout << "intermid = " << exp->intermid << endl;
+  ret = exp->ret;
 }
 
 cmd::cmd(state & estado, string s, expr* exp) {
@@ -382,6 +419,13 @@ para_for::para_for(expr *exp) {
   }
 }
 
+para_for::para_for(string op, expr *exp) {
+  if( exp != NULL) {
+    intermid = exp->intermid;
+    ret = intermid + " = " + intermid + " " + op[0] + " 1;\n";
+  }
+}
+
 fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
   intermid = pa->intermid;
   string labelFor= "l" + to_string(estado.labelId++);
@@ -394,7 +438,7 @@ fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
   intermid += "goto " + labelFalse + "\n";
   intermid += labelTrue + ":\n";
   intermid += c->ret;
-  intermid += "Fiz o comando;\n";
+  intermid += "Fiz comando\n";
   intermid += pc->ret;
   intermid += "goto " + labelFor + "\n";
   intermid += labelFalse + ":\n";

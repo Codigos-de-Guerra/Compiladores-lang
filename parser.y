@@ -220,7 +220,7 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_loop {$$ = new cmd(estado,$1);}
     | cmd_cond {$$ = new cmd($1);}
     | cmd_switch {}
-    | expr SEMICOLON {}//cuidado com o construtor do exit when 
+    | expr SEMICOLON {$$ = new cmd(estado, $1);}//cuidado com o construtor do exit when 
     | RETURN expr SEMICOLON {$$ = new cmd(estado, "RETURN", $2);}
     | RETURN SEMICOLON {}
     | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
@@ -281,8 +281,8 @@ for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN 
 
 para_for: cmd_decl_var {$$ = new para_for($1);}
         | expr {$$ = new para_for($1);}
-        | expr INCREMENT {}
-        | expr DECREMENT {};
+        | expr INCREMENT {$$ = new para_for("++", $1);}
+        | expr DECREMENT {$$ = new para_for("--", $1);};
 
 loop : LOOP cmd {$$ = new loop(estado, $2);};
 
@@ -337,22 +337,17 @@ block : LEFT_BRACE stmts RIGHT_BRACE {
     $$ = new block($2);
 };
 
-expr : INCREMENT expr {$$ = new expr(estado, $2);}
-     | DECREMENT expr {$$ = new expr(estado, $2);}
+expr : INCREMENT expr {$$ = new expr(estado, "++", $2);}
+     | DECREMENT expr {$$ = new expr(estado, "--", $2);}
      | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(estado, $2);}
-     | MINUS identifier {$$ = new expr(estado, $2);}
-     | NOT expr {$$ = new expr(estado, $2);}
+     | MINUS expr {$$ = new expr(estado, "-", $2);}
+     | NOT expr {$$ = new expr(estado, "!", $2);}
      | expr AND expr {$$ = new expr(estado, $1,"&", $3);}
      | expr OR expr {$$ = new expr(estado, $1,"|", $3);}
-     | expr PLUS expr {
-        
-        $$ = new expr(estado, $1,"+", $3);}
-     | expr TIMES expr {
-        
-        $$ = new expr(estado, $1,"*", $3);}
+     | expr PLUS expr {$$ = new expr(estado, $1,"+", $3);}
+     | expr TIMES expr {$$ = new expr(estado, $1,"*", $3);}
      | expr DIV expr {$$ = new expr(estado, $1,"/", $3);}
-     | expr MINUS expr {
-        $$ = new expr(estado, $1,"-", $3);}
+     | expr MINUS expr {$$ = new expr(estado, $1,"-", $3);}
      | expr MOD expr {$$ = new expr(estado, $1,"%", $3);}
      | expr EQUALS expr {$$ = new expr(estado, $1,"==", $3);}
      | expr DIFF expr {$$ = new expr(estado, $1,"!=", $3);}

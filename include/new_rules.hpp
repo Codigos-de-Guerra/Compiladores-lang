@@ -84,6 +84,8 @@ public:
   bool erro = false;
   string valor = "";
   int qualId = 0;
+  bool isId = false;
+  string rootId = "";
 
   set<pair<string,string>> compatibilidade = {
     make_pair("INT","NUMBER"),
@@ -105,6 +107,8 @@ public:
   expr(state & estado, expr *left,string operacao, expr *right);
 
   expr(state &estado, expr *exp);
+
+  expr(state &estado, string operacao, expr *exp);
 
   expr(state& estado, identifier *id);
 
@@ -247,6 +251,8 @@ public:
 
     cmd(cmd_cond *c_c);
 
+    cmd(state &estado, expr *exp);
+
     cmd(state &estado, cmd_loop *c_l);
 
     cmd(state &estado, string s, expr* exp);
@@ -290,6 +296,8 @@ public:
   para_for(cmd_decl_var *decl_var);
 
   para_for(expr *exp);
+
+  para_for(string op, expr *exp);
 };
 
 class fora : public Node {
