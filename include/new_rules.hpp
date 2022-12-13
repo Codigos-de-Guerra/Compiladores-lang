@@ -26,17 +26,7 @@ class fora;
 class Node {
 public:
   vector<Node *> children;
-  function<void(void)> exec;
-
-  Node(vector<Node *> _children = {})
-      : children(_children), exec([&]() { exec_children(); }) {}
-
-  void exec_children() {
-    for (auto node : children) {
-      if (node)
-        node->exec();
-    }
-  }
+  
 };
 
 class decl_fun : public Node {
@@ -247,13 +237,19 @@ class cmd : public Node {
 public:
     string ret = "";
 
+    cmd (state& estado,string s);
+
+    cmd(identifier* id,assign_expr* as);
+
     cmd(cmd_decl_var *decl_var);
 
     cmd(block *bl);
 
     cmd(cmd_cond *c_c);
 
-    cmd(cmd_loop *c_l);
+    cmd(state & estado,cmd_loop *c_l);
+
+    cmd(state& estado,expr* exp);
 };
 
 class elsea : public Node {

@@ -309,8 +309,30 @@ cmd::cmd(cmd_cond *c_c) {
   if (c_c != NULL) ret = c_c->intermid;
 }
 
-cmd::cmd(cmd_loop *c_l) {
-  if (c_l != NULL) ret = c_l->intermid;
+cmd::cmd(state & estado,expr* exp){
+  ret = exp->ret;
+  ret+= "if ("+exp->intermid+"): goto l"+to_string(estado.labelId+1)+";\n";
+}
+
+cmd::cmd(state& estado,string s){
+  if(s=="BREAK")ret = "goto l"+to_string(estado.labelId+1)+";\n";
+  else if(s=="CONTINUE")ret = "goto l"+to_string(estado.labelId)+";\n";
+}
+
+cmd::cmd(state& estado,cmd_loop *c_l) {
+  ret = "l"+to_string(estado.labelId)+":\n";
+  estado.labelId++;
+  if (c_l != NULL) ret += c_l->intermid;
+  ret += "goto l" +to_string(estado.labelId-1)+";\n";
+  ret += "l"+to_string(estado.labelId)+":\n";
+  estado.labelId++;
+}
+
+cmd::cmd(identifier* id,assign_expr * as){
+  //cout<<"::"<<id->name<<" -=- "<<as->intermid<<" -=- "<<as->ret<<" -=- \n";
+  ret = as->ret;
+  ret+= id->name + " = "+as->intermid+";\n";
+  
 }
 elsea::elsea () {}
 
@@ -323,11 +345,12 @@ ifa::ifa(state &estado, expr *exp, cmd *c, elsea *el) {
     intermid += "goto " + labelFalse + ";\n";
     intermid += labelTrue + ":\n";
     if (c != NULL) intermid += c->ret;
+    intermid += labelFalse + ":\n";
     if (el != NULL) {
-        intermid += labelFalse + ":\n";
+        
         intermid += "    aqui vai o else\n";
         // intermid += el->intermid;
-    } 
+    }
     //estado.arquivoEscrita += intermid;
 }
 

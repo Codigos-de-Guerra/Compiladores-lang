@@ -214,18 +214,18 @@ decl_fun : FUNCTION type ID {
     push_scope(estado.tables);
 } LEFT_PAREN typedlpar RIGHT_PAREN block {$$ = new decl_fun($2,$6,$8);};
 
-cmd : identifier assign_expr SEMICOLON {}
+cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
     | inOut SEMICOLON {}
-    | cmd_loop {$$ = new cmd($1);}
+    | cmd_loop {$$ = new cmd(estado,$1);}
     | cmd_cond {$$ = new cmd($1);}
     | cmd_switch {}
-    | expr SEMICOLON {}
+    | expr SEMICOLON {}//cuidado com o construtor do exit when 
     | RETURN expr SEMICOLON {}
     | RETURN SEMICOLON {}
-    | BREAK SEMICOLON {}
-    | CONTINUE SEMICOLON {}
-    | EXIT WHEN expr SEMICOLON {}
+    | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
+    | CONTINUE SEMICOLON {$$ = new cmd(estado,"CONTINUE");}
+    | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado,$3);}
     | {push_scope(estado.tables);} block {$$ = new cmd($2);};
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var(estado,$1,$2);};
