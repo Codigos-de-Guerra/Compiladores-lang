@@ -221,11 +221,11 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_cond {$$ = new cmd($1);}
     | cmd_switch {}
     | expr SEMICOLON {}//cuidado com o construtor do exit when 
-    | RETURN expr SEMICOLON {}
+    | RETURN expr SEMICOLON {$$ = new cmd(estado, "RETURN", $2);}
     | RETURN SEMICOLON {}
     | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
     | CONTINUE SEMICOLON {$$ = new cmd(estado,"CONTINUE");}
-    | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado,$3);}
+    | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado, "EXIT WHEN", $3);}
     | {push_scope(estado.tables);} block {$$ = new cmd($2);};
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var(estado,$1,$2);};

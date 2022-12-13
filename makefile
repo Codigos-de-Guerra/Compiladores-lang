@@ -38,5 +38,14 @@ $(OUT)/new_rules.o: $(INC)/new_rules.hpp $(SRC)/new_rules.cpp | $(OUT)
 test:
 	$(CMM) < $(EXAM)/t1.cmm
 
+if:
+	$(CMM) < $(EXAM)/if_else.cmm
+
+for:
+	$(CMM) < $(EXAM)/for.cmm
+
+loop:
+	$(CMM) < $(EXAM)/loop.cmm
+
 clean:
 	rm -rf $(OUT)

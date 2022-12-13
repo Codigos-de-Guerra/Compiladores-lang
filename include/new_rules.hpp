@@ -237,7 +237,7 @@ class cmd : public Node {
 public:
     string ret = "";
 
-    cmd (state& estado,string s);
+    cmd (state& estado, string s);
 
     cmd(identifier* id,assign_expr* as);
 
@@ -249,7 +249,7 @@ public:
 
     cmd(state &estado, cmd_loop *c_l);
 
-    cmd(state &estado, expr* exp);
+    cmd(state &estado, string s, expr* exp);
 };
 
 class elsea : public Node {
@@ -284,7 +284,8 @@ public:
 
 class para_for : public Node {
 public:
-  string intermid;
+  string intermid = "";
+  string ret = "";
 
   para_for(cmd_decl_var *decl_var);
 

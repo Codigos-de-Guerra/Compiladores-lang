@@ -4,7 +4,6 @@ decl_fun::decl_fun(type_name *t, typedlpar *tlpar, block *bl) {
   //intermid = t->name;
 
   if(bl != NULL) intermid += bl->intermid;
-
 }
 
 statement::statement(decl_fun *decl_f) {
@@ -187,7 +186,6 @@ expr::expr(state& estado, literal *lit) {
     valor = lit->value;
 }
 
-
 assign_expr::assign_expr() {}
 
 assign_expr::assign_expr(expr* a){
@@ -256,7 +254,6 @@ cmd_decl_var::cmd_decl_var(state& estado,all_decl_var *a, assign_expr_maybe *b) 
     if(!b->intermid.empty()){
       ret = b->ret;
       ret += a->intermid + " = " + b->intermid + '\n';
-      //estado.arquivoEscrita += ret;
     }
 }
 
@@ -309,37 +306,37 @@ cmd::cmd(cmd_cond *c_c) {
   if (c_c != NULL) ret = c_c->intermid;
 }
 
-cmd::cmd(state & estado,expr* exp){
-  ret = exp->ret;
-  ret+= "if ("+exp->intermid+"): goto l"+to_string(estado.labelId+1)+";\n";
+cmd::cmd(state & estado, string s, expr* exp) {
+  if(s == "EXIT WHEN") {
+    ret = exp->ret;
+    ret += "if ("+exp->intermid+") goto l"+to_string(estado.labelId+1)+";\n";
+  }
+  else if(s == "RETURN") {
+    //TODO
+  }
 }
 
-cmd::cmd(state& estado,string s){
-  if(s=="BREAK")ret = "goto l"+to_string(estado.labelId+1)+";\n";
-  else if(s=="CONTINUE")ret = "goto l"+to_string(estado.labelId)+";\n";
+cmd::cmd(state& estado, string s) {
+  if(s=="BREAK") ret = "goto l"+to_string(estado.labelId+1)+";\n";
+  else if(s=="CONTINUE") ret = "goto l"+to_string(estado.labelId)+";\n";
 }
 
-cmd::cmd(state& estado,cmd_loop *c_l) {
-  ret = "l"+to_string(estado.labelId)+":\n";
-  estado.labelId++;
-  if (c_l != NULL) ret += c_l->intermid;
-  ret += "goto l" +to_string(estado.labelId-1)+";\n";
-  ret += "l"+to_string(estado.labelId)+":\n";
-  estado.labelId++;
+cmd::cmd(state& estado, cmd_loop *c_l) {
+  if(c_l != NULL) ret = c_l->intermid;
 }
 
-cmd::cmd(identifier* id,assign_expr * as){
+cmd::cmd(identifier* id, assign_expr * as){
   //cout<<"::"<<id->name<<" -=- "<<as->intermid<<" -=- "<<as->ret<<" -=- \n";
   ret = as->ret;
   ret+= id->name + " = "+as->intermid+";\n";
   
 }
+
 elsea::elsea(state &estado, cmd *c) {
   if(c != NULL) intermid = c->ret;
 }
 
 ifa::ifa(state &estado, expr *exp, cmd *c, elsea *el) {
-  //estado.arquivoEscrita += exp->ret;
   intermid = exp->ret;
   string labelTrue = "l" + to_string(estado.labelId++); 
   string labelFalse = "l" + to_string(estado.labelId++);
@@ -357,7 +354,6 @@ ifa::ifa(state &estado, expr *exp, cmd *c, elsea *el) {
     intermid += el->intermid;
     intermid += labelHasElse + ":\n";
   }
-  //estado.arquivoEscrita += intermid;
 }
 
 cmd_cond::cmd_cond(ifa *iff) {
@@ -375,26 +371,42 @@ cmd_loop::cmd_loop(fora *f) {
 para_for::para_for(cmd_decl_var *decl_var) {
   if( decl_var != NULL) {
     intermid = decl_var->ret;
+    ret = intermid;
   }
 }
 
 para_for::para_for(expr *exp) {
-  if( exp != NULL) intermid = exp->ret;
+  if( exp != NULL) {
+    intermid = exp->intermid;
+    ret = exp->ret;
+  }
 }
 
 fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
-  //TODO fazer de fato o for com goto e label
-  if(pa != NULL) intermid += pa->intermid;
-  if(pb != NULL) intermid += pb->intermid;
-  if(pc != NULL) intermid += pc->intermid;
-  if(c != NULL) intermid += c->ret;
+  intermid = pa->intermid;
+  string labelFor= "l" + to_string(estado.labelId++);
+  intermid += labelFor + ":\n";
+
+  string labelTrue = "l" + to_string(estado.labelId++);
+  string labelFalse = "l" + to_string(estado.labelId++);
+  intermid += pb->ret;
+  intermid += "if (" + pb->intermid + ") goto " + labelTrue+ ";\n";
+  intermid += "goto " + labelFalse + "\n";
+  intermid += labelTrue + ":\n";
+  intermid += c->ret;
+  intermid += "Fiz o comando;\n";
+  intermid += pc->ret;
+  intermid += "goto " + labelFor + "\n";
+  intermid += labelFalse + ":\n";
 }
 
 loop::loop(state &estado, cmd *c) {
-  //TODO fazer de fato o loop com goto e label
-  if(c != NULL) intermid = c->ret;
-  //intermid += "Apenas testando bro\n";
-  //estado.arquivoEscrita += intermid;
+  intermid = "l"+to_string(estado.labelId)+":\n";
+  estado.labelId++;
+  if (c != NULL) intermid += c->ret;
+  intermid += "goto l" +to_string(estado.labelId-1)+";\n";
+  intermid += "l"+to_string(estado.labelId)+":\n";
+  estado.labelId++;
 }
 
 typedlpar::typedlpar(state & estado, parameter *param, typedlpar *lpar) {

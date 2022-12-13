@@ -2,10 +2,11 @@ function int main() {
     //int x = (10 + 20) * (30 + 40);
 
     str aa = "comecou";
-    bool k = true;
-    for(int i=0; i < 10; k && true) {
-        int x = 10;
-        int z = 20;
+    loop {
+        int x =0;
+        int y =1;
+        exit when x > 10;
+        bool f = true;
     }
 
     bool f = false;
