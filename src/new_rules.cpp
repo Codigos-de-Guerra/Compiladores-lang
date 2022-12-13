@@ -349,7 +349,8 @@ cmd::cmd(state & estado, string s, expr* exp) {
     ret += "if ("+exp->intermid+") goto l"+to_string(estado.labelId+1)+";\n";
   }
   else if(s == "RETURN") {
-    //TODO
+    ret = exp->ret;
+    ret += "return " + exp->intermid + ";\n";
   }
 }
 
@@ -438,7 +439,6 @@ fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
   intermid += "goto " + labelFalse + "\n";
   intermid += labelTrue + ":\n";
   intermid += c->ret;
-  intermid += "Fiz comando\n";
   intermid += pc->ret;
   intermid += "goto " + labelFor + "\n";
   intermid += labelFalse + ":\n";
