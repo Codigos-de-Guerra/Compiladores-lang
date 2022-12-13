@@ -292,7 +292,7 @@ if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {
 };
 
 else :  /*epsilon*/ {$$ = NULL;}
-      | ELSE cmd {};
+      | ELSE cmd {$$ = new elsea(estado, $2);};
 
 switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(estado.tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
     pop_scope(estado.tables);

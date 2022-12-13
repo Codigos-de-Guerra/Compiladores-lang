@@ -1,0 +1,14 @@
+function int main() {
+    //int x = (10 + 20) * (30 + 40);
+
+    if(true) {
+        if(40 > 30) {int y = 10; int a=20;}
+        endif
+        else {int y = false; int a = 40 + 10;}
+        bool y = true;
+    } endif else {
+        str s = "entrou else";
+    }
+
+    str l = "FIM";
+}

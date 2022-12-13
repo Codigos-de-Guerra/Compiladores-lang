@@ -334,24 +334,30 @@ cmd::cmd(identifier* id,assign_expr * as){
   ret+= id->name + " = "+as->intermid+";\n";
   
 }
-elsea::elsea () {}
+elsea::elsea(state &estado, cmd *c) {
+  if(c != NULL) intermid = c->ret;
+}
 
 ifa::ifa(state &estado, expr *exp, cmd *c, elsea *el) {
-    //estado.arquivoEscrita += exp->ret;
-    intermid = exp->ret;
-    string labelTrue = "l" + to_string(estado.labelId++); 
-    string labelFalse = "l" + to_string(estado.labelId++); 
-    intermid += "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
-    intermid += "goto " + labelFalse + ";\n";
-    intermid += labelTrue + ":\n";
-    if (c != NULL) intermid += c->ret;
-    intermid += labelFalse + ":\n";
-    if (el != NULL) {
-        
-        intermid += "    aqui vai o else\n";
-        // intermid += el->intermid;
-    }
-    //estado.arquivoEscrita += intermid;
+  //estado.arquivoEscrita += exp->ret;
+  intermid = exp->ret;
+  string labelTrue = "l" + to_string(estado.labelId++); 
+  string labelFalse = "l" + to_string(estado.labelId++);
+  string labelHasElse = "";
+  intermid += "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
+  intermid += "goto " + labelFalse + ";\n";
+  intermid += labelTrue + ":\n";
+  if (c != NULL) intermid += c->ret;
+  if (el != NULL) {
+    labelHasElse = "l" + to_string(estado.labelId++);
+    intermid += "goto " + labelHasElse + ";\n";
+  }
+  intermid += labelFalse + ":\n";
+  if (el != NULL) {
+    intermid += el->intermid;
+    intermid += labelHasElse + ":\n";
+  }
+  //estado.arquivoEscrita += intermid;
 }
 
 cmd_cond::cmd_cond(ifa *iff) {

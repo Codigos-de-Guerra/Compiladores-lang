@@ -247,14 +247,16 @@ public:
 
     cmd(cmd_cond *c_c);
 
-    cmd(state & estado,cmd_loop *c_l);
+    cmd(state &estado, cmd_loop *c_l);
 
-    cmd(state& estado,expr* exp);
+    cmd(state &estado, expr* exp);
 };
 
 class elsea : public Node {
 public:
-    elsea();
+  string intermid;
+  
+  elsea(state &estado, cmd *cmd);
 };
 
 class ifa : public Node {
