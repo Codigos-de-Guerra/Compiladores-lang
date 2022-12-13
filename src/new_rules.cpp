@@ -151,7 +151,7 @@ expr::expr(state &estado, expr *exp) {
     qualId = estado.nxtId - 1;
     valor = exp->valor;
     ret = exp->ret;
-    intermid = "t"+to_string(qualId-1);
+    intermid = "t"+to_string(qualId);
     if (exp->symbol_names.size() < (1 << 30))
       for (string sym_name : exp->symbol_names)
         symbol_names.push_back(sym_name);
