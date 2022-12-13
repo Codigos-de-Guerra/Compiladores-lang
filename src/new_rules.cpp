@@ -1,8 +1,10 @@
 #include "new_rules.hpp"
 
-//decl_fun::decl_fun(type_name *t, typedlpar *tlpar, block *b) {}
-decl_fun::decl_fun() {
-    intermid = "dd";
+decl_fun::decl_fun(type_name *t, typedlpar *tlpar, block *bl) {
+  //intermid = t->name;
+
+  if(bl != NULL) intermid += bl->intermid;
+
 }
 
 statement::statement(decl_fun *decl_f) {
@@ -15,18 +17,12 @@ statement::statement(cmd *c) {
 
 statements::statements(statement *st, statements *stmts) {
   if(st != NULL) intermid += st->intermid;
-  //cout << "oia\n" << intermid << endl;
   if(stmts != NULL) intermid += stmts->intermid;
-  cout << "oia\n" << this->intermid << endl;
 }
 
 
 programa::programa(state &estado, statements *stmts) {
-  if(stmts != NULL) {
-    cout << "stmts vazio??" << endl;
-    cout << "stmts->intermid:" << stmts->intermid;
-    intermid += stmts->intermid;
-  }
+  if(stmts != NULL) intermid += stmts->intermid;
   estado.arquivoEscrita += intermid;
 }
 
@@ -37,7 +33,6 @@ literal::literal(string tipo, string valor,state& estado){
     
     intermid = "t"+to_string(estado.nxtId);
     ret = intermid+" = "+valor+";\n";
-    estado.nxtId++;
 }
 
 identifier::identifier(string nome) {
@@ -310,25 +305,64 @@ cmd::cmd(block *bl) {
   if(bl != NULL) ret = bl->intermid;
 }
 
+cmd::cmd(cmd_cond *c_c) {
+  if (c_c != NULL) ret = c_c->intermid;
+}
+
+cmd::cmd(cmd_loop *c_l) {
+  if (c_l != NULL) ret = c_l->intermid;
+}
 elsea::elsea () {}
 
-ifa::ifa (state &estado, expr *exp, cmd *c, elsea *el) {
-        estado.arquivoEscrita += exp->ret;
-        string labelTrue = "l" + to_string(estado.labelId++); 
-        string labelFalse = "l" + to_string(estado.labelId++); 
-        intermid = "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
-        intermid += "goto " + labelFalse + ";\n";
-        intermid += labelTrue + ":\n";
-        if (c != NULL) intermid += c->ret;
-        if (el != NULL) {
-            intermid += labelFalse + ":\n";
-            intermid += "    aqui vai o else\n";
-            // intermid += el->intermid;
-        } 
-        estado.arquivoEscrita += intermid;
+ifa::ifa(state &estado, expr *exp, cmd *c, elsea *el) {
+    //estado.arquivoEscrita += exp->ret;
+    intermid = exp->ret;
+    string labelTrue = "l" + to_string(estado.labelId++); 
+    string labelFalse = "l" + to_string(estado.labelId++); 
+    intermid += "if (" + exp->intermid + ") goto " + labelTrue + ";\n";
+    intermid += "goto " + labelFalse + ";\n";
+    intermid += labelTrue + ":\n";
+    if (c != NULL) intermid += c->ret;
+    if (el != NULL) {
+        intermid += labelFalse + ":\n";
+        intermid += "    aqui vai o else\n";
+        // intermid += el->intermid;
+    } 
+    //estado.arquivoEscrita += intermid;
+}
+
+cmd_cond::cmd_cond(ifa *iff) {
+  if( iff != NULL) intermid = iff->intermid;
+}
+
+cmd_loop::cmd_loop(loop *lo) {
+  if( lo != NULL) intermid = lo->intermid;
+}
+
+cmd_loop::cmd_loop(fora *f) {
+  if( f != NULL) intermid = f->intermid;
+}
+
+para_for::para_for(cmd_decl_var *decl_var) {
+  if( decl_var != NULL) {
+    intermid = decl_var->ret;
+  }
+}
+
+para_for::para_for(expr *exp) {
+  if( exp != NULL) intermid = exp->ret;
+}
+
+fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
+  //TODO fazer de fato o for com goto e label
+  if(pa != NULL) intermid += pa->intermid;
+  if(pb != NULL) intermid += pb->intermid;
+  if(pc != NULL) intermid += pc->intermid;
+  if(c != NULL) intermid += c->ret;
 }
 
 loop::loop(state &estado, cmd *c) {
+  //TODO fazer de fato o loop com goto e label
   if(c != NULL) intermid = c->ret;
   //intermid += "Apenas testando bro\n";
   //estado.arquivoEscrita += intermid;

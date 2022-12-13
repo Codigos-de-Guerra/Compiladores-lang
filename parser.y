@@ -124,9 +124,13 @@ state estado;
 %type <cazeZeroRet> casezeromais
 %type <switchaRet> switch
 %type <cmdRet> cmd
+%type <cmd_condRet> cmd_cond
+%type <cmd_loopRet> cmd_loop
 %type <elseRet> else
 %type <ifRet> if
 %type <loopRet> loop
+%type <para_forRet> para_for
+%type <forRet> for
 %type <blockRet> block
 
 %token '['
@@ -208,13 +212,13 @@ stmt : decl_fun {$$ = new statement($1);}
 decl_fun : FUNCTION type ID {
     add_sym(estado.tables, *$3, {$2->name, false});
     push_scope(estado.tables);
-} LEFT_PAREN typedlpar RIGHT_PAREN block {$$ = new decl_fun(/*$2,$6,$8*/);};
+} LEFT_PAREN typedlpar RIGHT_PAREN block {$$ = new decl_fun($2,$6,$8);};
 
 cmd : identifier assign_expr SEMICOLON {}
     | cmd_decl_var SEMICOLON {$$ = new cmd($1);}
     | inOut SEMICOLON {}
-    | cmd_loop {}
-    | cmd_cond {}
+    | cmd_loop {$$ = new cmd($1);}
+    | cmd_cond {$$ = new cmd($1);}
     | cmd_switch {}
     | expr SEMICOLON {}
     | RETURN expr SEMICOLON {}
@@ -264,17 +268,19 @@ in : READ LEFT_PAREN ID RIGHT_PAREN {};
 
 out : WRITE LEFT_PAREN ID RIGHT_PAREN {};
 
-cmd_loop : for {}
-      | loop {}
+cmd_loop : for {$$ = new cmd_loop($1);}
+      | loop {$$ = new cmd_loop($1);}
 
-cmd_cond : if {};
+cmd_cond : if {$$ = new cmd_cond($1);};
 
 cmd_switch : switch {};
 
-for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd {};
+for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd {
+    $$ = new fora(estado, $3, $5, $7, $9);
+    };
 
-para_for: cmd_decl_var {}
-        | expr {}
+para_for: cmd_decl_var {$$ = new para_for($1);}
+        | expr {$$ = new para_for($1);}
         | expr INCREMENT {}
         | expr DECREMENT {};
 

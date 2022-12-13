@@ -1,5 +1,8 @@
 function int main() {
     int x = 10 - 20 * (30 - 40);
 
-    //loop int y = 10;
+    for(int i=0; x < i; int k=3) {
+        int aa = 200;
+    }
+
 }

@@ -15,6 +15,13 @@ using namespace std;
 
 class cmd;
 class programa;
+class type_name;
+class typedlpar;
+class block;
+class cmd_cond;
+class cmd_loop;
+class loop;
+class fora;
 
 class Node {
 public:
@@ -36,8 +43,7 @@ class decl_fun : public Node {
 public:
   string intermid;
 
-  //decl_fun(type_name *t, typedlpar *tlpar, block *b);
-  decl_fun();
+  decl_fun(type_name *t, typedlpar *tlpar, block *b);
 };
 
 class statement : public Node {
@@ -244,6 +250,10 @@ public:
     cmd(cmd_decl_var *decl_var);
 
     cmd(block *bl);
+
+    cmd(cmd_cond *c_c);
+
+    cmd(cmd_loop *c_l);
 };
 
 class elsea : public Node {
@@ -256,6 +266,38 @@ public:
     string intermid;
 
     ifa (state &estado, expr *exp, cmd *c, elsea *el);
+};
+
+class cmd_cond : public Node {
+public:
+  string intermid;
+
+  cmd_cond(ifa *iff);
+};
+
+class cmd_loop : public Node {
+public:
+  string intermid;
+
+  cmd_loop(loop *lo);
+
+  cmd_loop(fora *f);
+};
+
+class para_for : public Node {
+public:
+  string intermid;
+
+  para_for(cmd_decl_var *decl_var);
+
+  para_for(expr *exp);
+};
+
+class fora : public Node {
+public:
+  string intermid = "";
+
+  fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c);
 };
 
 class loop : public Node {

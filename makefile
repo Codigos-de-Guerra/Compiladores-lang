@@ -27,7 +27,7 @@ lex:
 	lex -o $(LEX_OUT) $(TOKENIZER)
 
 yacc: lex
-	bison -d -v $(PARSER) -o $(YACC_OUT)
+	yacc -d -v $(PARSER) -o $(YACC_OUT)
 
 compile: yacc $(OUT)/new_rules.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) $(LEX_OUT) $(YACC_OUT) $(OBJS) -o $(CMM)

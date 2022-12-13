@@ -27,9 +27,13 @@ typedef union {
   cazezeromais* cazeZeroRet;
   switcha* switchaRet; 
   cmd* cmdRet;
+  cmd_cond* cmd_condRet;
+  cmd_loop* cmd_loopRet;
   elsea* elseRet;
   ifa* ifRet;
   loop* loopRet;
+  para_for* para_forRet;
+  fora* forRet;
   block* blockRet;
 
   string *name;
