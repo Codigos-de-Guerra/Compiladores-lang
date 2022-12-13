@@ -53,7 +53,7 @@ public:
 
 class programa : public Node {
 public:
-  string intermid = "#include <oi>\n";
+  string intermid = "";
 
   programa(state &estado, statements *stmts);
 };
