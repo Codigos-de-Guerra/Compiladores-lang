@@ -1,0 +1,6 @@
+function int main() {
+    int a = 10;
+    int b = ++a;
+    real c = b + ++a;
+    --b;
+}

@@ -222,7 +222,7 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | cmd_switch {}
     | expr SEMICOLON {$$ = new cmd(estado, $1);}//cuidado com o construtor do exit when 
     | RETURN expr SEMICOLON {$$ = new cmd(estado, "RETURN", $2);}
-    | RETURN SEMICOLON {}
+    | RETURN SEMICOLON {$$ = new cmd(estado, "RETURN");}
     | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
     | CONTINUE SEMICOLON {$$ = new cmd(estado,"CONTINUE");}
     | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado, "EXIT WHEN", $3);}
@@ -319,10 +319,10 @@ primitive : INT {$$ = new primitive("INT");}
 
 type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
-typedlpar : /*epsilon*/ {}
+typedlpar : /*epsilon*/ {$$ = NULL;}
           | parameter typedlparAfter {$$ = new typedlpar(estado, $1, $2);}
 
-typedlparAfter : /*epsilon*/ {}
+typedlparAfter : /*epsilon*/ {$$ = NULL;}
                | COMMA parameter typedlparAfter {
     $$ = new typedlpar(estado, $2, $3);
 };

@@ -47,5 +47,8 @@ for:
 loop:
 	$(CMM) < $(EXAM)/loop.cmm
 
+incdec:
+	$(CMM) < $(EXAM)/inc_dec.cmm
+
 clean:
 	rm -rf $(OUT)
