@@ -360,6 +360,8 @@ cmd::cmd(state &estado, string s, expr *exp) {
 cmd::cmd(state &estado, string s) {
   if (s == "CONTINUE")
     ret = "goto l" + to_string(estado.labelId) + ";\n";
+  else if (s == "RETURN")
+    ret = "return;\n"; //+ "goto" label pra fora de funcall;
 }
 
 cmd::cmd(state &estado, cmd_loop *c_l) {
@@ -453,13 +455,11 @@ fora::fora(state &estado, para_for *pa, para_for *pb, para_for *pc, cmd *c) {
 }
 
 loop::loop(state &estado, cmd *c) {
-  intermid = "l" + to_string(estado.labelId) + ":\n";
-  estado.labelId++;
+  intermid = "l" + to_string(estado.labelId++) + ":\n";
   if (c != NULL)
     intermid += c->ret;
   intermid += "goto l" + to_string(estado.labelId - 1) + ";\n";
-  intermid += "l" + to_string(estado.labelId) + ":\n";
-  estado.labelId++;
+  intermid += "l" + to_string(estado.labelId++) + ":\n";
 }
 
 typedlpar::typedlpar(state &estado, parameter *param, typedlpar *lpar) {
