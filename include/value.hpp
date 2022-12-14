@@ -25,10 +25,11 @@ typedef union {
   expr *exprRet;
   caze * cazeRet;
   cazezeromais* cazeZeroRet;
-  switcha* switchaRet; 
+  switcha* switchRet;
   cmd* cmdRet;
   cmd_cond* cmd_condRet;
   cmd_loop* cmd_loopRet;
+  cmd_switch* cmd_switchRet;
   elsea* elseRet;
   ifa* ifRet;
   loop* loopRet;

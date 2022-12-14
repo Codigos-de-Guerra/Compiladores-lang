@@ -7,9 +7,9 @@
 #include <iostream>
 #include <map>
 #include <new>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 using namespace std;
 
@@ -20,13 +20,13 @@ class typedlpar;
 class block;
 class cmd_cond;
 class cmd_loop;
+class cmd_switch;
 class loop;
 class fora;
 
 class Node {
 public:
   vector<Node *> children;
-  
 };
 
 class decl_fun : public Node {
@@ -65,13 +65,13 @@ public:
   string intermid;
   string ret;
 
-  literal(string tipo, string valor,state& estado);
+  literal(string tipo, string valor, state &estado);
 };
 
 class identifier : public Node {
 public:
   string name;
-  
+
   identifier(string nome);
 };
 
@@ -87,32 +87,26 @@ public:
   bool isId = false;
   string rootId = "";
 
-  set<pair<string,string>> compatibilidade = {
-    make_pair("INT","NUMBER"),
-    make_pair("NUMBER","INT"),
-    make_pair("INT","REAL"),
-    make_pair("REAL","INT"),
-    make_pair("INT","BOOL"),
-    make_pair("BOOL","INT"),
-    make_pair("NUMBER","BOOL"),
-    make_pair("BOOL","NUMBER"),
-    make_pair("REAL","NUMBER"),
-    make_pair("NUMBER","REAL")
-  };
+  set<pair<string, string>> compatibilidade = {
+      make_pair("INT", "NUMBER"),  make_pair("NUMBER", "INT"),
+      make_pair("INT", "REAL"),    make_pair("REAL", "INT"),
+      make_pair("INT", "BOOL"),    make_pair("BOOL", "INT"),
+      make_pair("NUMBER", "BOOL"), make_pair("BOOL", "NUMBER"),
+      make_pair("REAL", "NUMBER"), make_pair("NUMBER", "REAL")};
 
   bool eInteiro();
 
   int getVal();
 
-  expr(state & estado, expr *left,string operacao, expr *right);
+  expr(state &estado, expr *left, string operacao, expr *right);
 
   expr(state &estado, expr *exp);
 
   expr(state &estado, string operacao, expr *exp);
 
-  expr(state& estado, identifier *id);
+  expr(state &estado, identifier *id);
 
-  expr(state& estado, literal *lit);
+  expr(state &estado, literal *lit);
 };
 
 class assign_expr : public Node {
@@ -121,15 +115,15 @@ public:
   string ret;
 
   assign_expr();
-  assign_expr(expr* a);
+  assign_expr(expr *a);
 };
 
 class assign_expr_maybe : public Node {
 public:
-string intermid = "";
-string ret = "";
+  string intermid = "";
+  string ret = "";
   assign_expr_maybe();
-  assign_expr_maybe(assign_expr * a);
+  assign_expr_maybe(assign_expr *a);
 };
 
 class primitive : public Node {
@@ -157,7 +151,6 @@ public:
   decl_var_prim(primitive *t, string var_name);
 };
 
-
 class const_decl_var : public Node {
 public:
   string name = "";
@@ -172,16 +165,16 @@ public:
   string intermid;
   all_decl_var();
 
-  all_decl_var(state& estado,decl_var_prim *var);
+  all_decl_var(state &estado, decl_var_prim *var);
 
-  all_decl_var(state & estado,const_decl_var *var);
+  all_decl_var(state &estado, const_decl_var *var);
 };
 
 class cmd_decl_var : public Node {
 public:
   string ret;
   cmd_decl_var();
-  cmd_decl_var(state& estado,all_decl_var *a, assign_expr_maybe *b);
+  cmd_decl_var(state &estado, all_decl_var *a, assign_expr_maybe *b);
 };
 
 class type_name : public Node {
@@ -205,29 +198,26 @@ class caze : public Node {
 public:
   string tipo = "";
   string valor = "";
+  string intermid = "";
+  bool hasBreak;
 
-  caze(literal * t);
+  caze(literal *t, statements *stmts, bool hasBreak);
 };
 
 class cazezeromais : public Node {
 public:
   string valorEsperado = "";
   set<string> javi;
-  set<pair<string,string>> compatibilidade = {
-    make_pair("INT","NUMBER"),
-    make_pair("NUMBER","INT"),
-    make_pair("INT","REAL"),
-    make_pair("REAL","INT"),
-    make_pair("INT","BOOL"),
-    make_pair("BOOL","INT"),
-    make_pair("NUMBER","BOOL"),
-    make_pair("BOOL","NUMBER"),
-    make_pair("REAL","NUMBER"),
-    make_pair("NUMBER","REAL")
-  };
+  set<pair<string, string>> compatibilidade = {
+      make_pair("INT", "NUMBER"),  make_pair("NUMBER", "INT"),
+      make_pair("INT", "REAL"),    make_pair("REAL", "INT"),
+      make_pair("INT", "BOOL"),    make_pair("BOOL", "INT"),
+      make_pair("NUMBER", "BOOL"), make_pair("BOOL", "NUMBER"),
+      make_pair("REAL", "NUMBER"), make_pair("NUMBER", "REAL")};
+  vector<vector<string>> cazeIntermid = vector<vector<string>>();
 
   cazezeromais();
-  cazezeromais(state &estado, caze* a , cazezeromais*b);
+  cazezeromais(state &estado, caze *a, cazezeromais *b);
 };
 
 class block : public Node {
@@ -239,37 +229,39 @@ public:
 
 class cmd : public Node {
 public:
-    string ret = "";
+  string ret = "";
 
-    cmd (state& estado, string s);
+  cmd(state &estado, string s);
 
-    cmd(identifier* id,assign_expr* as);
+  cmd(identifier *id, assign_expr *as);
 
-    cmd(cmd_decl_var *decl_var);
+  cmd(cmd_decl_var *decl_var);
 
-    cmd(block *bl);
+  cmd(block *bl);
 
-    cmd(cmd_cond *c_c);
+  cmd(cmd_cond *c_c);
 
-    cmd(state &estado, expr *exp);
+  cmd(cmd_switch *c_sw);
 
-    cmd(state &estado, cmd_loop *c_l);
+  cmd(state &estado, expr *exp);
 
-    cmd(state &estado, string s, expr* exp);
+  cmd(state &estado, cmd_loop *c_l);
+
+  cmd(state &estado, string s, expr *exp);
 };
 
 class elsea : public Node {
 public:
   string intermid;
-  
+
   elsea(state &estado, cmd *cmd);
 };
 
 class ifa : public Node {
 public:
-    string intermid;
+  string intermid;
 
-    ifa (state &estado, expr *exp, cmd *c, elsea *el);
+  ifa(state &estado, expr *exp, cmd *c, elsea *el);
 };
 
 class cmd_cond : public Node {
@@ -309,34 +301,36 @@ public:
 
 class loop : public Node {
 public:
-    string intermid;
+  string intermid;
 
-    loop(state &estado, cmd *c);
+  loop(state &estado, cmd *c);
 };
 
 class typedlpar {
 public:
   vector<parameter> params;
 
-  typedlpar(state & estado, parameter *param, typedlpar *lpar);
+  typedlpar(state &estado, parameter *param, typedlpar *lpar);
 };
 
 class switcha : public Node {
 public:
-set<pair<string,string>> compatibilidade = {
-    make_pair("INT","NUMBER"),
-    make_pair("NUMBER","INT"),
-    make_pair("INT","REAL"),
-    make_pair("REAL","INT"),
-    make_pair("INT","BOOL"),
-    make_pair("BOOL","INT"),
-    make_pair("NUMBER","BOOL"),
-    make_pair("BOOL","NUMBER"),
-    make_pair("REAL","NUMBER"),
-    make_pair("NUMBER","REAL")
-  };
-  
-  switcha(state &estado, expr* a, cazezeromais* b);
+  set<pair<string, string>> compatibilidade = {
+      make_pair("INT", "NUMBER"),  make_pair("NUMBER", "INT"),
+      make_pair("INT", "REAL"),    make_pair("REAL", "INT"),
+      make_pair("INT", "BOOL"),    make_pair("BOOL", "INT"),
+      make_pair("NUMBER", "BOOL"), make_pair("BOOL", "NUMBER"),
+      make_pair("REAL", "NUMBER"), make_pair("NUMBER", "REAL")};
+  string intermid;
+
+  switcha(state &estado, expr *a, cazezeromais *b);
+};
+
+class cmd_switch : public Node {
+public:
+  string intermid;
+
+  cmd_switch(switcha *sw);
 };
 
 #endif

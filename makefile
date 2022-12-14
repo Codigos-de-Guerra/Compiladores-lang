@@ -47,5 +47,8 @@ for:
 loop:
 	$(CMM) < $(EXAM)/loop.cmm
 
+switch:
+	$(CMM) < $(EXAM)/switch.cmm
+
 clean:
 	rm -rf $(OUT)

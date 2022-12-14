@@ -10,91 +10,6 @@ int yyerror(char *s);
 extern int yylineno;
 extern char* yytext;
 
-/*
-struct lval {
-    int line;
-    int col;
-    // the value of the token. if it is the number 0, this is going to be 0
-    string lexeme;
-    int token;
-    lval() {}
-};
-
-
-// all we have as symbols for the symbol table are identifiers. other possible
-// symbols are, for example, goto labels
-struct old_symbol {
-    int scope = 0;
-    // this is the actual name of the symbol. an id 'foo' has the name foo
-    string name = "";
-    string type = "";
-    bool is_const= false;
-    lval val;
-    symbol() {}
-};
-
-// since we have 128 ASCII characters, that's the max number of children our
-// trie can have, even though we won't use all of them
-#define N 128
-
-struct node {
-    struct node *children[N];
-    symbol sym;
-    bool is_leaf;
-};
-
-node* root;
-
-node *initialize()
-{
-    node *novo = (node*) calloc(1, sizeof(node));
-    for (int i = 0; i < N; i++) novo->children[i] = NULL;
-    novo->is_leaf = 0;
-
-    return novo;
-}
-
-void adiciona(symbol simbolo)
-{
-    node *tmp = root;
-    string word = simbolo.name;
-    for (int i = 0; i<word.size(); i++) {
-        // get the relative position in the alphabet list
-
-        int position = (int) word[i] - 'a';
-
-        if (tmp->children[position] == NULL){
-
-            tmp->children[position] = initialize();
-        }
-
-        tmp = tmp->children[position];
-    }
-
-
-      tmp->is_leaf = 1;
-      tmp->sym.name =  simbolo.name;
-}
-
-node *acha(symbol simbolo)
-{
-    // searches for word in the trie
-    node *tmp = root;
-    string word = simbolo.name;
-    for(int i = 0; i<word.size(); i++)
-    {
-        int position = word[i] - 'a';
-        if (tmp->children[position] == NULL) return NULL;
-        tmp = tmp->children[position];
-    }
-
-    if (tmp != NULL && tmp->is_leaf == 1) return tmp;
-
-    return NULL;
-}
-*/
-
-
 state estado;
 %}
 
@@ -122,10 +37,11 @@ state estado;
 %type <exprRet> expr
 %type <cazeRet> case
 %type <cazeZeroRet> casezeromais
-%type <switchaRet> switch
+%type <switchRet> switch
 %type <cmdRet> cmd
 %type <cmd_condRet> cmd_cond
 %type <cmd_loopRet> cmd_loop
+%type <cmd_switchRet> cmd_switch
 %type <elseRet> else
 %type <ifRet> if
 %type <loopRet> loop
@@ -219,11 +135,10 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | inOut SEMICOLON {}
     | cmd_loop {$$ = new cmd(estado,$1);}
     | cmd_cond {$$ = new cmd($1);}
-    | cmd_switch {}
+    | cmd_switch {$$ = new cmd($1);}
     | expr SEMICOLON {$$ = new cmd(estado, $1);}//cuidado com o construtor do exit when 
     | RETURN expr SEMICOLON {$$ = new cmd(estado, "RETURN", $2);}
     | RETURN SEMICOLON {}
-    | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
     | CONTINUE SEMICOLON {$$ = new cmd(estado,"CONTINUE");}
     | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado, "EXIT WHEN", $3);}
     | {push_scope(estado.tables);} block {$$ = new cmd($2);};
@@ -273,7 +188,7 @@ cmd_loop : for {$$ = new cmd_loop($1);}
 
 cmd_cond : if {$$ = new cmd_cond($1);};
 
-cmd_switch : switch {};
+cmd_switch : switch {$$ = new cmd_switch($1);};
 
 for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd {
     $$ = new fora(estado, $3, $5, $7, $9);
@@ -295,17 +210,15 @@ else :  /*epsilon*/ {$$ = NULL;}
       | ELSE cmd {$$ = new elsea(estado, $2);};
 
 switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(estado.tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
-    pop_scope(estado.tables);
-    $$ = new switcha(estado,$3,$7);
+         pop_scope(estado.tables);
+         $$ = new switcha(estado,$3,$7);
     };
 
 casezeromais : /*epsilon*/ {$$ = new cazezeromais();}
       | case casezeromais {$$ = new cazezeromais(estado,$1,$2);};
 
-case : {push_scope(estado.tables);} CASE literal COLON stmts {
-    pop_scope(estado.tables);
-    $$ = new caze($3);
-    };
+case : CASE literal COLON stmts BREAK SEMICOLON {$$ = new caze($2, $4, true);}
+     | CASE literal COLON stmts {$$ = new caze($2, $4, false);};
 
 typename : primitive {$$ = new type_name($1);}
          | ID {$$ = new type_name(*$1);};
