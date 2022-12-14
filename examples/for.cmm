@@ -1,0 +1,12 @@
+function int main() {
+
+    bool x = true;
+    for(int i=0; i < 10; i++) {
+        int x = 10;
+        int z = 20;
+    }
+
+    bool f = false;
+
+    return 0;
+}

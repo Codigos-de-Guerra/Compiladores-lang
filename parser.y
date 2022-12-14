@@ -10,91 +10,6 @@ int yyerror(char *s);
 extern int yylineno;
 extern char* yytext;
 
-/*
-struct lval {
-    int line;
-    int col;
-    // the value of the token. if it is the number 0, this is going to be 0
-    string lexeme;
-    int token;
-    lval() {}
-};
-
-
-// all we have as symbols for the symbol table are identifiers. other possible
-// symbols are, for example, goto labels
-struct old_symbol {
-    int scope = 0;
-    // this is the actual name of the symbol. an id 'foo' has the name foo
-    string name = "";
-    string type = "";
-    bool is_const= false;
-    lval val;
-    symbol() {}
-};
-
-// since we have 128 ASCII characters, that's the max number of children our
-// trie can have, even though we won't use all of them
-#define N 128
-
-struct node {
-    struct node *children[N];
-    symbol sym;
-    bool is_leaf;
-};
-
-node* root;
-
-node *initialize()
-{
-    node *novo = (node*) calloc(1, sizeof(node));
-    for (int i = 0; i < N; i++) novo->children[i] = NULL;
-    novo->is_leaf = 0;
-
-    return novo;
-}
-
-void adiciona(symbol simbolo)
-{
-    node *tmp = root;
-    string word = simbolo.name;
-    for (int i = 0; i<word.size(); i++) {
-        // get the relative position in the alphabet list
-
-        int position = (int) word[i] - 'a';
-
-        if (tmp->children[position] == NULL){
-
-            tmp->children[position] = initialize();
-        }
-
-        tmp = tmp->children[position];
-    }
-
-
-      tmp->is_leaf = 1;
-      tmp->sym.name =  simbolo.name;
-}
-
-node *acha(symbol simbolo)
-{
-    // searches for word in the trie
-    node *tmp = root;
-    string word = simbolo.name;
-    for(int i = 0; i<word.size(); i++)
-    {
-        int position = word[i] - 'a';
-        if (tmp->children[position] == NULL) return NULL;
-        tmp = tmp->children[position];
-    }
-
-    if (tmp != NULL && tmp->is_leaf == 1) return tmp;
-
-    return NULL;
-}
-*/
-
-
 state estado;
 %}
 
@@ -122,10 +37,11 @@ state estado;
 %type <exprRet> expr
 %type <cazeRet> case
 %type <cazeZeroRet> casezeromais
-%type <switchaRet> switch
+%type <switchRet> switch
 %type <cmdRet> cmd
 %type <cmd_condRet> cmd_cond
 %type <cmd_loopRet> cmd_loop
+%type <cmd_switchRet> cmd_switch
 %type <elseRet> else
 %type <ifRet> if
 %type <loopRet> loop
@@ -219,13 +135,12 @@ cmd : identifier assign_expr SEMICOLON {$$ = new cmd($1,$2);}
     | inOut SEMICOLON {}
     | cmd_loop {$$ = new cmd(estado,$1);}
     | cmd_cond {$$ = new cmd($1);}
-    | cmd_switch {}
-    | expr SEMICOLON {}//cuidado com o construtor do exit when 
-    | RETURN expr SEMICOLON {}
-    | RETURN SEMICOLON {}
-    | BREAK SEMICOLON {$$ = new cmd(estado,"BREAK");}
+    | cmd_switch {$$ = new cmd($1);}
+    | expr SEMICOLON {$$ = new cmd(estado, $1);}//cuidado com o construtor do exit when 
+    | RETURN expr SEMICOLON {$$ = new cmd(estado, "RETURN", $2);}
+    | RETURN SEMICOLON {$$ = new cmd(estado, "RETURN");}
     | CONTINUE SEMICOLON {$$ = new cmd(estado,"CONTINUE");}
-    | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado,$3);}
+    | EXIT WHEN expr SEMICOLON {$$ = new cmd(estado, "EXIT WHEN", $3);}
     | {push_scope(estado.tables);} block {$$ = new cmd($2);};
 
 cmd_decl_var : all_decl_var assign_expr_maybe {$$ = new cmd_decl_var(estado,$1,$2);};
@@ -273,7 +188,7 @@ cmd_loop : for {$$ = new cmd_loop($1);}
 
 cmd_cond : if {$$ = new cmd_cond($1);};
 
-cmd_switch : switch {};
+cmd_switch : switch {$$ = new cmd_switch($1);};
 
 for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN cmd {
     $$ = new fora(estado, $3, $5, $7, $9);
@@ -281,8 +196,8 @@ for : FOR LEFT_PAREN para_for SEMICOLON para_for SEMICOLON para_for RIGHT_PAREN 
 
 para_for: cmd_decl_var {$$ = new para_for($1);}
         | expr {$$ = new para_for($1);}
-        | expr INCREMENT {}
-        | expr DECREMENT {};
+        | expr INCREMENT {$$ = new para_for("++", $1);}
+        | expr DECREMENT {$$ = new para_for("--", $1);};
 
 loop : LOOP cmd {$$ = new loop(estado, $2);};
 
@@ -292,20 +207,18 @@ if : IF LEFT_PAREN expr RIGHT_PAREN cmd ENDIF else {
 };
 
 else :  /*epsilon*/ {$$ = NULL;}
-      | ELSE cmd {};
+      | ELSE cmd {$$ = new elsea(estado, $2);};
 
 switch : SWITCH LEFT_PAREN expr RIGHT_PAREN {push_scope(estado.tables);} LEFT_BRACE casezeromais RIGHT_BRACE {
-    pop_scope(estado.tables);
-    $$ = new switcha(estado,$3,$7);
+         pop_scope(estado.tables);
+         $$ = new switcha(estado,$3,$7);
     };
 
 casezeromais : /*epsilon*/ {$$ = new cazezeromais();}
       | case casezeromais {$$ = new cazezeromais(estado,$1,$2);};
 
-case : {push_scope(estado.tables);} CASE literal COLON stmts {
-    pop_scope(estado.tables);
-    $$ = new caze($3);
-    };
+case : CASE literal COLON stmts BREAK SEMICOLON {$$ = new caze($2, $4, true);}
+     | CASE literal COLON stmts {$$ = new caze($2, $4, false);};
 
 typename : primitive {$$ = new type_name($1);}
          | ID {$$ = new type_name(*$1);};
@@ -319,10 +232,10 @@ primitive : INT {$$ = new primitive("INT");}
 
 type : typename hashtagzeromais cochetezeromais {$$ = $1;};
 
-typedlpar : /*epsilon*/ {}
+typedlpar : /*epsilon*/ {$$ = NULL;}
           | parameter typedlparAfter {$$ = new typedlpar(estado, $1, $2);}
 
-typedlparAfter : /*epsilon*/ {}
+typedlparAfter : /*epsilon*/ {$$ = NULL;}
                | COMMA parameter typedlparAfter {
     $$ = new typedlpar(estado, $2, $3);
 };
@@ -337,22 +250,17 @@ block : LEFT_BRACE stmts RIGHT_BRACE {
     $$ = new block($2);
 };
 
-expr : INCREMENT expr {$$ = new expr(estado, $2);}
-     | DECREMENT expr {$$ = new expr(estado, $2);}
+expr : INCREMENT expr {$$ = new expr(estado, "++", $2);}
+     | DECREMENT expr {$$ = new expr(estado, "--", $2);}
      | LEFT_PAREN expr RIGHT_PAREN {$$ = new expr(estado, $2);}
-     | MINUS identifier {$$ = new expr(estado, $2);}
-     | NOT expr {$$ = new expr(estado, $2);}
+     | MINUS expr {$$ = new expr(estado, "-", $2);}
+     | NOT expr {$$ = new expr(estado, "!", $2);}
      | expr AND expr {$$ = new expr(estado, $1,"&", $3);}
      | expr OR expr {$$ = new expr(estado, $1,"|", $3);}
-     | expr PLUS expr {
-        
-        $$ = new expr(estado, $1,"+", $3);}
-     | expr TIMES expr {
-        
-        $$ = new expr(estado, $1,"*", $3);}
+     | expr PLUS expr {$$ = new expr(estado, $1,"+", $3);}
+     | expr TIMES expr {$$ = new expr(estado, $1,"*", $3);}
      | expr DIV expr {$$ = new expr(estado, $1,"/", $3);}
-     | expr MINUS expr {
-        $$ = new expr(estado, $1,"-", $3);}
+     | expr MINUS expr {$$ = new expr(estado, $1,"-", $3);}
      | expr MOD expr {$$ = new expr(estado, $1,"%", $3);}
      | expr EQUALS expr {$$ = new expr(estado, $1,"==", $3);}
      | expr DIFF expr {$$ = new expr(estado, $1,"!=", $3);}

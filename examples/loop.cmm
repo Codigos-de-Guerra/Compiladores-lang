@@ -1,0 +1,13 @@
+function int main() {
+    //int x = (10 + 20) * (30 + 40);
+
+    str aa = "comecou";
+    loop {
+        int x =0;
+        int y =1;
+        exit when x > 10;
+        bool f = true;
+    }
+
+    bool f = false;
+}

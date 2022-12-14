@@ -1,0 +1,14 @@
+function int main() {
+    int x = 10;
+
+    switch (x) {
+      case 5:
+           x = x + 5;
+           break;
+      case 10:
+           x = x - 5;
+           break;
+      case 2:
+           x = x + 3;
+    }
+}
